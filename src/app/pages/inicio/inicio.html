@@ -1,0 +1,64 @@
+<section class="hero">
+  <div class="overlay">
+    <h1>DUNAroma</h1>
+    <p>Fragancias que nacen del viento y la arena.</p>
+  </div>
+</section>
+
+<section class="productos-container">
+  <h2 class="section-title">Nuestra Colección</h2>
+
+  <div class="grid-productos">
+    <div class="producto-card" *ngFor="let p of productos">
+      <div class="img-box">
+        <img [src]="p.img1" [alt]="p.nombre" class="main-img">
+        
+        <div class="hover-actions">
+          <button class="btn-quickview" (click)="abrirModal(p)">
+            Vista rápida
+          </button>
+        </div>
+        
+        <span class="badge" *ngIf="p.stock < 5">¡Últimas unidades!</span>
+      </div>
+
+      <div class="info-box">
+        <span class="brand-name">{{p.marca}}</span>
+        <h3 class="product-name">{{p.nombre}}</h3>
+        <p class="product-ocasion">{{p.ocasion}}</p>
+        <div class="price-row">
+          <span class="price">${{p.precio}}</span>
+          <button class="btn-add-mini" (click)="abrirModal(p)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2026 DUNAroma - Inspirado en la esencia del desierto
+</footer>
+
+<div class="modal" *ngIf="modalAbierto && productoSeleccionado">
+  <div class="modal-content">
+    <span class="cerrar" (click)="cerrarModal()">&times;</span>
+    <div class="modal-grid">
+      <div class="modal-imagenes">
+        <img [src]="imagenSeleccionada" class="imagen-principal">
+        <div class="miniaturas">
+          <img [src]="productoSeleccionado.img1" (click)="cambiarImagen(productoSeleccionado.img1)">
+        </div>
+      </div>
+      <div class="modal-info">
+        <h2>{{productoSeleccionado.nombre}}</h2>
+        <p class="price">${{productoSeleccionado.precio}}</p>
+        <div class="detalles">
+          <p><strong>Marca:</strong> {{productoSeleccionado.marca}}</p>
+          <p><strong>Descripción:</strong> {{productoSeleccionado.descripcion}}</p>
+          <p><strong>Stock:</strong> {{productoSeleccionado.stock}}</p>
+        </div>
+        <button class="btn-add-mini" style="width: 100%; border-radius: 4px; margin-top: 20px;">Agregar al Carrito</button>
+      </div>
+    </div>
+  </div>
+</div>
