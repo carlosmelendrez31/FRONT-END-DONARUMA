@@ -1,14 +1,4 @@
-/* RESET GLOBAL - Aquí estaba el error del espacio blanco */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  padding-top: 7px; 
-}
 
 /* HEADER */
 .header {

@@ -18,30 +18,30 @@ export class PerfumeService {
   }
 
   cargarPerfumes(): void {
-    this.http.get<any[]>(this.apiUrl).pipe(
-      tap((data) => {
-        console.log('Datos recibidos de C#:', data); 
+  this.http.get<any[]>(this.apiUrl).pipe(
+    tap((data) => {
+      console.log('Datos recibidos de C#:', data); 
+      
+      // Mapeo "a prueba de balas" (atrapa mayúsculas y minúsculas)
+      const perfumesListos = data.map(p => ({
+        ...p,
+        idPerfume: p.idPerfume || p.IdPerfume,
+        nombre: p.nombre || p.Nombre, 
+        precio: p.precio || p.Precio,
+        marca: p.marca || p.Marca,
+        descripcion: p.descripcion || p.Descripcion,
+        stock: p.stock || p.Stock,
+        genero: p.genero || p.Genero,
+        ocasion: p.ocasion || p.Ocasion,
         
-        // El "traductor" de Mayúsculas (C#) a lo que tu HTML necesita
-        const perfumesListos = data.map(p => ({
-          ...p,
-          idPerfume: p.IdPerfume,
-          nombre: p.Nombre, 
-          precio: p.Precio,
-          marca: p.Marca,
-          descripcion: p.Descripcion,
-          stock: p.Stock,
-          genero: p.Genero,
-          ocasion: p.Ocasion,
-          // Creamos img1 para que el HTML no falle
-          img1: p.Imagen_Url || 'assets/img/placeholder.png',
-          img2: p.Imagen_Url 
-        }));
+        // Usamos la imagen de la BD, o una de internet si está vacía (así evitamos el error 404)
+        img1: p.imagen_Url || p.Imagen_Url || p.imagen_url || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=400'
+      }));
 
-        this.perfumesSubject.next(perfumesListos);
-      })
-    ).subscribe({
-      error: (err) => console.error('Error al conectar con la API:', err)
-    });
-  }
+      this.perfumesSubject.next(perfumesListos);
+    })
+  ).subscribe({
+    error: (err) => console.error('Error al conectar con la API:', err)
+  });
+}
 }
