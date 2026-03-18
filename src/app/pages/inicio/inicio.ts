@@ -54,20 +54,37 @@ export class Inicio implements OnInit, OnDestroy {
       next: (prods) => {
         this.productos = prods.map(p => ({
           ...p,
+          // 🔥 AQUÍ CONECTAMOS LA IMAGEN DEL BACK-END AL FRONT-END 🔥
+          img1: p.imagen_Url || p.Imagen_Url || p.imagen_url || 'https://via.placeholder.com/300x300?text=Sin+Imagen',
+          
+          idPerfume: p.idPerfume || p.idperfume || p.IdPerfume,
+          nombre: p.nombre || p.Nombre || p.nombreperfume,
+          marca: p.marca || p.Marca,
+          precio: p.precio || p.Precio,
+          genero: p.genero || p.Genero,
+          
+          // Valores por defecto si la base de datos no los manda
+          intensidad: p.intensidad ?? 50,
+          dulzor: p.dulzor ?? 50,
+          duracion: p.duracion ?? 50,
+          aromatico: p.aromatico ?? 50,
+
+          // Datos de prueba para el diseño (estrellas)
           rating: (Math.random() * (5 - 4) + 4).toFixed(1), 
           reviews: Math.floor(Math.random() * 200) + 15
         }));
+        
         this.productosFiltrados = [...this.productos];
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error:', err)
     });
 
-    // Iniciar el carrusel automático (solo corre en el navegador)
+    
     if (isPlatformBrowser(this.platformId)) {
       this.intervaloCarrusel = setInterval(() => {
         this.siguienteDiapositiva();
-      }, 5000); // Cambia cada 5 segundos
+      }, 5000); 
     }
   }
 

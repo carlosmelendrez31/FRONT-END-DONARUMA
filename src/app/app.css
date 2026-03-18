@@ -133,3 +133,20 @@
 .icono:hover {
   transform: scale(1.2); /* Los íconos crecen un poquito al pasar el mouse */
 }
+
+/* Esto hace que el cursor cambie a la manita en el logo y los links */
+.logo, .menu-item {
+  cursor: pointer !important;
+  text-decoration: none;
+  display: inline-block; /* Para que agarre bien el área de clic */
+}
+
+/* Evita que el logo se seleccione como texto azul feo */
+.logo {
+  user-select: none;
+}
+
+/* Opcional: que el logo brille un poquito al pasar el mouse */
+.logo:hover {
+  opacity: 0.8;
+}

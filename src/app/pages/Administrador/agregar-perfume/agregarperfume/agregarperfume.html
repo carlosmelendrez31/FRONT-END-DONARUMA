@@ -1,1 +1,154 @@
-<p>agregarperfume works!</p>
+<div class="admin-layout">
+  <div class="main-content">
+
+    <header class="header-panel">
+      <h1>Panel Admin - DUNAROMA</h1>
+      <div class="top-bar">
+        <div class="search-container">
+          <input type="text" [(ngModel)]="textoBusqueda" placeholder="Buscar fragancia..." class="search-input">
+          <span class="lupa">🔍</span>
+        </div>
+        <button class="btn-new" (click)="abrirModal()">+ Nuevo Perfume</button>
+      </div>
+    </header>
+
+    <div class="table-card">
+      <div class="table-wrapper">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Marca</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of perfumesFiltrados">
+              <td>#{{ p.idPerfume || p.IdPerfume }}</td>
+              <td>
+                <img [src]="p.imagen_Url || p.Imagen_Url" class="img-table">
+              </td>
+              <td class="bold-white">{{ p.nombre || p.Nombre }}</td>
+              <td>{{ p.marca || p.Marca }}</td>
+              <td class="gold-text">${{ p.precio || p.Precio }}</td>
+              <td>{{ p.stock || p.Stock }} pz</td>
+              <td class="text-center">
+                <button class="btn-action edit" (click)="editarPerfume(p)">✏️</button>
+                <button class="btn-action delete" (click)="abrirConfirmacionEliminar(p)">🗑️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="mostrarModal">
+      <div class="modal-window">
+        <button class="btn-close-x" (click)="cerrarModal()">&times;</button>
+
+        <div class="modal-header">
+          <h2>{{ nuevoPerfume.idPerfume ? 'Editar Perfume' : 'Registrar Fragancia' }}</h2>
+        </div>
+
+        <form (ngSubmit)="guardarPerfume()" class="modal-body">
+          <div class="form-layout">
+
+            <div class="fields-section">
+              <div class="control">
+                <label>Nombre *</label>
+                <input type="text" [(ngModel)]="nuevoPerfume.nombre" name="nombre" required>
+              </div>
+              <div class="control">
+                <label>Marca *</label>
+                <input type="text" [(ngModel)]="nuevoPerfume.marca" name="marca" required>
+              </div>
+              <div class="control-row">
+                <div class="control">
+                  <label>Precio ($)</label>
+                  <input type="number" [(ngModel)]="nuevoPerfume.precio" name="precio" required>
+                </div>
+                 <div class="control">
+                <label>Genero</label>
+                <textarea [(ngModel)]="nuevoPerfume.genero" name="genero" rows="1"></textarea>
+              </div>
+                <div class="control">
+                  <label>Stock</label>
+                  <input type="number" [(ngModel)]="nuevoPerfume.stock" name="stock" required>
+                </div>
+              </div>
+              <div class="control">
+                <label>URL Imagen *</label>
+                <input type="text" [(ngModel)]="nuevoPerfume.imagen_Url" name="imagen_Url" required>
+              </div>
+              <div class="control">
+                <label>Descripción</label>
+                <textarea [(ngModel)]="nuevoPerfume.descripcion" name="descripcion" rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="preview-section">
+              <label>Previsualización</label>
+              <div class="image-box">
+                <img *ngIf="nuevoPerfume.imagen_Url" [src]="nuevoPerfume.imagen_Url" alt="Preview">
+                <div *ngIf="!nuevoPerfume.imagen_Url" class="no-img">Sin imagen</div>
+              </div>
+
+              <div class="sliders">
+                <div class="range-group">
+                  <label>Intensidad: {{nuevoPerfume.intensidad}}%</label>
+                  <input type="range" [(ngModel)]="nuevoPerfume.intensidad" name="intensidad" min="0" max="100">
+                </div>
+                <div class="range-group">
+                  <label>Dulzor: {{nuevoPerfume.dulzor}}%</label>
+                  <input type="range" [(ngModel)]="nuevoPerfume.dulzor" name="dulzor" min="0" max="100">
+                </div>
+                <div class="range-group">
+                  <label>Duración: {{nuevoPerfume.duracion}}%</label>
+                  <input type="range" [(ngModel)]="nuevoPerfume.duracion" name="duracion" min="0" max="100">
+                </div>
+                <div class="range-group">
+                  <label>Aromático: {{nuevoPerfume.aromatico}}%</label>
+                  <input type="range" [(ngModel)]="nuevoPerfume.aromatico" name="aromatico" min="0" max="100">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" (click)="cerrarModal()">❌ Cancelar</button>
+            <button type="submit" class="btn-save">💾 Guardar Registro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop-super" *ngIf="mostrarConfirmacionEliminar">
+      <div class="modal-confirm-center">
+        <div class="confirm-icon-big">⚠️</div>
+        <h3>¿Eliminar este perfume?</h3>
+        <p>¿Seguro que quieres eliminar <strong>{{ perfumeAEliminar?.nombre }}</strong>?<br>Esta acción no se puede deshacer.</p>
+        <div class="confirm-botones">
+          <button class="btn-cancelar-modal" (click)="cancelarEliminacion()">Cancelar</button>
+          <button class="btn-eliminar-modal" (click)="ejecutarEliminacion()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-alerta-der" *ngIf="mostrarAlerta" [ngClass]="tipoAlerta">
+      <div class="toast-contenido">
+        <span class="toast-icono-estado">{{ tipoAlerta === 'success' ? '✅' : tipoAlerta === 'error' ? '❌' : '⚠️' }}</span>
+        <div class="toast-textos">
+          <span class="toast-titulo">{{ tipoAlerta === 'success' ? 'Éxito' : 'Aviso' }}</span>
+          <p>{{ mensajeAlerta }}</p>
+        </div>
+      </div>
+      <div class="toast-barra-progreso" [ngClass]="tipoAlerta"></div>
+    </div>
+
+  </div>
+</div>

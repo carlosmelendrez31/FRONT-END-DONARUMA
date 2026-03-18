@@ -1,47 +1,71 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Perfumes } from '../models/perfumes/perfumes';
+// Asegúrate de que esta ruta a tu interfaz sea la correcta
+import { Perfumes } from '../models/perfumes/perfumes'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerfumeService {
-  private apiUrl = 'https://localhost:7030/api/perfumes/todos';
+  // La URL base (ajusta el puerto si tu C# usa otro)
+  private baseUrl = 'https://localhost:7030/api/perfumes'; 
 
-  private perfumesSubject = new BehaviorSubject<any[]>([]); // Usamos any[] para evitar el error de tipado por ahora
+  private perfumesSubject = new BehaviorSubject<any[]>([]);
   public perfumes$ = this.perfumesSubject.asObservable();
 
   constructor(private http: HttpClient) { 
     this.cargarPerfumes();
   }
 
+  // --- 1. CARGAR/OBTENER TODOS (GET) ---
+  // Este método actualiza el BehaviorSubject para la tienda
   cargarPerfumes(): void {
-  this.http.get<any[]>(this.apiUrl).pipe(
-    tap((data) => {
-      console.log('Datos recibidos de C#:', data); 
-      
-      // Mapeo "a prueba de balas" (atrapa mayúsculas y minúsculas)
-      const perfumesListos = data.map(p => ({
-        ...p,
-        idPerfume: p.idPerfume || p.IdPerfume,
-        nombre: p.nombre || p.Nombre, 
-        precio: p.precio || p.Precio,
-        marca: p.marca || p.Marca,
-        descripcion: p.descripcion || p.Descripcion,
-        stock: p.stock || p.Stock,
-        genero: p.genero || p.Genero,
-        ocasion: p.ocasion || p.Ocasion,
-        
-        // Usamos la imagen de la BD, o una de internet si está vacía (así evitamos el error 404)
-        img1: p.imagen_Url || p.Imagen_Url || p.imagen_url || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=400'
-      }));
+    this.http.get<any[]>(`${this.baseUrl}/todos`).pipe(
+      tap((data) => {
+        const perfumesListos = data.map(p => ({
+          ...p,
+          idPerfume: p.idPerfume || p.IdPerfume,
+          nombre: p.nombre || p.Nombre, 
+          precio: p.precio || p.Precio,
+          marca: p.marca || p.Marca,
+          descripcion: p.descripcion || p.Descripcion,
+          stock: p.stock || p.Stock,
+          genero: p.genero || p.Genero,
+          ocasion: p.ocasion || p.Ocasion,
+          imagen_Url: p.imagen_Url || p.Imagen_Url || p.imagen_url
+        }));
+        this.perfumesSubject.next(perfumesListos);
+      })
+    ).subscribe({
+      error: (err) => console.error('Error al conectar con la API:', err)
+    });
+  }
 
-      this.perfumesSubject.next(perfumesListos);
-    })
-  ).subscribe({
-    error: (err) => console.error('Error al conectar con la API:', err)
-  });
-}
+  // Este es el que pide tu componente Admin
+  obtenerTodos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/todos`);
+  }
+
+  // --- 2. CREAR (POST) ---
+  crearPerfume(perfume: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/crear`, perfume).pipe(
+      tap(() => this.cargarPerfumes()) // Recarga la lista automáticamente
+    );
+  }
+
+  // --- 3. ACTUALIZAR (PUT) ---
+  actualizarPerfume(id: number, perfume: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/actualizar/${id}`, perfume).pipe(
+      tap(() => this.cargarPerfumes())
+    );
+  }
+
+  // --- 4. ELIMINAR (DELETE) ---
+  eliminarPerfume(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/eliminar/${id}`).pipe(
+      tap(() => this.cargarPerfumes())
+    );
+  }
 }
