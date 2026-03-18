@@ -1,0 +1,99 @@
+<section class="aromas-container">
+  <div class="header-luxury">
+    <h2>Nuestra Colección</h2>
+    <div class="linea-dorada"></div>
+  </div>
+  
+  <div class="filtros-container">
+    <button (click)="filtrar('cítricos')" [class.active]="filtroSeleccionado === 'cítricos'" class="btn-f">🍋 Cítricos</button>
+    <button (click)="filtrar('florales')" [class.active]="filtroSeleccionado === 'florales'" class="btn-f">🌹 Florales</button>
+    <button (click)="filtrar('orientales')" [class.active]="filtroSeleccionado === 'orientales'" class="btn-f">🌙 Orientales</button>
+    <button (click)="filtrar('frutales')" [class.active]="filtroSeleccionado === 'frutales'" class="btn-f">🍓 Frutales</button>
+    <button (click)="filtrar('gourmand')" [class.active]="filtroSeleccionado === 'gourmand'" class="btn-f">🍦 Gourmand</button>
+    <button (click)="filtrar('herbales')" [class.active]="filtroSeleccionado === 'herbales'" class="btn-f">🌿 Herbales</button>
+    <button (click)="filtrar('fougère')" [class.active]="filtroSeleccionado === 'fougère'" class="btn-f">🍃 Fougère</button>
+    <button (click)="filtrar('acuáticos')" [class.active]="filtroSeleccionado === 'acuáticos'" class="btn-f">🌊 Acuáticos</button>
+  </div>
+
+  <div class="resultados-section">
+    <div *ngIf="filtroSeleccionado === ''" class="mensaje-espera">
+      <p>Selecciona una familia olfativa para explorar nuestra colección exclusiva.</p>
+    </div>
+
+    <div class="buscador-container" *ngIf="filtroSeleccionado !== ''">
+      <div class="buscador-wrapper">
+        <span class="icono-lupa">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="textoBusqueda" 
+          (input)="aplicarFiltros()" 
+          placeholder="Buscar perfume o marca..." 
+          class="input-premium">
+      </div>
+    </div>
+
+    <div *ngIf="filtroSeleccionado !== '' && productosAMostrar.length === 0" class="mensaje-espera">
+      <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">🍂</div>
+      <p>No encontramos fragancias que coincidan con tu búsqueda.</p>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 10px;">Intenta con otro nombre o explora una categoría diferente.</p>
+    </div>
+
+    <div class="productos-grid" *ngIf="productosAMostrar.length > 0">
+      <div class="producto-card" *ngFor="let p of productosAMostrar">
+        <div class="card-glass">
+          <div class="producto-imagen">
+            <img [src]="p.imagenMostrar" alt="Perfume" class="img-card-api">
+            <div class="badge-agotado" *ngIf="p.stock === 0">AGOTADO</div>
+          </div>
+          <div class="producto-info">
+            <h3>{{ p.nombreMostrar }}</h3>
+            <p class="p-precio">${{ p.precio }}</p>
+            <p class="p-stock">Stock: {{ p.stock > 0 ? p.stock : 'Sin existencias' }}</p>
+            <button class="btn-action" (click)="abrirModal(p)">Ver Detalles</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="perfumeSeleccionado" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="btn-close" (click)="cerrarModal()">&times;</button>
+      
+      <div class="modal-body-premium">
+        <div class="modal-left">
+          <div class="modal-img-wrapper">
+            <img [src]="perfumeSeleccionado.imagenMostrar" alt="Perfume" class="img-modal-api">
+          </div>
+        </div>
+        
+        <div class="modal-right">
+          <span class="modal-brand-label">{{ perfumeSeleccionado.marca }}</span>
+          <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
+          
+          <div class="detalles-item-grid">
+            <p><strong class="gold">Género:</strong> {{ perfumeSeleccionado.genero || 'Unisex' }}</p>
+            <p><strong class="gold">Ocasión:</strong> {{ perfumeSeleccionado.ocasion || 'Uso Diario' }}</p>
+            <p><strong class="gold">Stock:</strong> {{ perfumeSeleccionado.stock > 0 ? perfumeSeleccionado.stock : 'Agotado' }}</p>
+          </div>
+
+          <div class="familias-pill-container" style="margin-bottom: 25px;">
+            <p style="margin:0;"><strong class="gold">Familias:</strong></p>
+            <span class="badge-gold" *ngFor="let fam of perfumeSeleccionado.familiasArray">
+              {{ fam | titlecase }}
+            </span>
+          </div>
+
+          <p class="modal-description-full">{{ perfumeSeleccionado.descripcion || 'Una fragancia única de autor, elaborada con esencias de la más alta calidad para asegurar una fijación y proyección excepcionales. Perfecta para ocasiones especiales.' }}</p>
+          
+          <div class="modal-footer-info">
+            <span class="modal-price-display">${{ perfumeSeleccionado.precio }}</span>
+            <button class="btn-add-cart" [disabled]="perfumeSeleccionado.stock === 0">
+              {{ perfumeSeleccionado.stock > 0 ? 'Agregar al Carrito' : 'Agotado' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
