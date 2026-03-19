@@ -10,7 +10,7 @@ import { PerfumeOlfativo } from '../models/familia-olfativa/familia-olfativa';
 export class FamiliasOlfativas {
   private http = inject(HttpClient);
   
-  // La URL de tu API en .NET que me pasaste
+  //La URL de tu API en .NET que me pasaste
 private apiUrl = 'https://localhost:7030/api/FamiliaOlfativa/todos';
 
   obtenerPerfumes(): Observable<any[]> {

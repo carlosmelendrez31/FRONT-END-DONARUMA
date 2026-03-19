@@ -19,8 +19,9 @@ export class Aromas implements OnInit {
   filtroSeleccionado: string = '';
   perfumeSeleccionado: PerfumeOlfativo | null = null;
   
-  // 3. ¡NUEVO! Variable para guardar lo que el usuario escribe
   textoBusqueda: string = ''; 
+  // ¡AQUÍ ESTÁ! Por defecto busca por nombre
+  criterioBusqueda: string = 'nombre'; 
 
   ngOnInit(): void {
     this.perfumesService.obtenerPerfumes().subscribe({
@@ -49,37 +50,35 @@ export class Aromas implements OnInit {
     });
   }
 
-  // 4. Modificamos el botón para que limpie la búsqueda al cambiar de categoría
   filtrar(familia: string) {
     this.filtroSeleccionado = familia;
-    this.textoBusqueda = ''; // Limpiamos el buscador al cambiar de pestaña
-    this.aplicarFiltros();   // Llamamos a la función maestra
+    this.textoBusqueda = ''; 
+    this.aplicarFiltros(); 
   }
 
-  // 5. ¡NUEVO! Función maestra que filtra por familia Y por nombre
   aplicarFiltros() {
     if (this.filtroSeleccionado === '') {
-      this.productosAMostrar = []; // Si no hay familia, no mostramos nada
+      this.productosAMostrar = []; 
       return;
     }
 
-    // Primero filtramos por la familia seleccionada (ej. 'cítricos')
     let filtrados = this.todosLosPerfumes.filter(p => 
       p.familiaOlfativa && p.familiaOlfativa.includes(this.filtroSeleccionado)
     );
 
-    // Luego, si el usuario escribió algo, filtramos esa lista por nombre o marca
     if (this.textoBusqueda.trim() !== '') {
       const texto = this.textoBusqueda.toLowerCase().trim();
-if (this.textoBusqueda.trim() !== '') {
-      const texto = this.textoBusqueda.toLowerCase().trim();
       
-      filtrados = filtrados.filter(p => 
-        // Le ponemos el ? a nombreMostrar y a marca para proteger el código
-        p.nombreMostrar?.toLowerCase().includes(texto) || 
-        p.marca?.toLowerCase().includes(texto)
-      );
-    }
+      filtrados = filtrados.filter(p => {
+        const coincideNombre = p.nombreMostrar?.toLowerCase().includes(texto);
+        const coincideMarca = p.marca?.toLowerCase().includes(texto);
+
+        // Ya solo existen estas dos opciones
+        if (this.criterioBusqueda === 'nombre') return coincideNombre;
+        if (this.criterioBusqueda === 'marca') return coincideMarca;
+        
+        return false; // Por seguridad
+      });
     }
 
     this.productosAMostrar = filtrados;

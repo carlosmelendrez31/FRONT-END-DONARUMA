@@ -2,7 +2,7 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); /* Azul noche profundo */
+  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
   color: #f8fafc;
   padding: 50px 20px;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -21,7 +21,7 @@
 h2 {
   font-family: 'Georgia', serif;
   font-size: 2.8rem;
-  color: #d4af37; /* Oro mate */
+  color: #d4af37;
   letter-spacing: 3px;
   margin-bottom: 15px;
   text-transform: uppercase;
@@ -61,7 +61,6 @@ h2 {
   transform: translateY(-3px);
 }
 
-/* Mensaje de Espera */
 .mensaje-espera {
   text-align: center;
   padding: 50px;
@@ -71,51 +70,137 @@ h2 {
   font-style: italic;
 }
 
-/* --- CUADRÍCULA DE PRODUCTOS ACTUALIZADA --- */
+/* --- BUSCADOR PREMIUM AVANZADO --- */
+.buscador-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  animation: fadeInCards 0.5s ease-out;
+}
+
+.buscador-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 650px;
+}
+
+.select-criterio {
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 25px;
+  color: #d4af37;
+  font-size: 0.95rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.select-criterio:focus {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+.select-criterio option {
+  background: #1e293b;
+  color: white;
+}
+
+.input-con-icono {
+  position: relative;
+  flex-grow: 1;
+}
+
+.icono-lupa {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.input-premium {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 20px 16px 50px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  color: #f8fafc;
+  font-size: 1rem;
+  outline: none;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.input-premium::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.input-premium:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+
+/* =========================================
+   NUEVO: CUADRÍCULA Y TARJETAS (DISEÑO INICIO)
+========================================= */
 .productos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 35px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
   animation: fadeInCards 0.8s ease-out;
 }
 
-.card-glass {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
+.producto-card {
+  background: white;
+  border-radius: 15px;
   overflow: hidden;
   transition: all 0.4s ease;
+  border: 3px solid transparent;
   position: relative;
 }
 
-.card-glass:hover {
-  transform: translateY(-10px);
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+/* Bordes de colores por género */
+.producto-card.borde-hombre { border-color: #3498db; }
+.producto-card.borde-mujer { border-color: #e84393; }
+.producto-card.borde-unisex { border-color: #9b59b6; }
+
+.producto-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* AQUÍ: Ajuste de la Imagen de la Card */
-.producto-imagen {
-  height: 220px; /* Altura específica */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(212, 175, 55, 0.03);
+.img-box {
   position: relative;
-  overflow: hidden; /* Importante para cortar excesos */
+  height: 280px;
+  background: #f9f9f9;
+  overflow: hidden;
 }
 
-.img-card-api {
+.main-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Hace que la imagen llene el espacio sin deformarse */
-  border-radius: 24px 24px 0 0;
+  object-fit: cover;
+  transition: 0.5s;
+}
+
+.producto-card:hover .main-img {
+  transform: scale(1.05);
 }
 
 .badge-agotado {
   position: absolute;
-  top: 20px;
+  top: 15px;
   left: 0;
   background: #ef4444;
   color: white;
@@ -124,43 +209,106 @@ h2 {
   font-weight: 800;
   border-radius: 0 4px 4px 0;
   letter-spacing: 1px;
+  z-index: 2;
 }
 
-.producto-info {
-  padding: 25px;
+.hover-actions {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+  z-index: 3;
+}
+
+.producto-card:hover .hover-actions {
+  opacity: 1;
+}
+
+.btn-quickview {
+  background: #d4af37;
+  color: #0A1F44;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-quickview:hover {
+  background: white;
+}
+
+.info-box {
+  padding: 20px;
   text-align: center;
+  color: #333;
 }
 
-.p-precio {
-  color: #d4af37;
-  font-size: 1.6rem;
+.brand-name {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.product-name {
+  margin: 5px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.estrellas {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.price-text {
+  font-size: 1.3rem;
   font-weight: 700;
-  margin: 10px 0;
+  color: #0A1F44;
+  margin: 0 0 15px 0;
 }
 
-.p-stock {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  margin-bottom: 20px;
-}
-
-.btn-action {
+.btn-agregar-rapido {
   width: 100%;
-  padding: 12px;
-  background: transparent;
-  border: 1px solid #d4af37;
-  color: #d4af37;
-  border-radius: 12px;
+  padding: 10px;
+  background: white;
+  color: #0A1F44;
+  border: 1px solid #0A1F44;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.3s;
+  font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
-.btn-action:hover {
-  background: #d4af37;
-  color: #1a1a2e;
+.btn-agregar-rapido:hover:not([disabled]) {
+  background: #0A1F44;
+  color: white;
 }
 
-/* --- MODAL (VENTANA EMERGENTE) REDISEÑADO --- */
+/* ETIQUETA DORADA ADAPTADA PARA FONDO BLANCO */
+.badge-gold-light {
+  background: rgba(212, 175, 55, 0.15);
+  color: #b38b1e;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================================
+   MODAL PREMIUM OSCURO
+========================================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -178,9 +326,9 @@ h2 {
   max-width: 850px;
   border-radius: 32px;
   border: 1px solid rgba(212, 175, 55, 0.4);
-  padding: 50px; /* Más padding para airear */
+  padding: 50px;
   position: relative;
-  overflow: visible; /* Prevent cut-offs */
+  overflow: visible;
   animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -198,17 +346,15 @@ h2 {
   cursor: pointer;
 }
 
-/* Nuevo Body Premium */
 .modal-body-premium {
   display: grid;
-  grid-template-columns: 1fr 1.3fr; /* Dos columnas limpias */
-  gap: 50px; /* Espacio generoso */
+  grid-template-columns: 1fr 1.3fr;
+  gap: 50px;
 }
 
-/* AQUÍ: Ajuste de la Imagen en el Modal (Reemplaza image_3.png placeholder) */
 .modal-img-wrapper {
   height: 100%;
-  min-height: 400px; /* Le damos altura mínima */
+  min-height: 400px;
   background: rgba(212, 175, 55, 0.05);
   border-radius: 20px;
   display: flex;
@@ -220,11 +366,10 @@ h2 {
 .img-modal-api {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Para que la botella completa se vea en el modal */
+  object-fit: contain;
   border-radius: 20px;
 }
 
-/* Detalles del Modal (Lado Derecho) */
 .modal-brand-label {
   color: #d4af37;
   text-transform: uppercase;
@@ -268,7 +413,7 @@ h2 {
 }
 
 .modal-footer-info {
-  margin-top: auto; /* Empuja el precio al fondo */
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -297,37 +442,18 @@ h2 {
   cursor: not-allowed;
 }
 
-/* --- ANIMACIONES --- */
-@keyframes fadeInCards {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scaleUp {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* --- RESPONSIVO --- */
-@media (max-width: 768px) {
-  .modal-body-premium { grid-template-columns: 1fr; gap: 20px; }
-  .modal-img-wrapper { height: 250px; min-height: 250px; }
-  .modal-title-perfume { font-size: 1.8rem; text-align: center; }
-  .modal-brand-label { text-align: center; }
-}
-
-/* --- ETIQUETAS DE FAMILIAS PARA MODAL --- */
+/* ETIQUETAS DEL MODAL */
 .familias-pill-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  grid-column: span 2; /* Para que ocupe las dos columnas en tu grid de detalles */
+  grid-column: span 2;
 }
 
 .badge-gold {
-  background: rgba(212, 175, 55, 0.1); /* Fondo transparente para el modo oscuro */
-  color: #d4af37; /* Letra dorada */
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
   border: 1px solid rgba(212, 175, 55, 0.4);
   padding: 4px 12px;
   border-radius: 20px;
@@ -341,49 +467,22 @@ h2 {
   background: rgba(212, 175, 55, 0.25);
 }
 
-/* --- BUSCADOR PREMIUM --- */
-.buscador-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
-  animation: fadeInCards 0.5s ease-out;
+/* ANIMACIONES Y MEDIA QUERIES */
+@keyframes fadeInCards {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.buscador-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.icono-lupa {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  opacity: 0.7;
-}
-
-.input-premium {
-  width: 100%;
-  padding: 16px 20px 16px 50px; /* Espacio extra a la izquierda para la lupa */
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 30px;
-  color: #f8fafc;
-  font-size: 1rem;
-  outline: none;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.input-premium::placeholder {
-  color: #94a3b8;
-  font-style: italic;
-}
-
-.input-premium:focus {
-  border-color: #d4af37;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-  background: rgba(255, 255, 255, 0.05);
+@media (max-width: 768px) {
+  .modal-body-premium { grid-template-columns: 1fr; gap: 20px; }
+  .modal-img-wrapper { height: 250px; min-height: 250px; }
+  .modal-title-perfume { font-size: 1.8rem; text-align: center; }
+  .modal-brand-label { text-align: center; }
+  .buscador-wrapper { flex-direction: column; }
+  .select-criterio { width: 100%; }
 }

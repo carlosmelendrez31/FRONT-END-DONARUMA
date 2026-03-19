@@ -4,7 +4,8 @@ export interface PerfumeOlfativo {
   marca: string;
   genero: string;
   ocasion: string;
-  esDeNoche: boolean; // Este venía en tu API de .NET
+  // Este venía en tu API de .NET
+  esDeNoche: boolean;
   precio: number;
   descripcion: string;
   imagen_Url: string;
