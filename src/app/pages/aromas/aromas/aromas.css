@@ -1,4 +1,6 @@
-/* --- CONFIGURACIÓN BASE PREMIUM --- */
+/* =========================================
+   1. CONFIGURACIÓN BASE PREMIUM
+========================================= */
 :host {
   display: block;
   min-height: 100vh;
@@ -34,7 +36,9 @@ h2 {
   margin: 0 auto;
 }
 
-/* --- FILTROS --- */
+/* =========================================
+   2. FILTROS Y BUSCADOR
+========================================= */
 .filtros-container {
   display: flex;
   justify-content: center;
@@ -70,7 +74,6 @@ h2 {
   font-style: italic;
 }
 
-/* --- BUSCADOR PREMIUM AVANZADO --- */
 .buscador-container {
   display: flex;
   justify-content: center;
@@ -150,9 +153,8 @@ h2 {
   background: rgba(255, 255, 255, 0.05);
 }
 
-
 /* =========================================
-   NUEVO: CUADRÍCULA Y TARJETAS (DISEÑO INICIO)
+   3. CUADRÍCULA Y TARJETAS BLANCAS
 ========================================= */
 .productos-grid {
   display: grid;
@@ -170,7 +172,6 @@ h2 {
   position: relative;
 }
 
-/* Bordes de colores por género */
 .producto-card.borde-hombre { border-color: #3498db; }
 .producto-card.borde-mujer { border-color: #e84393; }
 .producto-card.borde-unisex { border-color: #9b59b6; }
@@ -272,42 +273,11 @@ h2 {
   font-size: 1.3rem;
   font-weight: 700;
   color: #0A1F44;
-  margin: 0 0 15px 0;
+  margin: 0;
 }
-
-.btn-agregar-rapido {
-  width: 100%;
-  padding: 10px;
-  background: white;
-  color: #0A1F44;
-  border: 1px solid #0A1F44;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-}
-
-.btn-agregar-rapido:hover:not([disabled]) {
-  background: #0A1F44;
-  color: white;
-}
-
-/* ETIQUETA DORADA ADAPTADA PARA FONDO BLANCO */
-.badge-gold-light {
-  background: rgba(212, 175, 55, 0.15);
-  color: #b38b1e;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  padding: 3px 10px;
-  border-radius: 15px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
 
 /* =========================================
-   MODAL PREMIUM OSCURO
+   4. MODAL PREMIUM (Glassmorphism)
 ========================================= */
 .modal-overlay {
   position: fixed;
@@ -321,15 +291,17 @@ h2 {
 }
 
 .modal-content {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(20px);
   width: 95%;
-  max-width: 850px;
+  max-width: 950px;
   border-radius: 32px;
   border: 1px solid rgba(212, 175, 55, 0.4);
   padding: 50px;
   position: relative;
   overflow: visible;
   animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
 }
 
 .btn-close {
@@ -338,80 +310,190 @@ h2 {
   right: 25px;
   background: rgba(255,255,255,0.05);
   border: none;
-  color: white;
+  color: #ef4444;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
   cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.btn-close:hover {
+  background: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
 }
 
 .modal-body-premium {
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
+  grid-template-columns: 1fr 1fr;
   gap: 50px;
 }
 
+/* Lado Izquierdo: Imágenes */
+.modal-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
 .modal-img-wrapper {
-  height: 100%;
-  min-height: 400px;
-  background: rgba(212, 175, 55, 0.05);
+  width: 100%;
+  height: 400px;
+  background: white;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .img-modal-api {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 20px;
+}
+
+.miniaturas-container {
+  display: flex;
+  gap: 15px;
+}
+
+.miniaturas-container img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.miniaturas-container img:hover {
+  transform: scale(1.05);
+}
+
+.miniaturas-container img.active {
+  border-color: #d4af37;
+  transform: scale(1.05);
+}
+
+/* Lado Derecho: Info */
+.modal-right {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
 }
 
 .modal-brand-label {
-  color: #d4af37;
   text-transform: uppercase;
   letter-spacing: 4px;
-  font-size: 0.8rem;
-  display: block;
+  font-size: 0.9rem;
   margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .modal-title-perfume {
   text-align: left;
-  margin: 0 0 15px 0;
+  margin: 0 0 20px 0;
   color: #fff;
-  font-size: 2.2rem;
+  font-size: 2.8rem;
   font-family: 'Georgia', serif;
+  font-weight: 700;
 }
-
-.detalles-item-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 20px 0;
-  padding: 15px 0;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.detalles-item-grid p {
-  font-size: 0.9rem;
-  margin: 0;
-  color: #d1d5db;
-}
-
-.gold { color: #d4af37; }
 
 .modal-description-full {
   line-height: 1.8;
   color: #cbd5e1;
-  font-size: 0.95rem;
-  margin-bottom: 25px;
+  font-size: 1rem;
+  margin-bottom: 30px;
 }
 
+/* Panel de Estadísticas (Barras) */
+.estadisticas-aroma-panel {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stat-row:last-child { margin-bottom: 0; }
+
+.stat-label {
+  font-size: 0.95rem;
+  color: #ddd;
+  font-weight: 500;
+}
+
+.stat-bar {
+  width: 65%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.stat-bar .fill {
+  height: 100%;
+  background: #d4af37;
+  border-radius: 5px;
+  transition: width 0.5s ease-out;
+}
+
+/* --- DETALLES RÁPIDOS Y STOCK --- */
+.detalles-rapidos-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinea todo arriba */
+  flex-wrap: wrap; /* ¡MAGIA! Permite que los elementos bajen si no hay espacio */
+  gap: 15px; /* Espacio entre los elementos cuando bajan */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  color: #bbb;
+}
+
+.detalle-item { 
+  margin: 0; 
+  line-height: 1.6; /* Da un poco de aire entre el título dorado y el texto blanco */
+  flex: 1; /* Hace que se repartan el espacio equitativamente */
+  min-width: 90px; /* Evita que se hagan demasiado delgados */
+}
+
+.gold { color: #d4af37; }
+
+.stock-pastilla { margin: 0; }
+
+.badge-stock {
+  display: inline-block; /* Evita que se deforme */
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  white-space: nowrap; /* ¡MAGIA! Impide que el texto se rompa en dos renglones */
+}
+
+/* Pie del Modal: Botones */
 .modal-footer-info {
   margin-top: auto;
   display: flex;
@@ -420,37 +502,34 @@ h2 {
 }
 
 .modal-price-display {
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #d4af37;
 }
 
-.btn-add-cart {
-  background: #d4af37;
-  color: #0f172a;
-  padding: 15px 40px;
-  border-radius: 14px;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-add-cart:disabled {
-  background: #475569;
-  color: #94a3b8;
-  cursor: not-allowed;
-}
-
-/* ETIQUETAS DEL MODAL */
+/* =========================================
+   5. ETIQUETAS (PILLS) FAMILIAS OLFATIVAS
+========================================= */
 .familias-pill-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  grid-column: span 2;
 }
 
+/* Pastillas claras para las tarjetas blancas */
+.badge-gold-light {
+  background: rgba(212, 175, 55, 0.15);
+  color: #b38b1e;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Pastillas oscuras para el modal glassmorphism */
 .badge-gold {
   background: rgba(212, 175, 55, 0.1);
   color: #d4af37;
@@ -467,7 +546,36 @@ h2 {
   background: rgba(212, 175, 55, 0.25);
 }
 
-/* ANIMACIONES Y MEDIA QUERIES */
+
+/* =========================================
+   7. BOTÓN WHATSAPP Y ANIMACIONES
+========================================= */
+.btn-whatsapp {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #25d366;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+  z-index: 1000;
+  transition: 0.3s;
+  animation: pulse 2s infinite;
+}
+
+.btn-whatsapp img { width: 35px; }
+.btn-whatsapp:hover { transform: scale(1.1); }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
 @keyframes fadeInCards {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -478,11 +586,15 @@ h2 {
   to { transform: scale(1); opacity: 1; }
 }
 
+/* RESPONSIVO */
 @media (max-width: 768px) {
   .modal-body-premium { grid-template-columns: 1fr; gap: 20px; }
-  .modal-img-wrapper { height: 250px; min-height: 250px; }
-  .modal-title-perfume { font-size: 1.8rem; text-align: center; }
-  .modal-brand-label { text-align: center; }
+  .modal-left { order: -1; }
+  .modal-img-wrapper { height: 250px; }
+  .modal-title-perfume { font-size: 2rem; text-align: center; }
+  .modal-footer-info { flex-direction: column; gap: 20px; }
+  .acciones-modal-fila { width: 100%; flex-direction: column; }
+  .btn-add-cart { width: 100%; }
   .buscador-wrapper { flex-direction: column; }
   .select-criterio { width: 100%; }
 }

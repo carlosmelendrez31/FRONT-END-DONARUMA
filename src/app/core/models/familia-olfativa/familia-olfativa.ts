@@ -17,6 +17,14 @@ export interface PerfumeOlfativo {
   imagenMostrar?: string;
   familiaOlfativa?: string;
 
+  // ¡ESTOS SON LOS NUEVOS PARA EL MODAL PREMIUM! 👇
+  img1?: string;
+  img2?: string;
+  aromatico?: number;
+  intensidad?: number;
+  dulzor?: number;
+  duracion?: number;
+  
   // ¡Agregamos esta nueva!
   familiasArray?: string[];
 }

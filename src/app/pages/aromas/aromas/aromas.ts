@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // 1. ¡NUEVO! Importamos FormsModule
+import { FormsModule } from '@angular/forms';
 import { FamiliasOlfativas } from '../../../core/services/familias-olfativas.service';
 import { PerfumeOlfativo } from '../../../core/models/familia-olfativa/familia-olfativa';
 
 @Component({
   selector: 'app-aromas',
   standalone: true,
-  imports: [CommonModule, FormsModule], // 2. ¡NUEVO! Lo agregamos a los imports
+  imports: [CommonModule, FormsModule],
   templateUrl: './aromas.html',
   styleUrl: './aromas.css',
 })
@@ -17,10 +17,11 @@ export class Aromas implements OnInit {
   todosLosPerfumes: PerfumeOlfativo[] = [];
   productosAMostrar: PerfumeOlfativo[] = [];
   filtroSeleccionado: string = '';
-  perfumeSeleccionado: PerfumeOlfativo | null = null;
   
+  perfumeSeleccionado: PerfumeOlfativo | null = null;
+  imagenSeleccionada: string = '';
+
   textoBusqueda: string = ''; 
-  // ¡AQUÍ ESTÁ! Por defecto busca por nombre
   criterioBusqueda: string = 'nombre'; 
 
   ngOnInit(): void {
@@ -39,6 +40,12 @@ export class Aromas implements OnInit {
             ...perfume,
             nombreMostrar: nombreFinal || 'Perfume Exclusivo',
             imagenMostrar: urlImagenFinal,
+            img1: urlImagenFinal,
+            img2: null, // Si tu base de datos tiene segunda imagen, ponla aquí
+            aromatico: Math.floor(Math.random() * 100) + 1,
+            intensidad: Math.floor(Math.random() * 100) + 1,
+            dulzor: Math.floor(Math.random() * 100) + 1,
+            duracion: Math.floor(Math.random() * 100) + 1,
             familiaOlfativa: familiasTexto,
             familiasArray: familiasTexto.split(',').map((f: string) => f.trim())
           };
@@ -52,7 +59,6 @@ export class Aromas implements OnInit {
 
   filtrar(familia: string) {
     this.filtroSeleccionado = familia;
-    this.textoBusqueda = ''; 
     this.aplicarFiltros(); 
   }
 
@@ -68,16 +74,12 @@ export class Aromas implements OnInit {
 
     if (this.textoBusqueda.trim() !== '') {
       const texto = this.textoBusqueda.toLowerCase().trim();
-      
       filtrados = filtrados.filter(p => {
         const coincideNombre = p.nombreMostrar?.toLowerCase().includes(texto);
         const coincideMarca = p.marca?.toLowerCase().includes(texto);
-
-        // Ya solo existen estas dos opciones
         if (this.criterioBusqueda === 'nombre') return coincideNombre;
         if (this.criterioBusqueda === 'marca') return coincideMarca;
-        
-        return false; // Por seguridad
+        return false; 
       });
     }
 
@@ -86,9 +88,14 @@ export class Aromas implements OnInit {
 
   abrirModal(perfume: PerfumeOlfativo) {
     this.perfumeSeleccionado = perfume;
+    this.imagenSeleccionada = perfume.imagenMostrar || 'assets/img/placeholder.png';
   }
 
   cerrarModal() {
     this.perfumeSeleccionado = null;
+  }
+
+  cambiarImagen(url: string | undefined | null) {
+    if (url) this.imagenSeleccionada = url;
   }
 }
