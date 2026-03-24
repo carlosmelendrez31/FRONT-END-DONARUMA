@@ -66,32 +66,62 @@
                 <label>Marca *</label>
                 <input type="text" [(ngModel)]="nuevoPerfume.marca" name="marca" required>
               </div>
+
               <div class="control-row">
                 <div class="control">
-                  <label>Precio ($)</label>
-                  <input type="number" [(ngModel)]="nuevoPerfume.precio" name="precio" required>
+                  <label>Precio ($) *</label>
+                  <input type="number" [(ngModel)]="nuevoPerfume.precio" name="precio" min="1" required>
                 </div>
-                 <div class="control">
-                <label>Genero</label>
-                <textarea [(ngModel)]="nuevoPerfume.genero" name="genero" rows="1"></textarea>
+
+                <div class="control custom-dropdown-container">
+                  <label>Género *</label>
+                  <div class="custom-dropdown" (click)="toggleDropdownGenero()">
+                    {{ nuevoPerfume.genero || 'Seleccionar...' }}
+                    <span class="arrow">▼</span>
+                  </div>
+                  <div class="dropdown-list" *ngIf="dropdownGeneroAbierto">
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.genero === 'Hombre'"
+                      (click)="seleccionarGenero('Hombre')">Hombre</div>
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.genero === 'Mujer'"
+                      (click)="seleccionarGenero('Mujer')">Mujer</div>
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.genero === 'Unisex'"
+                      (click)="seleccionarGenero('Unisex')">Unisex</div>
+                  </div>
+                </div>
               </div>
+
+              <div class="control-row">
                 <div class="control">
-                  <label>Stock</label>
-                  <input type="number" [(ngModel)]="nuevoPerfume.stock" name="stock" required>
+                  <label>Stock (pz) *</label>
+                  <input type="number" [(ngModel)]="nuevoPerfume.stock" name="stock" min="1" required (input)="validarStock()">
+                </div>
+
+                <div class="control custom-dropdown-container">
+                  <label>Familia Olfativa (Selecciona hasta 3) *</label>
+                  <div class="custom-dropdown" (click)="toggleDropdownFamilia()">
+                    {{ familiasSeleccionadas.length > 0 ? familiasSeleccionadasNombres : 'Seleccionar familias...' }}
+                    <span class="arrow">▼</span>
+                  </div>
+                  <div class="dropdown-list multiple" *ngIf="dropdownFamiliaAbierto">
+                    <div class="dropdown-item" *ngFor="let fam of listaFamilias"
+                      [class.selected]="esFamiliaSeleccionada(fam.id)" (click)="toggleFamilia(fam)">
+                      {{ fam.nombre }}
+                      <span class="check" *ngIf="esFamiliaSeleccionada(fam.id)">✓</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+
               <div class="control">
                 <label>URL Imagen *</label>
                 <input type="text" [(ngModel)]="nuevoPerfume.imagen_Url" name="imagen_Url" required>
               </div>
               <div class="control">
                 <label>Descripción</label>
-                <textarea [(ngModel)]="nuevoPerfume.descripcion" name="descripcion" rows="2"></textarea>
+                <textarea [(ngModel)]="nuevoPerfume.descripcion" name="descripcion" rows="3"></textarea>
               </div>
-            </div>
-
-            <div class="preview-section">
-              <label>Previsualización</label>
+            </div> <div class="preview-section">
+              <label style="color: #d4af37; font-size: 0.85rem; margin-bottom: 5px; display: block;">Previsualización</label>
               <div class="image-box">
                 <img *ngIf="nuevoPerfume.imagen_Url" [src]="nuevoPerfume.imagen_Url" alt="Preview">
                 <div *ngIf="!nuevoPerfume.imagen_Url" class="no-img">Sin imagen</div>
@@ -115,19 +145,14 @@
                   <input type="range" [(ngModel)]="nuevoPerfume.aromatico" name="aromatico" min="0" max="100">
                 </div>
               </div>
-            </div>
-
-          </div>
-
-          <div class="modal-footer">
+            </div> </div> <div class="modal-footer">
             <button type="button" class="btn-cancel" (click)="cerrarModal()">❌ Cancelar</button>
             <button type="submit" class="btn-save">💾 Guardar Registro</button>
           </div>
         </form>
-      </div>
-    </div>
 
-    <div class="modal-backdrop-super" *ngIf="mostrarConfirmacionEliminar">
+      </div>
+    </div> <div class="modal-backdrop-super" *ngIf="mostrarConfirmacionEliminar">
       <div class="modal-confirm-center">
         <div class="confirm-icon-big">⚠️</div>
         <h3>¿Eliminar este perfume?</h3>

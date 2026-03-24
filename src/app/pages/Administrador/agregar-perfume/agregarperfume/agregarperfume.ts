@@ -15,15 +15,33 @@ export class Agregarperfume implements OnInit {
   listaPerfumes: any[] = [];
   textoBusqueda: string = '';
   mostrarModal: boolean = false;
-
   mostrarAlerta: boolean = false;
   mensajeAlerta: string = '';
   tipoAlerta: 'success' | 'error' | 'warning' = 'success';
+  
+  // --- VARIABLES PARA MENÚS DESPLEGABLES ---
+  dropdownGeneroAbierto: boolean = false;
+  dropdownFamiliaAbierto: boolean = false;
 
   mostrarConfirmacionEliminar: boolean = false;
   perfumeAEliminar: any = null;
 
   nuevoPerfume: any = this.limpiarDatos();
+
+  // --- VARIABLES DE FAMILIAS ACTUALIZADAS (CON IDs) ---
+  listaFamilias: any[] = [
+    { id: 1, nombre: '🍋 Cítricos' },
+    { id: 2, nombre: '🌹 Florales' }, // Usamos el 2 (puedes borrar el 3 en tu BD después)
+    { id: 4, nombre: '🌙 Orientales' },
+    { id: 5, nombre: '🍓 Frutales' },
+    { id: 6, nombre: '🍦 Gourmand' },
+    { id: 7, nombre: '🌿 Herbales' },
+    { id: 8, nombre: '🍃 Fougère' },
+    { id: 9, nombre: '🌊 Acuáticos' }
+  ];
+  
+  // 🔥 AHORA GUARDA OBJETOS COMPLETOS, NO SOLO STRINGS 🔥
+  familiasSeleccionadas: any[] = [];
 
   constructor(private perfumeService: PerfumeService) { }
 
@@ -36,6 +54,35 @@ export class Agregarperfume implements OnInit {
     this.tipoAlerta = tipo;
     this.mostrarAlerta = true;
     setTimeout(() => { this.mostrarAlerta = false; }, 3000);
+  }
+
+  // --- FUNCIÓN: VALIDAR STOCK (No dejar bajar de 1) ---
+  validarStock() {
+    if (this.nuevoPerfume.stock !== null && this.nuevoPerfume.stock < 1) {
+      this.nuevoPerfume.stock = 1;
+      this.lanzarAlerta('El stock mínimo debe ser 1', 'warning');
+    }
+  }
+
+  // --- NUEVAS FUNCIONES PARA MANEJAR LOS IDs DE LAS FAMILIAS ---
+  get familiasSeleccionadasNombres() {
+    return this.familiasSeleccionadas.map(f => f.nombre).join(', ');
+  }
+
+  esFamiliaSeleccionada(id: number) {
+    return this.familiasSeleccionadas.some(f => f.id === id);
+  }
+
+  // --- FUNCIÓN: SELECCIONAR FAMILIA ACTUALIZADA ---
+  toggleFamilia(familia: any) {
+    const index = this.familiasSeleccionadas.findIndex(f => f.id === familia.id);
+    if (index > -1) {
+      this.familiasSeleccionadas.splice(index, 1);
+    } else if (this.familiasSeleccionadas.length < 3) {
+      this.familiasSeleccionadas.push(familia);
+    } else {
+      this.lanzarAlerta('Máximo 3 familias permitidas', 'warning');
+    }
   }
 
   get perfumesFiltrados() {
@@ -51,7 +98,6 @@ export class Agregarperfume implements OnInit {
     this.perfumeService.obtenerTodos().subscribe({
       next: (datos: any[]) => {
         this.listaPerfumes = datos.map(p => {
-          // Ya que arreglamos el C#, ahora llegará limpio como p.nombre o p.Nombre
           return {
             idPerfume: p.idperfume || p.idPerfume || p.IdPerfume,
             nombre: p.nombre || p.Nombre, 
@@ -62,6 +108,8 @@ export class Agregarperfume implements OnInit {
             stock: p.stock || p.Stock,
             genero: p.genero || p.Genero,
             ocasion: p.ocasion || p.Ocasion,
+            // Asegurarse de recibir el arreglo de IDs de la base de datos
+            familiasOlfativasIds: p.familiasOlfativasIds || p.FamiliasOlfativasIds || [],
             intensidad: p.intensidad ?? 50,
             dulzor: p.dulzor ?? 50,
             duracion: p.duracion ?? 50,
@@ -90,6 +138,10 @@ export class Agregarperfume implements OnInit {
       Stock: this.nuevoPerfume.stock || 0,
       Genero: this.nuevoPerfume.genero || 'Hombre',
       Ocasion: this.nuevoPerfume.ocasion || 'Día',
+      
+      // 🔥 AQUÍ SE MANDAN LOS IDs AL BACK-END 🔥
+      FamiliasOlfativasIds: this.familiasSeleccionadas.map(f => f.id),
+      
       Intensidad: this.nuevoPerfume.intensidad,
       Dulzor: this.nuevoPerfume.dulzor,
       Duracion: this.nuevoPerfume.duracion,
@@ -119,6 +171,16 @@ export class Agregarperfume implements OnInit {
 
   editarPerfume(p: any) {
     this.nuevoPerfume = { ...p };
+    
+    // Encendemos los botoncitos leyendo los IDs que mandó el C#
+    const ids = p.familiasOlfativasIds || [];
+    
+    if (ids.length > 0) {
+      this.familiasSeleccionadas = this.listaFamilias.filter(f => ids.includes(f.id));
+    } else {
+      this.familiasSeleccionadas = [];
+    }
+
     this.mostrarModal = true;
   }
 
@@ -155,10 +217,29 @@ export class Agregarperfume implements OnInit {
   recargar() { this.cargarPerfumes(); this.cerrarModal(); }
 
   limpiarDatos() {
+    this.familiasSeleccionadas = []; 
+    
     return {
       nombre: '', marca: '', genero: 'Hombre', ocasion: 'Día',
       precio: null, stock: null, descripcion: '', imagen_Url: '',
       intensidad: 50, dulzor: 50, duracion: 50, aromatico: 50
     };
+  }
+
+  // --- FUNCIONES PARA ABRIR/CERRAR MENÚS ---
+  toggleDropdownGenero() { 
+    this.dropdownGeneroAbierto = !this.dropdownGeneroAbierto; 
+    this.dropdownFamiliaAbierto = false; 
+  }
+  
+  toggleDropdownFamilia() { 
+    this.dropdownFamiliaAbierto = !this.dropdownFamiliaAbierto; 
+    this.dropdownGeneroAbierto = false; 
+  }
+
+  // --- FUNCIÓN PARA SELECCIONAR GÉNERO ---
+  seleccionarGenero(genero: string) {
+    this.nuevoPerfume.genero = genero;
+    this.dropdownGeneroAbierto = false; 
   }
 }

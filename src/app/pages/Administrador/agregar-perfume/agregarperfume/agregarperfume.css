@@ -935,3 +935,111 @@
     width: 0%;
   }
 }
+/* --- ESTILOS DE LOS MENÚS DESPLEGABLES (DROPDOWNS) --- */
+.custom-dropdown-container {
+  position: relative;
+  user-select: none;
+}
+
+/* La caja principal que se ve cerrada */
+.custom-dropdown {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3); /* Borde dorado tenue */
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.custom-dropdown:hover {
+  border-color: #d4af37; /* Se ilumina al pasar el mouse */
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: #d4af37;
+}
+
+/* La cajita flotante con las opciones */
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #0d1b2a; /* Azul oscuro elegante */
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  margin-top: 5px;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Cada opción individual */
+.dropdown-item {
+  padding: 12px 15px;
+  color: #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* EL EFECTO DORADO CUANDO ESTÁ SELECCIONADO */
+.dropdown-item.selected {
+  background: rgba(212, 175, 55, 0.15); /* Fondo doradito transparente */
+  color: #d4af37;
+  font-weight: 600;
+  border-left: 4px solid #d4af37; /* Rayita dorada a la izquierda */
+}
+
+.check {
+  color: #d4af37;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+/* --- BLINDAJE PARA EL MODAL (Evita que la imagen se caiga) --- */
+.form-layout {
+  display: grid !important;
+  grid-template-columns: 1.3fr 1fr !important; /* Obliga a mantener 2 columnas fijas */
+  gap: 30px !important;
+  align-items: flex-start;
+}
+
+.modal-window {
+  max-height: 90vh; /* El modal nunca será más alto que tu pantalla */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-body {
+  overflow-y: auto; /* Agrega una barra de scroll si el contenido es muy largo */
+  padding-right: 15px;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #d4af37; /* Scroll dorado para que combine */
+  border-radius: 10px;
+}
