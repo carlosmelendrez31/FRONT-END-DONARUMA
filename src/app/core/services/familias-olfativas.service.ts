@@ -11,7 +11,7 @@ export class FamiliasOlfativas {
   private http = inject(HttpClient);
   
   //La URL de tu API en .NET que me pasaste
-private apiUrl = 'https://localhost:7030/api/FamiliaOlfativa/todos';
+private apiUrl = 'https://localhost:7030/api/Perfumes/todos';
 
   obtenerPerfumes(): Observable<any[]> {
     return this.http.get<PerfumeOlfativo[]>(this.apiUrl);  }

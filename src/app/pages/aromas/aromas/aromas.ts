@@ -24,6 +24,21 @@ export class Aromas implements OnInit {
   textoBusqueda: string = ''; 
   criterioBusqueda: string = 'nombre'; 
 
+  // --- NUEVO: Diccionario traductor de IDs a Nombres Reales ---
+  // Ajusta estos nombres según lo que signifiquen los IDs en tu tabla de Familias en la BD
+// --- Diccionario traductor de IDs a Nombres Reales ---
+  diccionarioFamilias: { [key: number]: string } = {
+    1: 'cítricos',
+    2: 'florales',
+    3: 'amaderados',
+    4: 'orientales',
+    5: 'frutales',
+    6: 'gourmand',
+    7: 'herbales',
+    8: 'fougère',
+    9: 'acuáticos'
+  };
+
   ngOnInit(): void {
     this.perfumesService.obtenerPerfumes().subscribe({
       next: (datosBackend) => {
@@ -34,20 +49,33 @@ export class Aromas implements OnInit {
           }
 
           let nombreFinal = perfume.nombre && perfume.nombre.trim() !== '' ? perfume.nombre : perfume.marca;
-          let familiasTexto = perfume.familiaOlfativa ? perfume.familiaOlfativa.toLowerCase() : 'sin familia';
+          
+          // --- MAGIA: Traducimos los números [1, 9, 8] a palabras ['cítricos', 'amaderados', 'acuáticos'] ---
+          let familiasArrayTraducidas: string[] = [];
+          let familiasTexto = 'sin familia';
+
+          if (perfume.familiasOlfativasIds && perfume.familiasOlfativasIds.length > 0) {
+            familiasArrayTraducidas = perfume.familiasOlfativasIds.map((id: number) => this.diccionarioFamilias[id] || `Familia ${id}`);
+            familiasTexto = familiasArrayTraducidas.join(', '); // Esto permite que los botones de filtro sigan funcionando
+          } else {
+            familiasArrayTraducidas = ['Sin Familia'];
+          }
 
           return {
             ...perfume,
             nombreMostrar: nombreFinal || 'Perfume Exclusivo',
             imagenMostrar: urlImagenFinal,
             img1: urlImagenFinal,
-            img2: null, // Si tu base de datos tiene segunda imagen, ponla aquí
-            aromatico: Math.floor(Math.random() * 100) + 1,
-            intensidad: Math.floor(Math.random() * 100) + 1,
-            dulzor: Math.floor(Math.random() * 100) + 1,
-            duracion: Math.floor(Math.random() * 100) + 1,
+            img2: null, 
+            
+            // --- CONEXIÓN REAL: Adiós a los Math.random() ---
+            aromatico: perfume.aromatico || 0,
+            intensidad: perfume.intensidad || 0,
+            dulzor: perfume.dulzor || 0,
+            duracion: perfume.duracion || 0,
+            
             familiaOlfativa: familiasTexto,
-            familiasArray: familiasTexto.split(',').map((f: string) => f.trim())
+            familiasArray: familiasArrayTraducidas
           };
         });
       },
