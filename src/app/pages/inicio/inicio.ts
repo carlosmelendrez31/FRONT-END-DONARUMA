@@ -21,6 +21,7 @@ export class Inicio implements OnInit, OnDestroy {
   ocasionActiva: string = '';
   criterioOrden: string = 'defecto';
 
+  
   // Modal Vista Rápida
   modalAbierto = false;
   imagenSeleccionada: string = '';
@@ -190,4 +191,22 @@ export class Inicio implements OnInit, OnDestroy {
   }
 
   cambiarImagen(url: string | undefined) { if (url) this.imagenSeleccionada = url; }
+
+
+  // 🔥 ESTO ES LO QUE LE FALTA A TU ARCHIVO 🔥
+  listaFamilias: any[] = [
+    { id: 1, nombre: 'Cítricos' },
+    { id: 2, nombre: 'Florales' },
+    { id: 4, nombre: 'Orientales' },
+    { id: 5, nombre: 'Frutales' },
+    { id: 6, nombre: 'Gourmand' },
+    { id: 7, nombre: 'Herbales' },
+    { id: 8, nombre: 'Fougère' },
+    { id: 9, nombre: 'Acuáticos' }
+  ];
+
+  getNombreFamilia(id: number): string {
+    const familia = this.listaFamilias.find(f => f.id === id);
+    return familia ? familia.nombre : '';
+  }
 }

@@ -1012,3 +1012,23 @@ body.modal-open {
 .btn-checkout:hover {
   background: white;
 }
+/* --- ESTILOS PARA LAS FAMILIAS OLFATIVAS EN LAS TARJETAS --- */
+.familias-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.badge-familia {
+  border: 1px solid #d4af37; /* Borde dorado */
+  color: #d4af37; /* Texto dorado */
+  background-color: transparent;
+  padding: 3px 10px;
+  border-radius: 15px; /* Bordes bien redondeados */
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}

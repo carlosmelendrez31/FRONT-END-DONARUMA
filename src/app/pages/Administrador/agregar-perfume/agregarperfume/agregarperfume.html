@@ -97,21 +97,34 @@
                 </div>
 
                 <div class="control custom-dropdown-container">
-                  <label>Familia Olfativa (Selecciona hasta 3) *</label>
-                  <div class="custom-dropdown" (click)="toggleDropdownFamilia()">
-                    {{ familiasSeleccionadas.length > 0 ? familiasSeleccionadasNombres : 'Seleccionar familias...' }}
+                  <label>Ocasión *</label>
+                  <div class="custom-dropdown" (click)="toggleDropdownOcasion()">
+                    {{ nuevoPerfume.ocasion || 'Seleccionar...' }}
                     <span class="arrow">▼</span>
                   </div>
-                  <div class="dropdown-list multiple" *ngIf="dropdownFamiliaAbierto">
-                    <div class="dropdown-item" *ngFor="let fam of listaFamilias"
-                      [class.selected]="esFamiliaSeleccionada(fam.id)" (click)="toggleFamilia(fam)">
-                      {{ fam.nombre }}
-                      <span class="check" *ngIf="esFamiliaSeleccionada(fam.id)">✓</span>
-                    </div>
+                  <div class="dropdown-list" *ngIf="dropdownOcasionAbierto">
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.ocasion === 'Día'" (click)="seleccionarOcasion('Día')">De Día</div>
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.ocasion === 'Noche'" (click)="seleccionarOcasion('Noche')">De Noche</div>
+                    <div class="dropdown-item" [class.selected]="nuevoPerfume.ocasion === 'Elegante'" (click)="seleccionarOcasion('Elegante')">Elegante</div>
                   </div>
                 </div>
               </div>
 
+              <div class="control custom-dropdown-container full-width">
+                <label>Familia Olfativa (Selecciona hasta 3) *</label>
+                <div class="custom-dropdown" (click)="toggleDropdownFamilia()">
+                  {{ familiasSeleccionadas.length > 0 ? familiasSeleccionadasNombres : 'Seleccionar familias...' }}
+                  <span class="arrow">▼</span>
+                </div>
+                <div class="dropdown-list multiple" *ngIf="dropdownFamiliaAbierto">
+                  <div class="dropdown-item" *ngFor="let fam of listaFamilias"
+                    [class.selected]="esFamiliaSeleccionada(fam.id)" (click)="toggleFamilia(fam)">
+                    {{ fam.nombre }}
+                    <span class="check" *ngIf="esFamiliaSeleccionada(fam.id)">✓</span>
+                  </div>
+                </div>
+              </div>
+              
               <div class="control">
                 <label>URL Imagen *</label>
                 <input type="text" [(ngModel)]="nuevoPerfume.imagen_Url" name="imagen_Url" required>

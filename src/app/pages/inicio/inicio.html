@@ -64,7 +64,6 @@
       </li>
     </ul>
 
-
     <h3 style="margin-top: 25px;">Ocasión</h3>
     <ul>
       <li (click)="toggleOcasion('Día')" [class.activo]="ocasionActiva === 'Día'">
@@ -114,6 +113,13 @@
         <div class="info-box">
           <span class="brand-name">{{p.marca}}</span>
           <h3 class="product-name">{{p.nombre}}</h3>
+
+          <div class="familias-container" *ngIf="p.familiasOlfativasIds && p.familiasOlfativasIds.length > 0">
+            <span class="badge-familia" *ngFor="let idFam of p.familiasOlfativasIds">
+              {{ getNombreFamilia(idFam) }}
+            </span>
+          </div>
+
           <div class="estrellas">⭐⭐⭐⭐⭐ <span class="rating-text">{{p.rating}} ({{p.reviews}})</span></div>
           <p class="price-text">${{p.precio}}</p>
           <button class="btn-agregar-rapido" (click)="agregarAlCarrito(p)">+ Agregar</button>
@@ -226,10 +232,21 @@
             </div>
           </div>
         </div>
+
         <div class="detalles-rapidos">
           <p><strong>Género:</strong> {{productoSeleccionado.genero}}</p>
+          <p><strong>Ocasión:</strong> {{productoSeleccionado.ocasion}}</p>
           <p><strong>Stock:</strong> <span class="stock-badge">{{productoSeleccionado.stock}} disponibles</span></p>
         </div>
+        
+        <div class="familias-container" style="justify-content: flex-start; margin-top: 15px;"
+          *ngIf="productoSeleccionado.familiasOlfativasIds && productoSeleccionado.familiasOlfativasIds.length > 0">
+          <span style="color: #8892b0; font-size: 0.9rem; margin-right: 10px;"><strong>Familias:</strong></span>
+          <span class="badge-familia" *ngFor="let idFam of productoSeleccionado.familiasOlfativasIds">
+            {{ getNombreFamilia(idFam) }}
+          </span>
+        </div>
+
         <div class="modal-bottom">
           <p class="precio-modal">${{productoSeleccionado.precio}}</p>
           <div class="acciones-modal">
@@ -237,6 +254,7 @@
             <button class="btn-favorito" (click)="agregarFavorito(productoSeleccionado)">❤</button>
           </div>
         </div>
+
       </div>
     </div>
   </div>

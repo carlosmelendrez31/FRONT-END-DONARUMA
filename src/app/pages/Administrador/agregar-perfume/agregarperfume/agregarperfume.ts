@@ -22,6 +22,7 @@ export class Agregarperfume implements OnInit {
   // --- VARIABLES PARA MENÚS DESPLEGABLES ---
   dropdownGeneroAbierto: boolean = false;
   dropdownFamiliaAbierto: boolean = false;
+  dropdownOcasionAbierto: boolean = false;
 
   mostrarConfirmacionEliminar: boolean = false;
   perfumeAEliminar: any = null;
@@ -230,16 +231,27 @@ export class Agregarperfume implements OnInit {
   toggleDropdownGenero() { 
     this.dropdownGeneroAbierto = !this.dropdownGeneroAbierto; 
     this.dropdownFamiliaAbierto = false; 
+    this.dropdownOcasionAbierto = false;
   }
   
   toggleDropdownFamilia() { 
     this.dropdownFamiliaAbierto = !this.dropdownFamiliaAbierto; 
     this.dropdownGeneroAbierto = false; 
+    this.dropdownOcasionAbierto = false;
+  }
+  toggleDropdownOcasion() { 
+    this.dropdownOcasionAbierto = !this.dropdownOcasionAbierto; 
+    this.dropdownGeneroAbierto = false; 
+    this.dropdownFamiliaAbierto = false;
   }
 
   // --- FUNCIÓN PARA SELECCIONAR GÉNERO ---
   seleccionarGenero(genero: string) {
     this.nuevoPerfume.genero = genero;
     this.dropdownGeneroAbierto = false; 
+  }
+  seleccionarOcasion(ocasion: string) {
+    this.nuevoPerfume.ocasion = ocasion;
+    this.dropdownOcasionAbierto = false; 
   }
 }
