@@ -65,8 +65,10 @@
 }
 
 .table-wrapper {
-  max-height: 450px;
-  overflow-y: auto;
+  max-height: none; 
+  height: auto;
+  overflow-y: visible;
+  overflow-x: auto;
 }
 
 .custom-table {
@@ -1042,4 +1044,64 @@
 .modal-body::-webkit-scrollbar-thumb {
   background: #d4af37; /* Scroll dorado para que combine */
   border-radius: 10px;
+}
+/* --- ESTILOS DE PAGINACIÓN --- */
+.paginacion-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.btn-pag {
+  background-color: transparent;
+  color: #d4af37; /* Dorado */
+  border: 1px solid #d4af37;
+  padding: 5px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-pag:hover:not(:disabled) {
+  background-color: #d4af37;
+  color: #0b132b; /* Azul oscuro */
+}
+
+.btn-pag:disabled {
+  color: #555;
+  border-color: #555;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.numeros-paginacion {
+  display: flex;
+  gap: 8px;
+}
+
+.num-pag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #1c2541; /* Color de tus tarjetas */
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.num-pag:hover {
+  background-color: #3a506b;
+}
+
+.num-pag.activa {
+  background-color: #d4af37;
+  color: #0b132b;
 }

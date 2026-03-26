@@ -32,7 +32,7 @@ export class Agregarperfume implements OnInit {
   // --- VARIABLES DE FAMILIAS ACTUALIZADAS (CON IDs) ---
   listaFamilias: any[] = [
     { id: 1, nombre: '🍋 Cítricos' },
-    { id: 2, nombre: '🌹 Florales' }, // Usamos el 2 (puedes borrar el 3 en tu BD después)
+    { id: 2, nombre: '🌹 Florales' }, 
     { id: 4, nombre: '🌙 Orientales' },
     { id: 5, nombre: '🍓 Frutales' },
     { id: 6, nombre: '🍦 Gourmand' },
@@ -45,6 +45,10 @@ export class Agregarperfume implements OnInit {
   familiasSeleccionadas: any[] = [];
 
   constructor(private perfumeService: PerfumeService) { }
+
+  // --- Variable de la Paginación ---
+  paginaActual: number = 1;
+  itemsPorPagina: number = 7;
 
   ngOnInit(): void {
     this.cargarPerfumes();
@@ -93,6 +97,32 @@ export class Agregarperfume implements OnInit {
       const marca = (p.marca || p.Marca || '').toLowerCase();
       return nombre.includes(this.textoBusqueda.toLowerCase()) || marca.includes(this.textoBusqueda.toLowerCase());
     });
+  }
+
+
+  // --- Logica de paginacion 
+  get perfumesPaginados() {
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    const fin = inicio + this.itemsPorPagina;
+    return this.perfumesFiltrados.slice(inicio, fin);
+  }
+
+  get totalPaginas() {
+    return Math.ceil(this.perfumesFiltrados.length / this.itemsPorPagina);
+  }
+
+  get arregloPaginas() {
+    const arr = [];
+    for (let i = 1; i <= this.totalPaginas; i++) {
+      arr.push(i);
+    }
+    return arr;
+  }
+
+  cambiarPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+    }
   }
 
   cargarPerfumes() {
