@@ -4,9 +4,10 @@
     <div class="linea-dorada"></div>
   </div>
   
-  <div class="filtros-container">
+<div class="filtros-container">
     <button (click)="filtrar('cítricos')" [class.active]="filtroSeleccionado === 'cítricos'" class="btn-f">🍋 Cítricos</button>
     <button (click)="filtrar('florales')" [class.active]="filtroSeleccionado === 'florales'" class="btn-f">🌹 Florales</button>
+    <button (click)="filtrar('amaderados')" [class.active]="filtroSeleccionado === 'amaderados'" class="btn-f">🪵 Amaderados</button>
     <button (click)="filtrar('orientales')" [class.active]="filtroSeleccionado === 'orientales'" class="btn-f">🌙 Orientales</button>
     <button (click)="filtrar('frutales')" [class.active]="filtroSeleccionado === 'frutales'" class="btn-f">🍓 Frutales</button>
     <button (click)="filtrar('gourmand')" [class.active]="filtroSeleccionado === 'gourmand'" class="btn-f">🍦 Gourmand</button>
@@ -42,7 +43,9 @@
       <div class="producto-card" *ngFor="let p of productosAMostrar" [ngClass]="{'borde-hombre': (p.genero | lowercase) === 'hombre', 'borde-mujer': (p.genero | lowercase) === 'mujer', 'borde-unisex': (p.genero | lowercase) === 'unisex' || !(p.genero)}">
         <div class="img-box">
           <img [src]="p.imagenMostrar" [alt]="p.nombreMostrar" class="main-img">
-          <div class="badge-agotado" *ngIf="p.stock === 0">AGOTADO</div>
+          
+          <div class="badge-agotado" *ngIf="(p.stock || 0) === 0">AGOTADO</div>
+          
           <div class="hover-actions">
             <button class="btn-quickview" (click)="abrirModal(p)">Vista Rápida</button>
           </div>
@@ -80,22 +83,22 @@
           <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
           <p class="modal-description-full">{{ perfumeSeleccionado.descripcion || 'Una fragancia única inspirada en la esencia del desierto.' }}</p>
 
-          <div class="estadisticas-aroma-panel">
+<div class="estadisticas-aroma-panel">
             <div class="stat-row">
               <span class="stat-label">Aromático</span>
-              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.aromatico || 50"></div></div>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.aromatico"></div></div>
             </div>
             <div class="stat-row">
               <span class="stat-label">Intensidad</span>
-              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.intensidad || 50"></div></div>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.intensidad"></div></div>
             </div>
             <div class="stat-row">
               <span class="stat-label">Dulce</span>
-              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.dulzor || 50"></div></div>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.dulzor"></div></div>
             </div>
             <div class="stat-row">
               <span class="stat-label">Duración</span>
-              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.duracion || 50"></div></div>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.duracion"></div></div>
             </div>
           </div>
 
@@ -113,7 +116,7 @@
             <div class="detalle-item stock-pastilla">
               <strong class="gold">Stock:</strong><br>
               <span class="badge-stock">
-                {{ perfumeSeleccionado.stock > 0 ? perfumeSeleccionado.stock : 'Agotado' }} disponibles
+                {{ (perfumeSeleccionado.stock || 0) > 0 ? perfumeSeleccionado.stock : 'Agotado' }} disponibles
               </span>
             </div>
           </div>
