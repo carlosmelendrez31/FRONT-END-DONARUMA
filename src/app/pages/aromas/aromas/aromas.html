@@ -4,7 +4,9 @@
     <div class="linea-dorada"></div>
   </div>
   
-<div class="filtros-container">
+  <div class="filtros-container">
+    <button (click)="filtrar('Todos')" [class.active]="filtroSeleccionado === 'Todos'" class="btn-f">✨ Todos</button>
+    
     <button (click)="filtrar('cítricos')" [class.active]="filtroSeleccionado === 'cítricos'" class="btn-f">🍋 Cítricos</button>
     <button (click)="filtrar('florales')" [class.active]="filtroSeleccionado === 'florales'" class="btn-f">🌹 Florales</button>
     <button (click)="filtrar('amaderados')" [class.active]="filtroSeleccionado === 'amaderados'" class="btn-f">🪵 Amaderados</button>
@@ -17,11 +19,8 @@
   </div>
 
   <div class="resultados-section">
-    <div *ngIf="filtroSeleccionado === ''" class="mensaje-espera">
-      <p>Selecciona una familia olfativa para explorar nuestra colección exclusiva.</p>
-    </div>
-
-    <div class="buscador-container" *ngIf="filtroSeleccionado !== ''">
+    
+    <div class="buscador-container">
       <div class="buscador-wrapper">
         <select [(ngModel)]="criterioBusqueda" (change)="aplicarFiltros()" class="select-criterio">
           <option value="nombre">Nombre</option>
@@ -34,7 +33,7 @@
       </div>
     </div>
 
-    <div *ngIf="filtroSeleccionado !== '' && productosAMostrar.length === 0" class="mensaje-espera">
+    <div *ngIf="productosAMostrar.length === 0" class="mensaje-espera">
       <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">🍂</div>
       <p>No encontramos fragancias que coincidan con tu búsqueda.</p>
     </div>
@@ -83,7 +82,7 @@
           <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
           <p class="modal-description-full">{{ perfumeSeleccionado.descripcion || 'Una fragancia única inspirada en la esencia del desierto.' }}</p>
 
-<div class="estadisticas-aroma-panel">
+          <div class="estadisticas-aroma-panel">
             <div class="stat-row">
               <span class="stat-label">Aromático</span>
               <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.aromatico"></div></div>

@@ -16,7 +16,9 @@ export class Aromas implements OnInit {
 
   todosLosPerfumes: PerfumeOlfativo[] = [];
   productosAMostrar: PerfumeOlfativo[] = [];
-  filtroSeleccionado: string = '';
+  
+  // 🌟 CAMBIO 1: Iniciamos con el filtro en "Todos" en lugar de vacío
+  filtroSeleccionado: string = 'Todos'; 
   
   perfumeSeleccionado: PerfumeOlfativo | null = null;
   imagenSeleccionada: string = '';
@@ -24,9 +26,6 @@ export class Aromas implements OnInit {
   textoBusqueda: string = ''; 
   criterioBusqueda: string = 'nombre'; 
 
-  // --- NUEVO: Diccionario traductor de IDs a Nombres Reales ---
-  // Ajusta estos nombres según lo que signifiquen los IDs en tu tabla de Familias en la BD
-// --- Diccionario traductor de IDs a Nombres Reales ---
   diccionarioFamilias: { [key: number]: string } = {
     1: 'cítricos',
     2: 'florales',
@@ -45,18 +44,18 @@ export class Aromas implements OnInit {
         this.todosLosPerfumes = datosBackend.map(perfume => {
           let urlImagenFinal = perfume.imagen_Url;
           if (!urlImagenFinal || urlImagenFinal === 'string' || urlImagenFinal === 'null' || urlImagenFinal.trim() === '') {
-            urlImagenFinal = 'https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=600&auto=format&fit=crop';
+            // MONOGRAMA DE LA MARCA (Fondo azul oscuro, letra D dorada)
+            urlImagenFinal = 'https://placehold.co/600x600/0f172a/d4af37/png?text=DUNAROMA';
           }
 
           let nombreFinal = perfume.nombre && perfume.nombre.trim() !== '' ? perfume.nombre : perfume.marca;
           
-          // --- MAGIA: Traducimos los números [1, 9, 8] a palabras ['cítricos', 'amaderados', 'acuáticos'] ---
           let familiasArrayTraducidas: string[] = [];
           let familiasTexto = 'sin familia';
 
           if (perfume.familiasOlfativasIds && perfume.familiasOlfativasIds.length > 0) {
             familiasArrayTraducidas = perfume.familiasOlfativasIds.map((id: number) => this.diccionarioFamilias[id] || `Familia ${id}`);
-            familiasTexto = familiasArrayTraducidas.join(', '); // Esto permite que los botones de filtro sigan funcionando
+            familiasTexto = familiasArrayTraducidas.join(', ');
           } else {
             familiasArrayTraducidas = ['Sin Familia'];
           }
@@ -67,17 +66,17 @@ export class Aromas implements OnInit {
             imagenMostrar: urlImagenFinal,
             img1: urlImagenFinal,
             img2: null, 
-            
-            // --- CONEXIÓN REAL: Adiós a los Math.random() ---
             aromatico: perfume.aromatico || 0,
             intensidad: perfume.intensidad || 0,
             dulzor: perfume.dulzor || 0,
             duracion: perfume.duracion || 0,
-            
             familiaOlfativa: familiasTexto,
             familiasArray: familiasArrayTraducidas
           };
         });
+
+        // 🌟 CAMBIO 2: Llenamos la pantalla en cuanto termina de cargar la API
+        this.aplicarFiltros(); 
       },
       error: (error) => {
         console.error('Error al conectar con la API de .NET:', error);
@@ -90,16 +89,18 @@ export class Aromas implements OnInit {
     this.aplicarFiltros(); 
   }
 
+  // 🌟 CAMBIO 3: Lógica ajustada para que "Todos" muestre el catálogo completo
   aplicarFiltros() {
-    if (this.filtroSeleccionado === '') {
-      this.productosAMostrar = []; 
-      return;
+    let filtrados = this.todosLosPerfumes;
+
+    // Solo filtramos si seleccionó algo distinto a "Todos"
+    if (this.filtroSeleccionado !== 'Todos') {
+      filtrados = filtrados.filter(p => 
+        p.familiasArray && p.familiasArray.includes(this.filtroSeleccionado)
+      );
     }
 
-    let filtrados = this.todosLosPerfumes.filter(p => 
-      p.familiaOlfativa && p.familiaOlfativa.includes(this.filtroSeleccionado)
-    );
-
+    // Filtro del buscador
     if (this.textoBusqueda.trim() !== '') {
       const texto = this.textoBusqueda.toLowerCase().trim();
       filtrados = filtrados.filter(p => {
