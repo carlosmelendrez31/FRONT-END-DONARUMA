@@ -183,7 +183,7 @@
   </div>
   <div class="carrito-footer" *ngIf="carrito.length > 0">
     <div class="total-fila"><span>Total:</span><strong>${{calcularTotalCarrito()}}</strong></div>
-    <button class="btn-checkout">Finalizar Compra</button>
+    <button class="btn-checkout" (click)="irAlCarrito()">Finalizar Compra</button>
   </div>
 </div>
 

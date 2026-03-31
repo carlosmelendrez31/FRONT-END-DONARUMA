@@ -3,6 +3,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PerfumeService } from '../../core/services/perfume';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { CarritoService } from '../../core/services/carrito.service';
 
 @Component({
   selector: 'app-inicio',
@@ -47,7 +49,9 @@ export class Inicio implements OnInit, OnDestroy {
   constructor(
     private perfumeService: PerfumeService, 
     private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private carritoService: CarritoService
   ) { }
 
   ngOnInit(): void {
@@ -166,6 +170,13 @@ export class Inicio implements OnInit, OnDestroy {
   eliminarDelCarrito(index: number) { this.carrito.splice(index, 1); }
   calcularTotalCarrito(): number { return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); }
   toggleCarrito() { this.carritoAbierto = !this.carritoAbierto; }
+
+  irAlCarrito() {
+    this.carritoService.setCarrito(this.carrito);
+    this.carritoAbierto = false; // Close the overlay
+    document.body.classList.remove('modal-open'); // Just in case
+    this.router.navigate(['/carrito']);
+  }
 
   lanzarNotificacion(mensaje: string) {
     this.notificaciones.push(mensaje);

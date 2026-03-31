@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { loadStripe } from '@stripe/stripe-js';
 import { CarritoService } from '../../core/services/carrito.service'; 
@@ -10,15 +10,19 @@ import { CarritoService } from '../../core/services/carrito.service';
   templateUrl: './carrito.html',
   styleUrl: './carrito.css'
 })
-export class Carrito {
+export class Carrito implements OnInit {
 
-  // Un carrito de prueba simulado para ver que funcione
-  listaCarrito = [
-    { nombre: 'Valentino Born In Roma', precio: 600.00, cantidad: 1 },
-    { nombre: 'Hugo Boss', precio: 320.00, cantidad: 2 }
-  ];
+  listaCarrito: any[] = [];
 
   constructor(private carritoService: CarritoService) {}
+
+  ngOnInit() {
+    const fromService = this.carritoService.getCarrito();
+    // Si hay datos en el servicio, los usamos. Si no, podemos dejarlo vacío o usar los de prueba por si recargan la página directamente.
+    if (fromService && fromService.length > 0) {
+      this.listaCarrito = fromService;
+    }
+  }
 
   pagarConStripe() {
     // Ya no necesitamos cargar la llave pública aquí, el backend hace todo el trabajo pesado
