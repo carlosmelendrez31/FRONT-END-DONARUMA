@@ -1,0 +1,13 @@
+[33m❯[39m Building...
+[32m✔[39m Building...
+[1mInitial chunk files[22m  [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mmain-DUEWNUO5.js[39m     [2m | [22m[2mmain[22m         [2m | [22m[36m408.31 kB[39m[2m | [22m               [36m97.44 kB[39m
+[32mpolyfills-5CFQRCPP.js[39m[2m | [22m[2mpolyfills[22m    [2m | [22m [36m34.59 kB[39m[2m | [22m               [36m11.33 kB[39m
+[32mstyles-EC774HHA.css[39m  [2m | [22m[2mstyles[22m       [2m | [22m[36m258 bytes[39m[2m | [22m              [36m258 bytes[39m
+
+[1m [22m                    [2m | [22m[1mInitial total[22m[2m | [22m[1m443.15 kB[22m[2m | [22m              [1m109.03 kB[22m
+
+Application bundle generation complete. [6.217 seconds] - 2026-03-27T06:23:48.688Z
+
+Output location: C:\Users\carlo\OneDrive\Desktop\FRONT-DUNAROMA\dist\Frontend-Donaruma
+
