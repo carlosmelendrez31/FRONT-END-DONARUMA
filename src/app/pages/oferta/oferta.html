@@ -1,0 +1,144 @@
+<div class="dev-panel">
+  <span class="dev-title">⚙️ Control del Reloj:</span>
+    <input type="number" min="0" #inputDias placeholder="Días" value="0"> :
+    <input type="number" min="0" #inputHoras placeholder="Hrs" value="0"> :
+    <input type="number" min="0" #inputMins placeholder="Min" value="0"> :
+    <input type="number" min="0" #inputSegs placeholder="Seg" value="10">
+    <button class="dev-btn" (click)="setReloj(inputDias.value, inputHoras.value, inputMins.value, inputSegs.value)">
+    Aplicar Tiempo
+  </button>
+</div>
+
+<section class="ofertas-wrapper">
+  
+  <div class="hero-ofertas">
+    <div class="hero-content">
+    <span class="etiqueta-hero">Privilegios Dunaroma</span>
+      <h1 class="titulo-exclusivo">Venta Privada</h1>
+      <p class="subtitulo-hero">Una selección extraordinaria de nuestras fragancias más codiciadas a precios irrepetibles.</p>
+      <p class="subtitulo-hero">El tiempo para hacerlas tuyas termina en:</p>
+      
+      <div class="reloj-container">
+        <div class="tiempo-box"><span class="numero">{{ dias | number:'2.0' }}</span><span class="etiqueta">DÍAS</span></div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ horas | number:'2.0' }}</span><span class="etiqueta">HRS</span></div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ minutos | number:'2.0' }}</span><span class="etiqueta">MIN</span></div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ segundos | number:'2.0' }}</span><span class="etiqueta">SEG</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contenedor-catalogo">
+    
+    <ng-container *ngIf="!ofertaFinalizada; else mensajeCierre">
+      <div class="productos-grid" *ngIf="productosEnOferta.length > 0">
+        <div class="producto-card" *ngFor="let p of productosEnOferta" 
+             [class.tarjeta-agotada]="(p.stock || 0) === 0"
+             [ngClass]="{'borde-hombre': (p.genero | lowercase) === 'hombre', 'borde-mujer': (p.genero | lowercase) === 'mujer', 'borde-unisex': (p.genero | lowercase) === 'unisex' || !(p.genero)}">
+          
+          <div class="img-box">
+            <img [src]="p.imagenMostrar" [alt]="p.nombreMostrar" class="main-img">
+            
+            <div class="badge-privilege">PRIVILEGE -20%</div>
+            <div class="badge-agotado" *ngIf="(p.stock || 0) === 0">AGOTADO</div>
+            
+            <div class="hover-actions">
+              <button class="btn-quickview" (click)="abrirModal(p)">Ver oferta</button>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="brand-name">{{p.marca}}</span>
+            <h3 class="product-name">{{p.nombreMostrar}}</h3>
+            
+            <div class="familias-pill-container" style="justify-content: center; margin-bottom: 10px;">
+              <span class="badge-gold-light" *ngFor="let fam of p.familiasArray">{{ fam | titlecase }}</span>
+            </div>
+            <div class="estrellas">⭐⭐⭐⭐⭐</div>
+            
+            <div class="precios-wrapper">
+              <span class="precio-viejo">${{ p.precioOriginal }}</span>
+              <span class="precio-nuevo">${{ p.precioOferta | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #mensajeCierre>
+      <div class="mensaje-finalizado-wrapper">
+        <div class="icono-finalizado">⏳</div>
+        <h2 class="titulo-finalizado">Acceso Concluido</h2>
+        <p class="subtitulo-finalizado">Esta selección exclusiva ha finalizado. Regresa pronto para descubrir nuevos privilegios de Dunaroma.</p>
+        <a routerLink="/aromas" class="btn-regresar">Explorar Catálogo Completo</a>
+      </div>
+    </ng-template>
+
+  </div>
+</section>
+
+//seccion del modal
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <div class="modal-content modal-oferta" (click)="$event.stopPropagation()">
+    <button class="btn-close" (click)="cerrarModal()">×</button>
+
+    <div class="modal-body-premium">
+      
+      <div class="modal-left">
+        <div class="modal-img-wrapper">
+            <img [src]="perfumeSeleccionado.imagenMostrar" class="img-modal-api" [class.imagen-blanco-negro]="(perfumeSeleccionado.stock || 0) === 0">
+            <div class="badge-privilege large-badge">PRIVILEGE -20%</div>
+        </div>
+      </div>
+
+      <div class="modal-right">
+        <span class="modal-brand-label">{{ perfumeSeleccionado.marca }}</span>
+        <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
+        
+        <div class="modal-precio-destacado">
+          <span class="precio-viejo-modal">${{ perfumeSeleccionado.precioOriginal }}</span>
+          <span class="precio-nuevo-modal">${{ perfumeSeleccionado.precioOferta | number:'1.0-0' }}</span>
+        </div>
+
+        <div class="alerta-stock" *ngIf="(perfumeSeleccionado.stock || 0) > 0"
+             [ngClass]="{
+               'stock-bajo': perfumeSeleccionado.stock <= 5,
+               'stock-medio': perfumeSeleccionado.stock > 5 && perfumeSeleccionado.stock <= 15,
+               'stock-alto': perfumeSeleccionado.stock > 15
+             }">
+
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock <= 5">
+            🔥 Alta demanda: <strong>Solo quedan {{ perfumeSeleccionado.stock }} unidades</strong>
+          </p>
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock > 5 && perfumeSeleccionado.stock <= 15">
+            ⚡ Últimas piezas: <strong>Quedan {{ perfumeSeleccionado.stock }} unidades</strong>
+          </p>
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock > 15">
+            ✨ Disponible: <strong>{{ perfumeSeleccionado.stock }} unidades listas para envío</strong>
+          </p>
+
+          <div class="barra-escasez">
+            <div class="barra-llena" [style.width.%]="perfumeSeleccionado.stock * 4"></div>
+          </div>
+        </div>
+
+        <div class="alerta-agotado-modal" *ngIf="(perfumeSeleccionado.stock || 0) === 0">
+          Esta fragancia se ha agotado por completo durante la Venta Privada.
+        </div>
+
+        <button class="btn-agregar-carrito" [disabled]="(perfumeSeleccionado.stock || 0) === 0">
+          {{ (perfumeSeleccionado.stock || 0) > 0 ? 'Añadir al carrito' : 'Oferta Agotada' }}
+        </button>
+
+        <div class="condiciones-venta">
+          <p>✨ Envío de cortesía incluido en esta pieza.</p>
+          <p>🔒 Venta final exclusiva. No aplican devoluciones.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
