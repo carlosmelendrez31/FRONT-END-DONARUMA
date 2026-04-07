@@ -1,21 +1,29 @@
 export interface PerfumeOlfativo {
-  idPerfume: number;
-  nombre: string;
-  marca: string;
-  genero: string;
-  ocasion: string;
-  esDeNoche: boolean; // Este venía en tu API de .NET
-  precio: number;
-  descripcion: string;
-  imagen_Url: string;
-  stock: number;
-  
-  // Agregamos el signo de interrogación (?) porque estos 3 los creamos 
-  // nosotros en Angular y no vienen directamente de la base de datos
-  nombreMostrar?: string;
-  imagenMostrar?: string;
-  familiaOlfativa?: string;
+  // Datos base de tu API
+  idPerfume?: number;
+  nombre?: string;
+  marca?: string;
+  precio?: number;
+  descripcion?: string;
+  imagen_Url?: string;
+  ocasion?: string;
+  genero?: string;
+  stock?: number;
 
-  // ¡Agregamos esta nueva!
+  // Las estadísticas de tu nueva API
+  intensidad?: number;
+  dulzor?: number;
+  duracion?: number;
+  aromatico?: number;
+
+  // El arreglo de números que manda la nueva API para las familias
+  familiasOlfativasIds?: number[];
+
+  // Variables extra calculadas que usa nuestro diseño visual (Front-end)
+  imagenMostrar?: string;
+  nombreMostrar?: string;
   familiasArray?: string[];
+  familiaOlfativa?: string;
+  img1?: string;
+  img2?: string;
 }
