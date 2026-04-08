@@ -1,1 +1,134 @@
-<p>agregardescuento works!</p>
+<div class="admin-dashboard">
+  
+  <div class="admin-header-flex">
+    <div>
+      <h1>Venta Privada</h1>
+      <p>Administración exclusiva de ofertas Dunaroma</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-outline-gold" (click)="abrirModalReloj()">Ajustar Reloj</button>
+      <button class="btn-success" (click)="abrirModalOferta()">+ Nueva Oferta</button>
+    </div>
+  </div>
+
+  <div class="admin-card full-width-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Perfume</th>
+          <th>Precio Original</th>
+          <th>Descuento</th>
+          <th>Precio Privilegio</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="ofertasActivas.length === 0">
+          <td colspan="6" class="text-center empty-state">No hay perfumes en oferta actualmente.</td>
+        </tr>
+        <tr *ngFor="let oferta of ofertasActivas" [class.inactivo]="!oferta.activo">
+          <td>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img *ngIf="oferta.perfume?.imagen_Url" [src]="oferta.perfume.imagen_Url" class="img-thumbnail">
+              <div class="perfume-info">
+                <strong>{{ oferta.perfume?.nombre }}</strong>
+                <small>{{ oferta.perfume?.marca }}</small>
+              </div>
+            </div>
+          </td>
+          <td class="strike-price">${{ oferta.perfume?.precio }}</td>
+          <td><span class="badge-descuento">-{{ oferta.descuento }}%</span></td>
+          <td class="gold-price">${{ oferta.precioOferta | number:'1.0-0' }}</td>
+          <td>
+            <span class="status-indicator" [class.online]="oferta.activo" [class.offline]="!oferta.activo">
+              {{ oferta.activo ? 'Publicado' : 'Oculto' }}
+            </span>
+          </td>
+          
+          <td style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+            <button class="btn-toggle" [class.btn-danger]="oferta.activo" [class.btn-activate]="!oferta.activo" (click)="toggleEstadoOferta(oferta)">
+              {{ oferta.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+            
+            <button class="btn-edit-icon" (click)="editarOferta(oferta)" title="Editar descuento">
+              ✏️
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalOfertaAbierto" (click)="cerrarModalOferta()">
+  <div class="modal-content glass-modal" (click)="$event.stopPropagation()">
+    <button class="btn-close" (click)="cerrarModalOferta()">×</button>
+    
+    <div class="modal-header">
+      <h3>{{ modoEdicion ? '✏️ Editar Descuento' : '🏷️ Agregar Perfume a la Oferta' }}</h3>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Seleccionar Perfume</label>
+        <select [(ngModel)]="perfumeSeleccionado" (change)="validarYCalcular($event)" class="admin-input" [disabled]="modoEdicion">
+          <option [ngValue]="null">-- Elige un perfume del inventario --</option>
+          <option *ngFor="let p of perfumesInventario" [ngValue]="p">
+            {{ p.marca }} - {{ p.nombre }} (${{ p.precio }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row" *ngIf="perfumeSeleccionado">
+        <div class="form-group half">
+          <label>Descuento (%)</label>
+          <input type="number" min="1" max="100" [ngModel]="porcentajeDescuento" (input)="validarYCalcular($event)" class="admin-input">
+        </div>
+        <div class="form-group half">
+          <label>Precio Final Privilegio</label>
+          <div class="precio-calculado-box">
+            ${{ precioCalculado | number:'1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="cerrarModalOferta()">Cancelar</button>
+      <button class="btn-success" [disabled]="!perfumeSeleccionado || porcentajeDescuento <= 0" (click)="agregarOferta()">
+        {{ modoEdicion ? 'Guardar Cambios' : 'Guardar Oferta' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalRelojAbierto" (click)="cerrarModalReloj()">
+  <div class="modal-content glass-modal small-modal" (click)="$event.stopPropagation()">
+    <button class="btn-close" (click)="cerrarModalReloj()">×</button>
+    
+    <div class="modal-header">
+      <h3>Temporizador Global</h3>
+    </div>
+
+    <div class="modal-body text-center">
+      <div class="form-group">
+        <label style="color: #d4af37; font-weight: bold;">Configuración Actual guardada:</label>
+        <input type="datetime-local" [(ngModel)]="fechaFinOferta" class="admin-input date-input text-center">
+        <small style="color: #94a3b8; display: block; margin-top: 5px;">Modifica este valor para actualizar el temporizador global.</small>
+      </div>
+
+      <div class="vista-previa-fecha" *ngIf="fechaFinOferta">
+        <span class="preview-label">La oferta finalizará el:</span>
+        <h4 class="preview-date">{{ fechaFinOferta | date:'fullDate' }}</h4>
+        <h5 class="preview-time">a las {{ fechaFinOferta | date:'shortTime' }}</h5>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="cerrarModalReloj()">Cancelar</button>
+      <button class="btn-success" (click)="guardarConfiguracionReloj()">Confirmar Tiempo</button>
+    </div>
+  </div>
+</div>

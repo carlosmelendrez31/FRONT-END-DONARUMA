@@ -1,0 +1,489 @@
+:host {
+  /* Variables de la marca Dunaroma */
+  --oro-principal: #d4af37;
+  --oro-brillante: #f9d976;
+  --oro-oscuro: #b38b1e;
+  --fondo-base: #0a0f18;
+  --panel-bg: rgba(20, 27, 41, 0.65);
+  --borde-suave: rgba(212, 175, 55, 0.15);
+  --texto-claro: #f8fafc;
+  --texto-secundario: #94a3b8;
+}
+
+.admin-dashboard {
+  padding: 40px;
+  background: radial-gradient(circle at top right, #111827 0%, var(--fondo-base) 100%);
+  min-height: 100vh;
+  color: var(--texto-claro);
+  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+
+.admin-header {
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-header h1 {
+  color: var(--oro-principal);
+  font-family: 'Georgia', serif;
+  font-size: 2.2rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.admin-header p {
+  color: var(--texto-secundario);
+  margin: 0;
+  font-size: 1rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+}
+
+/* ================================
+   TARJETAS (GLASSMORPHISM)
+================================ */
+.admin-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-card:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(212, 175, 55, 0.1);
+}
+
+.list-card {
+  height: 100%;
+}
+
+.admin-card h3 {
+  margin-top: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mt-20 { margin-top: 25px; }
+
+/* ================================
+   FORMULARIOS Y CONTROLES
+================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.half { flex: 1; }
+
+label {
+  display: block;
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 12px 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--oro-principal);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Ocultar la flecha fea en los select en algunos navegadores */
+select.admin-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+select.admin-input option {
+  background: var(--fondo-base);
+  color: white;
+}
+
+.precio-calculado-box {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border: 1px solid var(--oro-principal);
+  color: var(--oro-principal);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ================================
+   BOTONES
+================================ */
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.2) !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.btn-primary { 
+  background: transparent; 
+  color: var(--texto-claro); 
+  border: 1px solid var(--texto-secundario);
+}
+.btn-primary:hover { 
+  border-color: #fff; 
+  background: rgba(255,255,255,0.05); 
+}
+
+.btn-success { 
+  background: linear-gradient(135deg, var(--oro-principal) 0%, var(--oro-oscuro) 100%);
+  color: #000; 
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+.btn-success:hover:not([disabled]) { 
+  background: linear-gradient(135deg, var(--oro-brillante) 0%, var(--oro-principal) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* ================================
+   TABLA DE ADMINISTRACIÓN
+================================ */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 0 15px 10px 15px;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.admin-table tr {
+  transition: all 0.2s ease;
+}
+
+.admin-table tbody tr {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(212, 175, 55, 0.05);
+  transform: scale(1.01);
+}
+
+.admin-table td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* Bordes redondeados para las filas de la tabla */
+.admin-table td:first-child { border-radius: 8px 0 0 8px; }
+.admin-table td:last-child { border-radius: 0 8px 8px 0; }
+
+.img-thumbnail {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.perfume-info strong { color: #fff; font-size: 1rem; }
+.perfume-info small { color: var(--texto-secundario); display: block; margin-top: 2px; }
+
+.strike-price { text-decoration: line-through; color: #64748b; font-size: 0.9rem;}
+.gold-price { color: var(--oro-principal); font-weight: 800; font-size: 1.1rem; }
+
+.badge-descuento {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.status-indicator {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  min-width: 80px;
+}
+.online { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.offline { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3); }
+
+.btn-toggle {
+  padding: 8px 15px;
+  width: auto;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  text-transform: none;
+  font-weight: 600;
+}
+.btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.btn-danger:hover { background: #ef4444; color: white; }
+
+.btn-activate { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.btn-activate:hover { background: #10b981; color: white; }
+
+.inactivo { opacity: 0.6; filter: grayscale(50%); }
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .admin-grid { grid-template-columns: 1fr; }
+}
+
+/* Agrega esto a tu agregardescuento.css existente */
+
+/* Cabecera Flexible */
+.admin-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 20px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.header-actions button {
+  width: auto;
+  padding: 10px 25px;
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--oro-principal);
+  border: 1px solid var(--oro-principal);
+}
+.btn-outline-gold:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.full-width-card {
+  width: 100%;
+}
+
+.text-center { text-align: center; }
+.empty-state { padding: 40px !important; color: var(--texto-secundario); font-style: italic; }
+
+/* ================================
+   MODALES GLASSMORPHISM
+================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.glass-modal {
+  background: var(--panel-bg);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.small-modal {
+  max-width: 400px;
+}
+
+.btn-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  font-size: 1.8rem;
+  cursor: pointer;
+  width: auto;
+  padding: 0 10px;
+}
+.btn-close:hover { color: #ef4444; }
+
+.modal-header {
+  padding: 25px 30px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.modal-header h3 {
+  margin: 0;
+  color: var(--oro-principal);
+  font-size: 1.3rem;
+}
+
+.modal-body {
+  padding: 30px;
+}
+
+.modal-footer {
+  padding: 20px 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 16px 16px;
+}
+
+.modal-footer button {
+  width: auto;
+  min-width: 120px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ================================
+   ESTILOS DEL PANEL DE RELOJ
+================================ */
+.date-input {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: var(--oro-principal);
+  font-family: monospace;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(70%) sepia(50%) saturate(600%) hue-rotate(1deg) brightness(100%) contrast(100%);
+  cursor: pointer;
+  transform: scale(1.3);
+}
+
+.vista-previa-fecha {
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  animation: fadeIn 0.5s ease;
+}
+
+.preview-label {
+  display: block;
+  color: var(--texto-secundario);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.preview-date {
+  color: #fff;
+  font-family: 'Georgia', serif;
+  font-size: 1.3rem;
+  margin: 0 0 5px 0;
+  font-weight: normal;
+  text-transform: capitalize;
+}
+
+.preview-time {
+  color: var(--oro-principal);
+  font-size: 1.1rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   BOTÓN DE EDITAR MINIMALISTA (LÁPIZ)
+========================================= */
+.btn-edit-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem; /* Tamaño del icono */
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s ease;
+  opacity: 0.6; /* Un poco tenue para no robar atención */
+}
+
+.btn-edit-icon:hover {
+  opacity: 1; /* Se ilumina al pasar el mouse */
+  transform: scale(1.15); /* Crece un poquito */
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6)); /* Sutil resplandor dorado */
+}

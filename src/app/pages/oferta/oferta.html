@@ -1,19 +1,13 @@
-<div class="dev-panel">
-  <span class="dev-title">⚙️ Control del Reloj:</span>
-    <input type="number" min="0" #inputDias placeholder="Días" value="0"> :
-    <input type="number" min="0" #inputHoras placeholder="Hrs" value="0"> :
-    <input type="number" min="0" #inputMins placeholder="Min" value="0"> :
-    <input type="number" min="0" #inputSegs placeholder="Seg" value="10">
-    <button class="dev-btn" (click)="setReloj(inputDias.value, inputHoras.value, inputMins.value, inputSegs.value)">
-    Aplicar Tiempo
-  </button>
+<div *ngIf="verificandoOferta" class="pantalla-carga">
+  <div class="loader-dorado"></div>
+  <h2 class="texto-carga">Validando acceso a los privilegios...</h2>
 </div>
 
-<section class="ofertas-wrapper">
+<section class="ofertas-wrapper" *ngIf="!verificandoOferta">
   
   <div class="hero-ofertas">
     <div class="hero-content">
-    <span class="etiqueta-hero">Privilegios Dunaroma</span>
+      <span class="etiqueta-hero">Privilegios Dunaroma</span>
       <h1 class="titulo-exclusivo">Venta Privada</h1>
       <p class="subtitulo-hero">Una selección extraordinaria de nuestras fragancias más codiciadas a precios irrepetibles.</p>
       <p class="subtitulo-hero">El tiempo para hacerlas tuyas termina en:</p>
@@ -33,6 +27,7 @@
   <div class="contenedor-catalogo">
     
     <ng-container *ngIf="!ofertaFinalizada; else mensajeCierre">
+      
       <div class="productos-grid" *ngIf="productosEnOferta.length > 0">
         <div class="producto-card" *ngFor="let p of productosEnOferta" 
              [class.tarjeta-agotada]="(p.stock || 0) === 0"
@@ -41,7 +36,7 @@
           <div class="img-box">
             <img [src]="p.imagenMostrar" [alt]="p.nombreMostrar" class="main-img">
             
-            <div class="badge-privilege">PRIVILEGE -20%</div>
+            <div class="badge-privilege">PRIVILEGE -{{ p.descuento }}%</div>
             <div class="badge-agotado" *ngIf="(p.stock || 0) === 0">AGOTADO</div>
             
             <div class="hover-actions">
@@ -66,6 +61,17 @@
           
         </div>
       </div>
+
+      <div class="mensaje-finalizado-wrapper" *ngIf="productosEnOferta.length === 0" style="margin-top: 40px;">
+        <div class="icono-finalizado">💎</div>
+        <h2 class="titulo-finalizado">Éxito Total</h2>
+        <p class="subtitulo-finalizado">
+          Nuestra selección exclusiva ha sido reclamada en su totalidad por nuestra comunidad. 
+          El acceso permanecerá abierto hasta que el contador termine, pero el inventario se ha agotado.
+        </p>
+        <a routerLink="/" class="btn-regresar">Explorar Catálogo Principal</a>
+      </div>
+
     </ng-container>
 
     <ng-template #mensajeCierre>
@@ -73,14 +79,13 @@
         <div class="icono-finalizado">⏳</div>
         <h2 class="titulo-finalizado">Acceso Concluido</h2>
         <p class="subtitulo-finalizado">Esta selección exclusiva ha finalizado. Regresa pronto para descubrir nuevos privilegios de Dunaroma.</p>
-        <a routerLink="/aromas" class="btn-regresar">Explorar Catálogo Completo</a>
+        <a routerLink="/" class="btn-regresar">Explorar Catálogo Completo</a>
       </div>
     </ng-template>
 
   </div>
 </section>
 
-//seccion del modal
 <div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
   <div class="modal-content modal-oferta" (click)="$event.stopPropagation()">
     <button class="btn-close" (click)="cerrarModal()">×</button>
@@ -90,7 +95,7 @@
       <div class="modal-left">
         <div class="modal-img-wrapper">
             <img [src]="perfumeSeleccionado.imagenMostrar" class="img-modal-api" [class.imagen-blanco-negro]="(perfumeSeleccionado.stock || 0) === 0">
-            <div class="badge-privilege large-badge">PRIVILEGE -20%</div>
+            <div class="badge-privilege large-badge">PRIVILEGE -{{ perfumeSeleccionado.descuento }}%</div>
         </div>
       </div>
 
