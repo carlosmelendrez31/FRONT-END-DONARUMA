@@ -24,6 +24,11 @@ export class Carrito implements OnInit {
     }
   }
 
+  // 🔥 AQUÍ ESTÁ LA FUNCIÓN MÁGICA PARA SUMAR EL DINERO
+  calcularTotal(): number {
+    return this.listaCarrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+  }
+
   pagarConStripe() {
     // Ya no necesitamos cargar la llave pública aquí, el backend hace todo el trabajo pesado
     this.carritoService.procesarPagoStripe(this.listaCarrito).subscribe({

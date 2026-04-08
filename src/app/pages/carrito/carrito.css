@@ -1,0 +1,149 @@
+/* Contenedor principal */
+.carrito-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.titulo-carrito {
+  text-align: center;
+  color: #d4af37; /* Dorado Dunaroma */
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+/* Layout de dos columnas */
+.carrito-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+/* Tarjetas de los productos */
+.producto-card {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05); /* Fondo oscuro transparente */
+  border: 1px solid rgba(212, 175, 55, 0.2); /* Borde dorado sutil */
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.producto-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.8);
+}
+
+.producto-icono {
+  font-size: 40px;
+  margin-right: 20px;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.producto-info {
+  flex-grow: 1;
+}
+
+.producto-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+}
+
+.producto-cantidad {
+  margin: 0;
+  color: #a0aab2;
+  font-size: 14px;
+}
+
+.producto-precio {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* Panel de Resumen */
+.resumen-pedido {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 30px;
+  height: fit-content;
+}
+
+.resumen-pedido h2 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.resumen-fila {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  color: #cccccc;
+}
+
+.envio-gratis {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.divisor {
+  border: 0;
+  height: 1px;
+  background: rgba(212, 175, 55, 0.3);
+  margin: 20px 0;
+}
+
+.resumen-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+
+/* El famoso botón dorado */
+.btn-pagar {
+  width: 100%;
+  background-color: #d4af37;
+  color: #0b132b;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-pagar:hover {
+  background-color: #f1c40f;
+}
+
+.btn-pagar:active {
+  transform: scale(0.98);
+}
+
+.pago-seguro {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 15px;
+}
+
+/* Para que se vea bien en celulares */
+@media (max-width: 768px) {
+  .carrito-grid {
+    grid-template-columns: 1fr;
+  }
+}
