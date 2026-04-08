@@ -1,13 +1,45 @@
-<div style="padding: 20px; text-align: center; color: white;">
-  <h2>Mi Carrito de Compras 🛒</h2>
-  
-  <ul style="list-style: none; padding: 0;">
-    <li *ngFor="let item of listaCarrito" style="margin-bottom: 10px;">
-      {{ item.cantidad }}x {{ item.nombre }} - ${{ item.precio }}
-    </li>
-  </ul>
+<div class="carrito-container">
+  <h1 class="titulo-carrito">Mi Carrito de Compras</h1>
 
-  <button (click)="pagarConStripe()" style="padding: 10px 20px; background-color: #d4af37; color: #0b132b; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
-    Pagar con Stripe 💳
-  </button>
+  <div class="carrito-grid">
+    
+    <div class="lista-productos">
+      <div class="producto-card" *ngFor="let item of listaCarrito">
+        <div class="producto-icono">✨</div> <div class="producto-info">
+          <h3>{{ item.nombre }}</h3>
+          <p class="producto-cantidad">Cantidad: {{ item.cantidad }}</p>
+        </div>
+        
+        <div class="producto-precio">
+          ${{ item.precio * item.cantidad }} MXN
+        </div>
+      </div>
+    </div>
+
+    <div class="resumen-pedido">
+      <h2>Resumen del Pedido</h2>
+      
+      <div class="resumen-fila">
+        <span>Subtotal</span>
+        <span>${{ calcularTotal() }} MXN</span>
+      </div>
+      <div class="resumen-fila">
+        <span>Envío estándar</span>
+        <span class="envio-gratis">¡Gratis!</span>
+      </div>
+      
+      <hr class="divisor">
+      
+      <div class="resumen-total">
+        <span>Total a pagar</span>
+        <span>${{ calcularTotal() }} MXN</span>
+      </div>
+
+      <button class="btn-pagar" (click)="pagarConStripe()">
+        Pagar con Stripe 💳
+      </button>
+      <p class="pago-seguro">🔒 Pago 100% seguro y encriptado</p>
+    </div>
+
+  </div>
 </div>
