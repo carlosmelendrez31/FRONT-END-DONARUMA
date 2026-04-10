@@ -29,21 +29,15 @@ export class Carrito implements OnInit {
     return this.listaCarrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
 
-  pagarConStripe() {
-    // Ya no necesitamos cargar la llave pública aquí, el backend hace todo el trabajo pesado
-    this.carritoService.procesarPagoStripe(this.listaCarrito).subscribe({
-      next: (respuesta: any) => {
-        
-        // ¡La nueva forma mágica! Si el servidor nos responde con la URL de Stripe, mandamos al cliente directo para allá
-        if (respuesta.url) {
-          window.location.href = respuesta.url; 
-        }
-
-      },
-      error: (err) => {
-        console.error('Hubo un error al conectar con el servidor', err);
-        alert('Error al conectar con el servidor. Revisa la consola.');
-      }
-    });
-  }
+ pagarConStripe() {
+  this.carritoService.procesarPagoStripe().subscribe({
+    next: (respuesta: any) => {
+      // Stripe nos manda la URL de cobro y Angular nos redirige automáticamente
+      window.location.href = respuesta.url; 
+    },
+    error: (err) => {
+      console.error("Hubo un error al crear la sesión de pago", err);
+    }
+  });
+}
 }
