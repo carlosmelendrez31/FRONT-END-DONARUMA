@@ -1,0 +1,24 @@
+/* src/styles.css - EL VERDADERO ARCHIVO GLOBAL */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* El azul fuerte que matará a los bordes blancos */
+  background-color: #0A1F44; 
+  overflow-x: hidden; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+/* Empujamos toda la aplicación hacia abajo para que el menú fixed no la tape */
+app-root {
+  display: block;
+  padding-top: 75px; 
+}

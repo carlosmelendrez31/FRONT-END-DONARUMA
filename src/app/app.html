@@ -1,0 +1,47 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<header class="header">
+  <a routerLink="/" class="logo">DUNA<span>ROMA</span></a>
+
+  <nav class="nav">
+    <a routerLink="/fofativas" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Aromas</a>
+    <a routerLink="/ofertas" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Ofertas</a>
+    <a routerLink="/novedades" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Novedades</a>
+   <div class="dropdown" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">
+      <span class="menu-item">Admin ▾</span>
+      <div class="dropdown-content">
+        <a routerLink="/admin">📦 Gestionar Perfumes</a>
+        <a routerLink="/admin-novedades">📰 Publicar Novedades</a>
+        <a style="cursor: not-allowed; opacity: 0.6;" title="Próximamente">🔥 Ofertas (Pronto)</a>
+      </div>
+    </div>
+    
+    <a routerLink="/" class="menu-item" *ngIf="!appStorage.isLoggedIn()">Cuenta</a>
+  </nav>
+
+  <div class="acciones">
+    <!-- Si la sesión está activa -->
+    <ng-container *ngIf="appStorage.userProfile$ | async as profile">
+      <div class="user-menu-container" (click)="toggleMenu()">
+        <span class="material-icons user-icon">account_circle</span>
+        <span class="user-name">{{ profile.nombreCompleto }}</span>
+        <span class="material-icons arrow-icon">arrow_drop_down</span>
+        
+        <div class="dropdown-menu" *ngIf="isMenuOpen">
+          <a class="dropdown-item">
+            <span class="material-icons">person</span>
+            Mi Perfil
+          </a>
+          <a class="dropdown-item logout" (click)="logout()">
+            <span class="material-icons">logout</span>
+            Logout
+          </a>
+        </div>
+      </div>
+    </ng-container>
+    
+    <!-- Para botones pretederminados o vacíos si no loggeado... -->
+    <a routerLink="/" class="login-btn-header" *ngIf="!appStorage.isLoggedIn()">Iniciar Sesión</a>
+  </div>
+</header>
+
+<router-outlet></router-outlet>

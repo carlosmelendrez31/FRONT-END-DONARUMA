@@ -1,0 +1,1107 @@
+/* General */
+.admin-layout {
+  background: #0a192f;
+  min-height: 100vh;
+  padding: 40px;
+  color: #8892b0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header-panel h1 {
+  color: #ccd6f6;
+  margin-bottom: 20px;
+}
+
+/* 🌟 Alineación Buscador y Botón 🌟 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.search-container {
+  position: relative;
+  width: 350px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 20px;
+  background: #112240;
+  border: 2px solid #233554;
+  border-radius: 50px;
+  color: white;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #d4af37;
+}
+
+.lupa {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  color: #d4af37;
+}
+
+.btn-new {
+  background: #d4af37;
+  color: #0a192f;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Tabla */
+.table-card {
+  background: #112240;
+  border: 1px solid #233554;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  max-height: none; 
+  height: auto;
+  overflow-y: visible;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background: #1d2d50;
+  color: #d4af37;
+  padding: 15px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+}
+
+.custom-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #233554;
+}
+
+.img-table {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #d4af37;
+}
+
+/* 🌟 Modal 🌟 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 12, 27, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-window {
+  position: relative;
+  background: #112240;
+  width: 850px;
+  padding: 35px;
+  border-radius: 20px;
+  border: 1px solid #d4af37;
+}
+
+.btn-close-x {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.control label {
+  color: #d4af37;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+/* 🌟 Borde de Observación 🌟 */
+.control input,
+.control textarea {
+  background: #0a192f;
+  border: 1px solid #233554;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 5px solid #ef4444;
+}
+
+.control input:focus {
+  border-color: #d4af37;
+  outline: none;
+}
+
+.control input:valid {
+  border-left-color: #d4af37;
+}
+
+/* Previsualización Imagen */
+.image-box {
+  width: 100%;
+  height: 200px;
+  background: #0a192f;
+  border: 2px dashed #233554;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.image-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.no-img {
+  color: #374151;
+}
+
+.range-group {
+  margin-bottom: 10px;
+}
+
+.range-group label {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.range-group input {
+  width: 100%;
+  accent-color: #d4af37;
+}
+
+/* Botones Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+  border-top: 1px solid #233554;
+  padding-top: 20px;
+}
+
+.btn-save {
+  background: #d4af37;
+  color: #0a192f;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bold-white {
+  color: white;
+  font-weight: bold;
+}
+
+.gold-text {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+/* ======================================================== */
+/* NUEVOS AGREGADOS PROFESIONALES (MODAL ELIMINAR Y ALERTA) */
+/* ======================================================== */
+
+/* Botones de acción originales de tu tabla */
+.btn-action {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: transform 0.2s;
+}
+
+.btn-action:hover {
+  transform: scale(1.2);
+}
+
+/* Modal de Confirmación Superior */
+.modal-backdrop-super {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 12, 27, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9000;
+  /* Asegura que tape el otro modal si está abierto */
+}
+
+.modal-confirm-pro {
+  background: #112240;
+  border: 1px solid #ef4444;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  width: 380px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  animation: scalePop 0.3s ease-out;
+}
+
+.icon-warning-pro {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+}
+
+.modal-confirm-pro h3 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.modal-confirm-pro p {
+  color: #8892b0;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.footer-confirm-pro {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-cancel-pro {
+  background: #233554;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-cancel-pro:hover {
+  background: #304a75;
+}
+
+.btn-delete-pro {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-delete-pro:hover {
+  background: #dc2626;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+/* Alerta Toast Profesional (Flotante derecha) */
+.toast-alerta-pro {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #112240;
+  border-radius: 10px;
+  padding: 15px 20px;
+  box-shadow: -5px 10px 30px rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  /* Siempre hasta arriba de todo */
+  min-width: 280px;
+  border-left: 5px solid;
+  animation: slideToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.toast-alerta-pro.success {
+  border-left-color: #10b981;
+}
+
+.toast-alerta-pro.error {
+  border-left-color: #ef4444;
+}
+
+.toast-alerta-pro.warning {
+  border-left-color: #f59e0b;
+}
+
+.toast-content-pro {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.toast-icon-pro {
+  font-size: 1.8rem;
+}
+
+.toast-text-pro strong {
+  color: white;
+  display: block;
+  font-size: 1.1rem;
+}
+
+.toast-text-pro p {
+  color: #8892b0;
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+}
+
+/* Barrita animada de tiempo */
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  width: 100%;
+  animation: progressToast 3s linear forwards;
+}
+
+@keyframes scalePop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideToast {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progressToast {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
+/* General */
+.admin-layout {
+  background: #0a192f;
+  min-height: 100vh;
+  padding: 40px;
+  color: #8892b0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header-panel h1 {
+  color: #ccd6f6;
+  margin-bottom: 20px;
+}
+
+/* 🌟 Alineación Buscador y Botón 🌟 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.search-container {
+  position: relative;
+  width: 350px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 20px;
+  background: #112240;
+  border: 2px solid #233554;
+  border-radius: 50px;
+  color: white;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #d4af37;
+}
+
+.lupa {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  color: #d4af37;
+}
+
+.btn-new {
+  background: #d4af37;
+  color: #0a192f;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Tabla */
+.table-card {
+  background: #112240;
+  border: 1px solid #233554;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background: #1d2d50;
+  color: #d4af37;
+  padding: 15px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+}
+
+.custom-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #233554;
+}
+
+.img-table {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #d4af37;
+}
+
+/* 🌟 Modal 🌟 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 12, 27, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-window {
+  position: relative;
+  background: #112240;
+  width: 850px;
+  padding: 35px;
+  border-radius: 20px;
+  border: 1px solid #d4af37;
+}
+
+.btn-close-x {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.control label {
+  color: #d4af37;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+/* 🌟 Borde de Observación 🌟 */
+.control input,
+.control textarea {
+  background: #0a192f;
+  border: 1px solid #233554;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 5px solid #ef4444;
+}
+
+.control input:focus {
+  border-color: #d4af37;
+  outline: none;
+}
+
+.control input:valid {
+  border-left-color: #d4af37;
+}
+
+/* Previsualización Imagen */
+.image-box {
+  width: 100%;
+  height: 200px;
+  background: #0a192f;
+  border: 2px dashed #233554;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.image-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.no-img {
+  color: #374151;
+}
+
+.range-group {
+  margin-bottom: 10px;
+}
+
+.range-group label {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.range-group input {
+  width: 100%;
+  accent-color: #d4af37;
+}
+
+/* Botones Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+  border-top: 1px solid #233554;
+  padding-top: 20px;
+}
+
+.btn-save {
+  background: #d4af37;
+  color: #0a192f;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bold-white {
+  color: white;
+  font-weight: bold;
+}
+
+.gold-text {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+/* ========================================================= */
+/* MEJORAS DE BOTONES DE ACCIÓN (DORADO Y ROJO)              */
+/* ========================================================= */
+
+.btn-action {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  /* Más grandes */
+  cursor: pointer;
+  margin: 0 10px;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Dorado para editar */
+.btn-action.edit {
+  color: #d4af37;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+}
+
+.btn-action.edit:hover {
+  transform: scale(1.4);
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+/* Rojo para eliminar */
+.btn-action.delete {
+  color: #ef4444;
+  text-shadow: 0 0 5px rgba(239, 68, 68, 0.2);
+}
+
+.btn-action.delete:hover {
+  transform: scale(1.4);
+  text-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+}
+
+/* ========================================================= */
+/* ESTILOS DEL MODAL DE ELIMINAR Y ALERTA TOAST              */
+/* ========================================================= */
+
+/* Modal Confirmar Eliminar (Centro) */
+.modal-backdrop-super {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 12, 27, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+}
+
+.modal-confirm-center {
+  background: #112240;
+  border: 2px solid #ef4444;
+  padding: 35px;
+  border-radius: 20px;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.confirm-icon-big {
+  font-size: 4rem;
+  margin-bottom: 10px;
+}
+
+.modal-confirm-center h3 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+.modal-confirm-center p {
+  color: #8892b0;
+  margin-bottom: 25px;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.confirm-botones {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-cancelar-modal {
+  background: #233554;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-cancelar-modal:hover {
+  background: #304a75;
+}
+
+.btn-eliminar-modal {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-eliminar-modal:hover {
+  background: #dc2626;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+}
+
+/* Alerta Toast (Arriba a la derecha) */
+.toast-alerta-der {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #112240;
+  border-left: 5px solid;
+  border-radius: 10px;
+  padding: 15px 25px;
+  z-index: 9999;
+  box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.6);
+  min-width: 300px;
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.toast-alerta-der.success {
+  border-left-color: #10b981;
+}
+
+.toast-alerta-der.error {
+  border-left-color: #ef4444;
+}
+
+.toast-alerta-der.warning {
+  border-left-color: #f59e0b;
+}
+
+.toast-contenido {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.toast-icono-estado {
+  font-size: 1.8rem;
+}
+
+.toast-titulo {
+  color: white;
+  font-weight: bold;
+  display: block;
+  font-size: 1.1rem;
+}
+
+.toast-textos p {
+  color: #8892b0;
+  margin: 5px 0 0 0;
+  font-size: 0.95rem;
+}
+
+/* Barra animada de la alerta */
+.toast-barra-progreso {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.toast-barra-progreso::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  animation: barProgress 3s linear forwards;
+}
+
+.toast-barra-progreso.success::after {
+  background: #10b981;
+}
+
+.toast-barra-progreso.error::after {
+  background: #ef4444;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes barProgress {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+/* --- ESTILOS DE LOS MENÚS DESPLEGABLES (DROPDOWNS) --- */
+.custom-dropdown-container {
+  position: relative;
+  user-select: none;
+}
+
+/* La caja principal que se ve cerrada */
+.custom-dropdown {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3); /* Borde dorado tenue */
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.custom-dropdown:hover {
+  border-color: #d4af37; /* Se ilumina al pasar el mouse */
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: #d4af37;
+}
+
+/* La cajita flotante con las opciones */
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #0d1b2a; /* Azul oscuro elegante */
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  margin-top: 5px;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Cada opción individual */
+.dropdown-item {
+  padding: 12px 15px;
+  color: #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* EL EFECTO DORADO CUANDO ESTÁ SELECCIONADO */
+.dropdown-item.selected {
+  background: rgba(212, 175, 55, 0.15); /* Fondo doradito transparente */
+  color: #d4af37;
+  font-weight: 600;
+  border-left: 4px solid #d4af37; /* Rayita dorada a la izquierda */
+}
+
+.check {
+  color: #d4af37;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+/* --- BLINDAJE PARA EL MODAL (Evita que la imagen se caiga) --- */
+.form-layout {
+  display: grid !important;
+  grid-template-columns: 1.3fr 1fr !important; /* Obliga a mantener 2 columnas fijas */
+  gap: 30px !important;
+  align-items: flex-start;
+}
+
+.modal-window {
+  max-height: 90vh; /* El modal nunca será más alto que tu pantalla */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-body {
+  overflow-y: auto; /* Agrega una barra de scroll si el contenido es muy largo */
+  padding-right: 15px;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #d4af37; /* Scroll dorado para que combine */
+  border-radius: 10px;
+}
+/* --- ESTILOS DE PAGINACIÓN --- */
+.paginacion-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.btn-pag {
+  background-color: transparent;
+  color: #d4af37; /* Dorado */
+  border: 1px solid #d4af37;
+  padding: 5px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-pag:hover:not(:disabled) {
+  background-color: #d4af37;
+  color: #0b132b; /* Azul oscuro */
+}
+
+.btn-pag:disabled {
+  color: #555;
+  border-color: #555;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.numeros-paginacion {
+  display: flex;
+  gap: 8px;
+}
+
+.num-pag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #1c2541; /* Color de tus tarjetas */
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.num-pag:hover {
+  background-color: #3a506b;
+}
+
+.num-pag.activa {
+  background-color: #d4af37;
+  color: #0b132b;
+}

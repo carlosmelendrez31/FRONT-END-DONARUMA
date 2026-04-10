@@ -1,0 +1,140 @@
+<section class="aromas-container">
+  <div class="header-luxury">
+    <h2>Nuestra Colección</h2>
+    <div class="linea-dorada"></div>
+  </div>
+  
+<div class="filtros-container">
+    <button (click)="filtrar('cítricos')" [class.active]="filtroSeleccionado === 'cítricos'" class="btn-f">🍋 Cítricos</button>
+    <button (click)="filtrar('florales')" [class.active]="filtroSeleccionado === 'florales'" class="btn-f">🌹 Florales</button>
+    <button (click)="filtrar('amaderados')" [class.active]="filtroSeleccionado === 'amaderados'" class="btn-f">🪵 Amaderados</button>
+    <button (click)="filtrar('orientales')" [class.active]="filtroSeleccionado === 'orientales'" class="btn-f">🌙 Orientales</button>
+    <button (click)="filtrar('frutales')" [class.active]="filtroSeleccionado === 'frutales'" class="btn-f">🍓 Frutales</button>
+    <button (click)="filtrar('gourmand')" [class.active]="filtroSeleccionado === 'gourmand'" class="btn-f">🍦 Gourmand</button>
+    <button (click)="filtrar('herbales')" [class.active]="filtroSeleccionado === 'herbales'" class="btn-f">🌿 Herbales</button>
+    <button (click)="filtrar('fougère')" [class.active]="filtroSeleccionado === 'fougère'" class="btn-f">🍃 Fougère</button>
+    <button (click)="filtrar('acuáticos')" [class.active]="filtroSeleccionado === 'acuáticos'" class="btn-f">🌊 Acuáticos</button>
+  </div>
+
+  <div class="resultados-section">
+    <div *ngIf="filtroSeleccionado === ''" class="mensaje-espera">
+      <p>Selecciona una familia olfativa para explorar nuestra colección exclusiva.</p>
+    </div>
+
+    <div class="buscador-container" *ngIf="filtroSeleccionado !== ''">
+      <div class="buscador-wrapper">
+        <select [(ngModel)]="criterioBusqueda" (change)="aplicarFiltros()" class="select-criterio">
+          <option value="nombre">Nombre</option>
+          <option value="marca">Marca</option>
+        </select>
+        <div class="input-con-icono">
+          <span class="icono-lupa">🔍</span>
+          <input type="text" [(ngModel)]="textoBusqueda" (input)="aplicarFiltros()" [placeholder]="criterioBusqueda === 'marca' ? 'Ej. Dior, Chanel...' : 'Buscar perfume...'" class="input-premium">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filtroSeleccionado !== '' && productosAMostrar.length === 0" class="mensaje-espera">
+      <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">🍂</div>
+      <p>No encontramos fragancias que coincidan con tu búsqueda.</p>
+    </div>
+
+    <div class="productos-grid" *ngIf="productosAMostrar.length > 0">
+      <div class="producto-card" *ngFor="let p of productosAMostrar" [ngClass]="{'borde-hombre': (p.genero | lowercase) === 'hombre', 'borde-mujer': (p.genero | lowercase) === 'mujer', 'borde-unisex': (p.genero | lowercase) === 'unisex' || !(p.genero)}">
+        <div class="img-box">
+          <img [src]="p.imagenMostrar" [alt]="p.nombreMostrar" class="main-img">
+          
+          <div class="badge-agotado" *ngIf="(p.stock || 0) === 0">AGOTADO</div>
+          
+          <div class="hover-actions">
+            <button class="btn-quickview" (click)="abrirModal(p)">Vista Rápida</button>
+          </div>
+        </div>
+        <div class="info-box">
+          <span class="brand-name">{{p.marca}}</span>
+          <h3 class="product-name">{{p.nombreMostrar}}</h3>
+          <div class="familias-pill-container" style="justify-content: center; margin-bottom: 10px;">
+            <span class="badge-gold-light" *ngFor="let fam of p.familiasArray">{{ fam | titlecase }}</span>
+          </div>
+          <div class="estrellas">⭐⭐⭐⭐⭐</div>
+          <p class="price-text">${{p.precio}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="perfumeSeleccionado" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="btn-close" (click)="cerrarModal()">&times;</button>
+      
+      <div class="modal-body-premium">
+        <div class="modal-left">
+          <div class="modal-img-wrapper">
+            <img [src]="imagenSeleccionada" alt="Perfume" class="img-modal-api">
+          </div>
+          <div class="miniaturas-container">
+            <img *ngIf="perfumeSeleccionado.img1" [src]="perfumeSeleccionado.img1" (click)="cambiarImagen(perfumeSeleccionado.img1)" [class.active]="imagenSeleccionada === perfumeSeleccionado.img1">
+            <img *ngIf="perfumeSeleccionado.img2" [src]="perfumeSeleccionado.img2" (click)="cambiarImagen(perfumeSeleccionado.img2)" [class.active]="imagenSeleccionada === perfumeSeleccionado.img2">
+          </div>
+        </div>
+        
+        <div class="modal-right">
+          <span class="modal-brand-label gold">{{ perfumeSeleccionado.marca }}</span>
+          <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
+          <p class="modal-description-full">{{ perfumeSeleccionado.descripcion || 'Una fragancia única inspirada en la esencia del desierto.' }}</p>
+
+<div class="estadisticas-aroma-panel">
+            <div class="stat-row">
+              <span class="stat-label">Aromático</span>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.aromatico"></div></div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Intensidad</span>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.intensidad"></div></div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Dulce</span>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.dulzor"></div></div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Duración</span>
+              <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.duracion"></div></div>
+            </div>
+          </div>
+
+          <div class="detalles-rapidos-fila">
+            <div class="detalle-item">
+              <strong class="gold">Género:</strong><br>
+              <span>{{ perfumeSeleccionado.genero || 'Unisex' }}</span>
+            </div>
+            
+            <div class="detalle-item">
+              <strong class="gold">Ocasión:</strong><br>
+              <span>{{ perfumeSeleccionado.ocasion || 'Uso Diario' }}</span>
+            </div>
+            
+            <div class="detalle-item stock-pastilla">
+              <strong class="gold">Stock:</strong><br>
+              <span class="badge-stock">
+                {{ (perfumeSeleccionado.stock || 0) > 0 ? perfumeSeleccionado.stock : 'Agotado' }} disponibles
+              </span>
+            </div>
+          </div>
+
+          <div class="familias-pill-container" style="margin-bottom: 25px;">
+            <p style="margin:0;"><strong class="gold">Familias:</strong></p>
+            <span class="badge-gold" *ngFor="let fam of perfumeSeleccionado.familiasArray">{{ fam | titlecase }}</span>
+          </div>
+          
+          <div class="modal-footer-info" style="justify-content: flex-end;">
+            <span class="modal-price-display">${{ perfumeSeleccionado.precio }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<a href="https://wa.me/521234567890" target="_blank" class="btn-whatsapp" title="Chat con soporte">
+  <img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" alt="WhatsApp">
+</a>
