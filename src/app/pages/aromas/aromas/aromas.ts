@@ -37,15 +37,17 @@ export class Aromas implements OnInit {
     9: 'acuáticos'
   };
 
-  ngOnInit(): void {
-    this.perfumesService.obtenerPerfumes().subscribe({
-      // Usamos any[] para poder leer las propiedades que manda C# sin que TypeScript marque error
-      next: (datosBackend: any[]) => { 
-        
-        console.log('Datos que llegan desde la API de C#:', datosBackend[0]);
+  // --- VARIABLES DEL CARRITO ---
+  carritoAbierto = false;
+  carrito: any[] = [];
 
+  ngOnInit(): void {
+    // 🌟 Cargamos el carrito al entrar a la página
+    this.cargarCarrito();
+
+    this.perfumesService.obtenerPerfumes().subscribe({
+      next: (datosBackend: any[]) => { 
         this.todosLosPerfumes = datosBackend.map(perfume => {
-          // Buscamos tanto en minúscula como en mayúscula
           let urlImagenFinal = perfume.imagen_Url || perfume.Imagen_Url;
           if (!urlImagenFinal || urlImagenFinal === 'string' || urlImagenFinal === 'null' || urlImagenFinal.trim() === '') {
             urlImagenFinal = 'https://placehold.co/600x600/0f172a/d4af37/png?text=DUNAROMA';
@@ -56,7 +58,6 @@ export class Aromas implements OnInit {
           let familiasArrayTraducidas: string[] = [];
           let familiasTexto = 'sin familia';
 
-          // Mapeo seguro para las familias olfativas
           const familiasIds = perfume.familiasOlfativasIds || perfume.FamiliasOlfativasIds || [];
 
           if (familiasIds && familiasIds.length > 0) {
@@ -73,7 +74,6 @@ export class Aromas implements OnInit {
             img1: urlImagenFinal,
             img2: null, 
             
-            // 🌟 LA CORRECCIÓN CLAVE: Atrapamos el formato de Angular o el de C# ASP.NET
             aromatico: perfume.aromatico ?? perfume.Aromatico ?? 0,
             intensidad: perfume.intensidad ?? perfume.Intensidad ?? 0,
             dulzor: perfume.dulzor ?? perfume.Dulzor ?? 0,
@@ -82,7 +82,6 @@ export class Aromas implements OnInit {
             familiaOlfativa: familiasTexto,
             familiasArray: familiasArrayTraducidas,
             
-            // Aseguramos género, stock, precio y marca
             genero: perfume.genero || perfume.Genero || 'Unisex',
             ocasion: perfume.ocasion || perfume.Ocasion || 'Uso Diario',
             stock: perfume.stock ?? perfume.Stock ?? 0,
@@ -139,5 +138,52 @@ export class Aromas implements OnInit {
 
   cambiarImagen(url: string | undefined | null) {
     if (url) this.imagenSeleccionada = url;
+  }
+
+  // --- LÓGICA DEL CARRITO GLOBAL ---
+  cargarCarrito() {
+    this.carrito = JSON.parse(localStorage.getItem('carrito_dunaroma') || '[]');
+  }
+
+  agregarAlCarrito(producto: any) {
+    let carrito = JSON.parse(localStorage.getItem('carrito_dunaroma') || '[]');
+    const itemExistente = carrito.find((item: any) => item.idPerfume === producto.idPerfume);
+
+    if (itemExistente) {
+      itemExistente.cantidad += 1;
+    } else {
+      const productoParaCarrito = {
+        idPerfume: producto.idPerfume,
+        nombre: producto.nombreMostrar,
+        marca: producto.marca,
+        precio: producto.precio, 
+        img1: producto.imagenMostrar,
+        cantidad: 1
+      };
+      carrito.push(productoParaCarrito);
+    }
+
+    localStorage.setItem('carrito_dunaroma', JSON.stringify(carrito));
+    
+    // 🌟 Actualizamos la vista del carrito y cerramos modal
+    this.cargarCarrito(); 
+    alert(`¡${producto.nombreMostrar} se agregó al carrito! 🛒`);
+    this.cerrarModal();
+  }
+
+  toggleCarrito() { 
+    this.carritoAbierto = !this.carritoAbierto; 
+    if (this.carritoAbierto) {
+      this.cargarCarrito(); 
+    }
+  }
+
+  eliminarDelCarrito(index: number) { 
+    this.carrito.splice(index, 1); 
+    localStorage.setItem('carrito_dunaroma', JSON.stringify(this.carrito));
+  }
+
+  calcularTotalCarrito(): number { 
+    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); 
   }
 }

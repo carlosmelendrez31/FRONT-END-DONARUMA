@@ -1,6 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common'; 
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-// Importa tu servicio (ajusta la ruta según tu proyecto)
 import { Ofertasadm } from '../../core/services/ofertasadm'; 
 import { RouterLink } from '@angular/router';
 
@@ -28,15 +27,20 @@ export class Ofertas implements OnInit, OnDestroy {
   minutos: number = 0;
   segundos: number = 0;
   intervalo: any;
-  fechaDestino: Date | null = null; // Guardará la fecha real de la base de datos
+  fechaDestino: Date | null = null; 
 
   verificandoOferta: boolean = true;
 
+  // --- VARIABLES DEL CARRITO ---
+  carritoAbierto: boolean = false;
+  carrito: any[] = [];
+
   ngOnInit(): void {
+    this.cargarCarrito(); // 🌟 Cargar el carrito global al iniciar
     this.cargarDatosDesdeAPI();
   }
 
-cargarDatosDesdeAPI(): void {
+  cargarDatosDesdeAPI(): void {
     // 1. PRIMERO preguntamos por el reloj
     this.ofertasService.obtenerRelojCliente().subscribe({
       next: (config) => {
@@ -51,11 +55,11 @@ cargarDatosDesdeAPI(): void {
           } else {
             // NO HAY TIEMPO: Cortamos el acceso directamente
             this.ofertaFinalizada = true;
-            this.verificandoOferta = false; // Terminamos de verificar
+            this.verificandoOferta = false; 
           }
         } else {
           this.ofertaFinalizada = true;
-          this.verificandoOferta = false; // Terminamos de verificar
+          this.verificandoOferta = false; 
         }
       },
       error: (err) => {
@@ -79,7 +83,7 @@ cargarDatosDesdeAPI(): void {
           precioOferta: apiItem.precioOferta,
           stock: apiItem.stock,
           
-          descuento: apiItem.descuento, // <--- ¡ESTA ES LA LÍNEA QUE FALTABA! 
+          descuento: apiItem.descuento, 
           
           genero: 'Unisex', 
           familiasArray: ['Privilege'] 
@@ -105,17 +109,15 @@ cargarDatosDesdeAPI(): void {
       const diferenciaMilisegundos = this.fechaDestino!.getTime() - ahora;
 
       if (diferenciaMilisegundos <= 0) {
-        // El tiempo se acabó de verdad
         clearInterval(this.intervalo);
         this.detenerRelojEnCero();
       } else {
-        // Cálculos matemáticos para extraer días, horas, mins y segs
         this.dias = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
         this.horas = Math.floor((diferenciaMilisegundos % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         this.minutos = Math.floor((diferenciaMilisegundos % (1000 * 60 * 60)) / (1000 * 60));
         this.segundos = Math.floor((diferenciaMilisegundos % (1000 * 60)) / 1000);
       }
-    }, 1000); // Se ejecuta cada 1 segundo (1000 ms)
+    }, 1000); 
   }
 
   private detenerRelojEnCero() {
@@ -131,7 +133,6 @@ cargarDatosDesdeAPI(): void {
     if (this.intervalo) clearInterval(this.intervalo);
   }
 
-  // --- LÓGICA DEL MODAL DE OFERTA (Se queda igual) ---
   abrirModal(perfume: any) {
     this.perfumeSeleccionado = perfume;
     this.modalAbierto = true;
@@ -144,5 +145,50 @@ cargarDatosDesdeAPI(): void {
       this.perfumeSeleccionado = null;
       document.body.style.overflow = 'auto'; 
     }, 300);
+  }
+
+  // --- LÓGICA DEL CARRITO GLOBAL ---
+  cargarCarrito() {
+    this.carrito = JSON.parse(localStorage.getItem('carrito_dunaroma') || '[]');
+  }
+
+  agregarAlCarritoOferta(perfume: any) {
+    let carritoMemoria = JSON.parse(localStorage.getItem('carrito_dunaroma') || '[]');
+    const itemExistente = carritoMemoria.find((item: any) => item.idPerfume === perfume.idPerfume);
+
+    if (itemExistente) {
+      itemExistente.cantidad += 1;
+    } else {
+      const productoParaCarrito = {
+        idPerfume: perfume.idPerfume,
+        nombre: perfume.nombreMostrar,
+        marca: perfume.marca,
+        precio: perfume.precioOferta, // 💰 Guardamos el precio especial de oferta
+        img1: perfume.imagenMostrar,
+        cantidad: 1
+      };
+      carritoMemoria.push(productoParaCarrito);
+    }
+
+    localStorage.setItem('carrito_dunaroma', JSON.stringify(carritoMemoria));
+    this.cargarCarrito(); 
+    alert(`¡${perfume.nombreMostrar} agregado con precio de Venta Privada! 💎`);
+    this.cerrarModal();
+  }
+
+  toggleCarrito() { 
+    this.carritoAbierto = !this.carritoAbierto; 
+    if (this.carritoAbierto) {
+      this.cargarCarrito(); 
+    }
+  }
+
+  eliminarDelCarrito(index: number) { 
+    this.carrito.splice(index, 1); 
+    localStorage.setItem('carrito_dunaroma', JSON.stringify(this.carrito));
+  }
+
+  calcularTotalCarrito(): number { 
+    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); 
   }
 }

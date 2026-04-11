@@ -20,7 +20,7 @@
           <th>Descuento</th>
           <th>Precio Privilegio</th>
           <th>Estado</th>
-          <th>Acción</th>
+          <th style="text-align: center;">Acción</th>
         </tr>
       </thead>
       <tbody>
@@ -29,7 +29,7 @@
         </tr>
         <tr *ngFor="let oferta of ofertasActivas" [class.inactivo]="!oferta.activo">
           <td>
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
               <img *ngIf="oferta.perfume?.imagen_Url" [src]="oferta.perfume.imagen_Url" class="img-thumbnail">
               <div class="perfume-info">
                 <strong>{{ oferta.perfume?.nombre }}</strong>
@@ -55,7 +55,6 @@
               ✏️
             </button>
           </td>
-
         </tr>
       </tbody>
     </table>
@@ -114,9 +113,9 @@
 
     <div class="modal-body text-center">
       <div class="form-group">
-        <label style="color: #d4af37; font-weight: bold;">Configuración Actual guardada:</label>
+        <label style="color: #d4af37; font-weight: bold; margin-bottom: 15px;">Configuración Actual guardada:</label>
         <input type="datetime-local" [(ngModel)]="fechaFinOferta" class="admin-input date-input text-center">
-        <small style="color: #94a3b8; display: block; margin-top: 5px;">Modifica este valor para actualizar el temporizador global.</small>
+        <small style="color: #94a3b8; display: block; margin-top: 15px;">Modifica este valor para actualizar el temporizador global.</small>
       </div>
 
       <div class="vista-previa-fecha" *ngIf="fechaFinOferta">
