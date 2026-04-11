@@ -55,6 +55,9 @@ export class Inicio implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // 👇 Cargamos el carrito desde la memoria al iniciar 👇
+    this.cargarCarrito();
+
     this.productosSub = this.perfumeService.perfumes$.subscribe({
       next: (prods) => {
         this.productos = prods.map(p => ({
@@ -124,6 +127,7 @@ export class Inicio implements OnInit, OnDestroy {
   }
 
   // --- BUSCADOR, ORDEN Y FILTROS (Tus funciones intactas) ---
+  // --- BUSCADOR, ORDEN Y FILTROS ---
   buscarPorNombre() { this.aplicarFiltros(); }
   cambiarOrden() { this.aplicarFiltros(); }
   toggleGenero(genero: string) { this.generoActivo = this.generoActivo === genero ? '' : genero; this.aplicarFiltros(); }
@@ -158,11 +162,29 @@ export class Inicio implements OnInit, OnDestroy {
   }
 
   // --- LÓGICA DEL CARRITO Y NOTIFICACIONES (Tus funciones intactas) ---
+  // 👇 --- LÓGICA DEL CARRITO Y SINCRONIZACIÓN --- 👇
+  cargarCarrito() {
+    if (isPlatformBrowser(this.platformId)) {
+      const carritoGuardado = localStorage.getItem('carritoDunaroma');
+      if (carritoGuardado) {
+        this.carrito = JSON.parse(carritoGuardado);
+      }
+    }
+  }
+
+  guardarCarrito() {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('carritoDunaroma', JSON.stringify(this.carrito));
+    }
+  }
+
   agregarAlCarrito(producto: any, cantidad: number = 1) {
     const itemExistente = this.carrito.find(item => item.idPerfume === producto.idPerfume);
     if (itemExistente) { itemExistente.cantidad += cantidad; } 
     else { this.carrito.push({ ...producto, cantidad: cantidad }); }
     
+    this.guardarCarrito(); // Guardamos en memoria al agregar
+
     this.lanzarNotificacion(`¡${producto.nombre} se agregó al carrito!`);
     if (this.modalAbierto) this.cerrarModal();
   }
@@ -178,6 +200,28 @@ export class Inicio implements OnInit, OnDestroy {
     this.router.navigate(['/carrito']);
   }
 
+  eliminarDelCarrito(index: number) { 
+    this.carrito.splice(index, 1); 
+    this.guardarCarrito(); // Guardamos en memoria al eliminar
+  }
+
+  calcularTotalCarrito(): number { 
+    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); 
+  }
+
+  toggleCarrito() { 
+    this.cargarCarrito(); // Traemos lo más fresco de la memoria antes de abrir
+    this.carritoAbierto = !this.carritoAbierto; 
+  }
+
+  irAlCarrito() {
+    this.carritoService.setCarrito(this.carrito);
+    this.carritoAbierto = false; 
+    document.body.classList.remove('modal-open'); 
+    this.router.navigate(['/carrito']);
+  }
+
+  // --- NOTIFICACIONES ---
   lanzarNotificacion(mensaje: string) {
     this.notificaciones.push(mensaje);
     setTimeout(() => { this.notificaciones.shift(); this.cdr.detectChanges(); }, 3500);
@@ -186,6 +230,7 @@ export class Inicio implements OnInit, OnDestroy {
   agregarFavorito(producto: any) { this.lanzarNotificacion(`¡${producto.nombre} guardado en favoritos! ❤`); }
 
   // --- LÓGICA DEL MODAL (Tus funciones intactas) ---
+  // --- LÓGICA DEL MODAL ---
   abrirModal(producto: any) {
     this.productoSeleccionado = producto;
     this.imagenSeleccionada = producto.img1 || 'assets/img/placeholder.png';
@@ -205,6 +250,7 @@ export class Inicio implements OnInit, OnDestroy {
 
 
   // 🔥 ESTO ES LO QUE LE FALTA A TU ARCHIVO 🔥
+  // --- LISTA DE FAMILIAS ---
   listaFamilias: any[] = [
     { id: 1, nombre: 'Cítricos' },
     { id: 2, nombre: 'Florales' },

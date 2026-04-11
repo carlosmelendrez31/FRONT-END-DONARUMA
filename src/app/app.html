@@ -7,6 +7,14 @@
     <a routerLink="/ofertas" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Ofertas</a>
     <a routerLink="/novedades" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Novedades</a>
     <a routerLink="/admin" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">Admin</a>
+   <div class="dropdown" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">
+      <span class="menu-item">Admin ▾</span>
+      <div class="dropdown-content">
+        <a routerLink="/admin">📦 Gestionar Perfumes</a>
+        <a routerLink="/admin-novedades">📰 Publicar Novedades</a>
+        <a style="cursor: not-allowed; opacity: 0.6;" title="Próximamente">🔥 Ofertas (Pronto)</a>
+      </div>
+    </div>
     
     <a routerLink="/" class="menu-item" *ngIf="!appStorage.isLoggedIn()">Cuenta</a>
   </nav>

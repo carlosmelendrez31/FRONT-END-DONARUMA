@@ -1,0 +1,166 @@
+<section class="novedades-container VIP-theme">
+
+  <div class="glow-bg glow-1"></div>
+  <div class="glow-bg glow-2"></div>
+
+  <div class="header-vip">
+    <h2>DUNAROMA <span>NOTICIAS</span></h2>
+    <p>Las últimas exclusivas, lanzamientos y secretos de la alta perfumería.</p>
+  </div>
+
+  <div *ngIf="cargando" class="loading">Preparando exclusivas...</div>
+
+  <div class="novedades-layout" *ngIf="!cargando">
+
+    <div class="news-feed-large">
+      <article class="large-card glass-card" *ngFor="let post of listaNovedades">
+        <div class="card-image-wrapper-large">
+          <img [src]="post.imagenUrl" [alt]="post.titulo" class="main-image-large">
+          <span class="category-tag-vip">EXCLUSIVO</span>
+        </div>
+        <div class="card-content-large">
+          <h3 class="post-title-large">{{ post.titulo }}</h3>
+          <div class="post-author-vip">
+            <img src="https://ui-avatars.com/api/?name=Dunaroma&background=d4af37&color=0b132b&bold=true" alt="Admin"
+              class="author-avatar-vip">
+            <div class="author-info-vip">
+              <span class="author-name-vip">Por Admin DUNAROMA</span>
+              <span class="post-time-vip">{{ post.fechaPublicacion | date:'longDate' }}</span>
+            </div>
+          </div>
+          <p class="post-excerpt-large">{{ post.descripcion }}</p>
+          <button class="read-more-vip" [routerLink]="['/novedades', post.idNovedad]">
+            Leer artículo completo
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <aside class="sidebar-vip">
+      <div class="widget-vip widget-newsletter">
+        <div class="widget-icon">✉️</div>
+        <h3>Únete al Club Privado</h3>
+        <p>Recibe códigos de descuento y entérate de los nuevos ingresos antes que nadie.</p>
+        
+        <input type="email" #emailInput placeholder="Tu correo electrónico..." class="input-sidebar">
+        
+        <button class="btn-sidebar" (click)="suscribirVIP(emailInput.value); emailInput.value=''">Suscribirme</button>
+      </div>
+
+      <div class="widget-vip widget-tendencias">
+        <h3>Tendencias</h3>
+        <ul class="lista-tendencias">
+          <li *ngFor="let perfume of perfumesTendencia" (click)="abrirModal(perfume)">
+            <div class="tendencia-img">
+              <img [src]="perfume.imagen_Url || perfume.img1 || perfume.Imagen_Url" [alt]="perfume.nombre"
+                style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+            </div>
+            <div class="tendencia-info">
+              <h4>{{ perfume.nombre }}</h4>
+              <p>{{ perfume.marca }} - ${{ perfume.precio }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="modal" *ngIf="modalAbierto">
+      <div class="modal-content">
+        <span class="cerrar" (click)="cerrarModal()">&times;</span>
+        <div class="modal-grid" *ngIf="perfumeSeleccionado">
+          
+          <div class="modal-imagenes">
+            <img [src]="perfumeSeleccionado.imagen_Url || perfumeSeleccionado.img1" class="imagen-principal" [alt]="perfumeSeleccionado.nombre">
+          </div>
+
+          <div class="modal-info">
+            <span class="brand-modal">{{ perfumeSeleccionado.marca }}</span>
+            <h2>{{ perfumeSeleccionado.nombre }}</h2>
+            <p class="desc-modal">{{ perfumeSeleccionado.descripcion }}</p>
+
+            <div class="estadisticas-aroma">
+              <div class="stat-row">
+                <span>Aromático</span>
+                <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.aromatico || 50"></div></div>
+              </div>
+              <div class="stat-row">
+                <span>Intensidad</span>
+                <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.intensidad || 50"></div></div>
+              </div>
+              <div class="stat-row">
+                <span>Dulce</span>
+                <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.dulzor || 50"></div></div>
+              </div>
+              <div class="stat-row">
+                <span>Duración</span>
+                <div class="stat-bar"><div class="fill" [style.width.%]="perfumeSeleccionado.duracion || 50"></div></div>
+              </div>
+            </div>
+
+            <div class="detalles-rapidos">
+              <p><strong>Género:</strong> {{perfumeSeleccionado.genero}}</p>
+              <p><strong>Ocasión:</strong> {{perfumeSeleccionado.ocasion}}</p>
+              <p><strong>Stock:</strong> <span class="stock-badge">{{perfumeSeleccionado.stock}} disponibles</span></p>
+            </div>
+
+            <div class="familias-container" style="justify-content: flex-start; margin-top: 15px;"
+                 *ngIf="perfumeSeleccionado.familiasOlfativasIds && perfumeSeleccionado.familiasOlfativasIds.length > 0">
+              <span style="color: #8892b0; font-size: 0.9rem; margin-right: 10px;"><strong>Familias:</strong></span>
+              <span class="badge-familia" *ngFor="let idFam of perfumeSeleccionado.familiasOlfativasIds">
+                {{ getNombreFamilia(idFam) }}
+              </span>
+            </div>
+
+            <div class="modal-bottom">
+              <p class="precio-modal">${{ perfumeSeleccionado.precio }}</p>
+              <div class="acciones-modal">
+                <button class="btn-carrito" (click)="agregarAlCarrito(perfumeSeleccionado)">Agregar al carrito</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<div class="toast-container">
+  <div class="toast-mensaje" *ngFor="let msj of notificaciones">✅ {{msj}}</div>
+</div>
+
+<a href="https://wa.me/521234567890" target="_blank" class="btn-whatsapp" title="Chat con soporte">
+  <img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" alt="WhatsApp" style="width: 35px;">
+</a>
+
+<button class="btn-carrito-flotante" (click)="toggleCarrito()">
+  🛒 <span class="badge-carrito" *ngIf="carrito.length > 0">{{carrito.length}}</span>
+</button>
+
+<div class="carrito-overlay" *ngIf="carritoAbierto" (click)="toggleCarrito()"></div>
+
+<div class="carrito-lateral" [class.abierto]="carritoAbierto">
+  <div class="carrito-header">
+    <h2>Tu Carrito</h2><span class="cerrar-carrito" (click)="toggleCarrito()">✖</span>
+  </div>
+
+  <div class="carrito-body">
+    <div *ngIf="carrito.length === 0" class="carrito-vacio">
+      <p>Tu carrito está vacío.</p>
+    </div>
+
+    <div class="carrito-item" *ngFor="let item of carrito; let i = index">
+      <img [src]="item.img1 || item.imagen_Url || item.Imagen_Url || item.imagenUrl || 'https://via.placeholder.com/60?text=Foto'" alt="Perfume">
+      <div class="item-info">
+        <h4>{{item.nombre}}</h4>
+        <p class="item-precio">${{item.precio}} x {{item.cantidad}}</p>
+      </div>
+      <button class="btn-eliminar-item" (click)="eliminarDelCarrito(i)">🗑️</button>
+    </div>
+  </div>
+
+  <div class="carrito-footer" *ngIf="carrito.length > 0">
+    <div class="total-fila"><span>Total:</span><strong>${{calcularTotalCarrito()}}</strong></div>
+    <button class="btn-checkout" routerLink="/carrito">Finalizar Compra</button>
+  </div>
+</div>

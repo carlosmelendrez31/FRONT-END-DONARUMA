@@ -40,4 +40,21 @@ export class Carrito implements OnInit {
     }
   });
 }
+  pagarConStripe() {
+    // Ya no necesitamos cargar la llave pública aquí, el backend hace todo el trabajo pesado
+    this.carritoService.procesarPagoStripe(this.listaCarrito).subscribe({
+      next: (respuesta: any) => {
+        
+        // ¡La nueva forma mágica! Si el servidor nos responde con la URL de Stripe, mandamos al cliente directo para allá
+        if (respuesta.url) {
+          window.location.href = respuesta.url; 
+        }
+
+      },
+      error: (err) => {
+        console.error('Hubo un error al conectar con el servidor', err);
+        alert('Error al conectar con el servidor. Revisa la consola.');
+      }
+    });
+  }
 }
