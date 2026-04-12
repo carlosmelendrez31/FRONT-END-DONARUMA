@@ -23,7 +23,18 @@ export class Inicio implements OnInit, OnDestroy {
   ocasionActiva: string = '';
   criterioOrden: string = 'defecto';
 
-  
+  // --- LISTA DE FAMILIAS ---
+  listaFamilias: any[] = [
+    { id: 1, nombre: 'Cítricos' },
+    { id: 2, nombre: 'Florales' },
+    { id: 4, nombre: 'Orientales' },
+    { id: 5, nombre: 'Frutales' },
+    { id: 6, nombre: 'Gourmand' },
+    { id: 7, nombre: 'Herbales' },
+    { id: 8, nombre: 'Fougère' },
+    { id: 9, nombre: 'Acuáticos' }
+  ];
+
   // Modal Vista Rápida
   modalAbierto = false;
   imagenSeleccionada: string = '';
@@ -88,7 +99,6 @@ export class Inicio implements OnInit, OnDestroy {
       error: (err) => console.error('Error:', err)
     });
 
-    
     if (isPlatformBrowser(this.platformId)) {
       this.intervaloCarrusel = setInterval(() => {
         this.siguienteDiapositiva();
@@ -115,7 +125,6 @@ export class Inicio implements OnInit, OnDestroy {
 
   // --- NUEVO: LOS MÁS VENDIDOS ---
   get mejoresVendidos() {
-    // Tomamos los primeros 4 perfumes para mostrarlos como destacados
     return this.productos.slice(0, 4);
   }
 
@@ -126,7 +135,6 @@ export class Inicio implements OnInit, OnDestroy {
     }
   }
 
-  // --- BUSCADOR, ORDEN Y FILTROS (Tus funciones intactas) ---
   // --- BUSCADOR, ORDEN Y FILTROS ---
   buscarPorNombre() { this.aplicarFiltros(); }
   cambiarOrden() { this.aplicarFiltros(); }
@@ -161,7 +169,6 @@ export class Inicio implements OnInit, OnDestroy {
     this.productosFiltrados = filtrados;
   }
 
-  // --- LÓGICA DEL CARRITO Y NOTIFICACIONES (Tus funciones intactas) ---
   // 👇 --- LÓGICA DEL CARRITO Y SINCRONIZACIÓN --- 👇
   cargarCarrito() {
     if (isPlatformBrowser(this.platformId)) {
@@ -187,17 +194,6 @@ export class Inicio implements OnInit, OnDestroy {
 
     this.lanzarNotificacion(`¡${producto.nombre} se agregó al carrito!`);
     if (this.modalAbierto) this.cerrarModal();
-  }
-
-  eliminarDelCarrito(index: number) { this.carrito.splice(index, 1); }
-  calcularTotalCarrito(): number { return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); }
-  toggleCarrito() { this.carritoAbierto = !this.carritoAbierto; }
-
-  irAlCarrito() {
-    this.carritoService.setCarrito(this.carrito);
-    this.carritoAbierto = false; // Close the overlay
-    document.body.classList.remove('modal-open'); // Just in case
-    this.router.navigate(['/carrito']);
   }
 
   eliminarDelCarrito(index: number) { 
@@ -229,7 +225,6 @@ export class Inicio implements OnInit, OnDestroy {
 
   agregarFavorito(producto: any) { this.lanzarNotificacion(`¡${producto.nombre} guardado en favoritos! ❤`); }
 
-  // --- LÓGICA DEL MODAL (Tus funciones intactas) ---
   // --- LÓGICA DEL MODAL ---
   abrirModal(producto: any) {
     this.productoSeleccionado = producto;
@@ -247,20 +242,6 @@ export class Inicio implements OnInit, OnDestroy {
   }
 
   cambiarImagen(url: string | undefined) { if (url) this.imagenSeleccionada = url; }
-
-
-  // 🔥 ESTO ES LO QUE LE FALTA A TU ARCHIVO 🔥
-  // --- LISTA DE FAMILIAS ---
-  listaFamilias: any[] = [
-    { id: 1, nombre: 'Cítricos' },
-    { id: 2, nombre: 'Florales' },
-    { id: 4, nombre: 'Orientales' },
-    { id: 5, nombre: 'Frutales' },
-    { id: 6, nombre: 'Gourmand' },
-    { id: 7, nombre: 'Herbales' },
-    { id: 8, nombre: 'Fougère' },
-    { id: 9, nombre: 'Acuáticos' }
-  ];
 
   getNombreFamilia(id: number): string {
     const familia = this.listaFamilias.find(f => f.id === id);

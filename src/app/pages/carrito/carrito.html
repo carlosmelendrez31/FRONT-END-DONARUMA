@@ -42,16 +42,3 @@
     </div>
 
   </div>
-<div style="padding: 20px; text-align: center; color: white;">
-  <h2>Mi Carrito de Compras 🛒</h2>
-  
-  <ul style="list-style: none; padding: 0;">
-    <li *ngFor="let item of listaCarrito" style="margin-bottom: 10px;">
-      {{ item.cantidad }}x {{ item.nombre }} - ${{ item.precio }}
-    </li>
-  </ul>
-
-  <button (click)="pagarConStripe()" style="padding: 10px 20px; background-color: #d4af37; color: #0b132b; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
-    Pagar con Stripe 💳
-  </button>
-</div>

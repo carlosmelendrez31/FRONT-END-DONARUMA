@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { loadStripe } from '@stripe/stripe-js';
 import { CarritoService } from '../../core/services/carrito.service'; 
+import Swal from 'sweetalert2'; // 👈 1. IMPORT NUEVO DE LA LIBRERÍA
 
 @Component({
   selector: 'app-carrito',
@@ -24,36 +24,36 @@ export class Carrito implements OnInit {
     }
   }
 
+  // 👈 2. NUEVA HERRAMIENTA DE ALERTAS ELEGANTES
+  mostrarAlertaElegante(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+    Swal.fire({
+      title: tipo === 'success' ? '¡Éxito!' : (tipo === 'error' ? 'Error' : 'Aviso'),
+      text: mensaje,
+      icon: tipo,
+      background: '#111827', // Fondo oscuro tipo Dunaroma
+      color: '#ffffff', // Letras blancas
+      confirmButtonColor: '#fbbf24' // Botón dorado
+    });
+  }
+
   // 🔥 AQUÍ ESTÁ LA FUNCIÓN MÁGICA PARA SUMAR EL DINERO
   calcularTotal(): number {
     return this.listaCarrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
 
- pagarConStripe() {
-  this.carritoService.procesarPagoStripe().subscribe({
-    next: (respuesta: any) => {
-      // Stripe nos manda la URL de cobro y Angular nos redirige automáticamente
-      window.location.href = respuesta.url; 
-    },
-    error: (err) => {
-      console.error("Hubo un error al crear la sesión de pago", err);
-    }
-  });
-}
   pagarConStripe() {
-    // Ya no necesitamos cargar la llave pública aquí, el backend hace todo el trabajo pesado
-    this.carritoService.procesarPagoStripe(this.listaCarrito).subscribe({
+    // Ya no lleva argumentos adentro de los paréntesis
+    this.carritoService.procesarPagoStripe().subscribe({
       next: (respuesta: any) => {
-        
         // ¡La nueva forma mágica! Si el servidor nos responde con la URL de Stripe, mandamos al cliente directo para allá
         if (respuesta.url) {
           window.location.href = respuesta.url; 
         }
-
       },
       error: (err) => {
         console.error('Hubo un error al conectar con el servidor', err);
-        alert('Error al conectar con el servidor. Revisa la consola.');
+        // 👇 3. AQUÍ REEMPLAZAMOS EL VIEJO ALERT POR EL NUEVO PREMIUM 👇
+        this.mostrarAlertaElegante('Error al conectar con el servidor. Revisa la consola.', 'error');
       }
     });
   }

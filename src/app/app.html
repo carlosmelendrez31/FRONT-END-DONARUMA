@@ -6,13 +6,14 @@
     <a routerLink="/fofativas" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Aromas</a>
     <a routerLink="/ofertas" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Ofertas</a>
     <a routerLink="/novedades" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Novedades</a>
-    <a routerLink="/admin" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">Admin</a>
+    
    <div class="dropdown" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">
       <span class="menu-item">Admin ▾</span>
       <div class="dropdown-content">
         <a routerLink="/admin">📦 Gestionar Perfumes</a>
         <a routerLink="/admin-novedades">📰 Publicar Novedades</a>
-        <a style="cursor: not-allowed; opacity: 0.6;" title="Próximamente">🔥 Ofertas (Pronto)</a>
+        <a routerLink="/admin/venta-privada">🏷️ Publicar Ofertas</a>
+        
       </div>
     </div>
     
