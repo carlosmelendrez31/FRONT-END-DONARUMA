@@ -173,7 +173,7 @@
       <p style="font-size: 0.9rem; color: #888;">Agrega la esencia de tus sueños.</p>
     </div>
     <div class="carrito-item" *ngFor="let item of carrito; let i = index">
-      <img [src]="item.img1" alt="Perfume">
+      <img [src]="item.img1 || item.imagen_Url || item.Imagen_Url || item.imagenUrl || 'https://via.placeholder.com/60?text=Foto'" alt="Perfume">
       <div class="item-info">
         <h4>{{item.nombre}}</h4>
         <p class="item-precio">${{item.precio}} x {{item.cantidad}}</p>
@@ -204,8 +204,7 @@
       <div class="modal-info">
         <span class="brand-modal">{{productoSeleccionado.marca}}</span>
         <h2>{{productoSeleccionado.nombre}}</h2>
-        <p class="desc-modal">{{productoSeleccionado.descripcion || 'Una fragancia única inspirada en la esencia del
-          desierto.'}}</p>
+        <p class="desc-modal">{{productoSeleccionado.descripcion || 'Una fragancia única inspirada en la esencia del desierto.'}}</p>
         <div class="estadisticas-aroma">
           <div class="stat-row">
             <span>Aromático</span>

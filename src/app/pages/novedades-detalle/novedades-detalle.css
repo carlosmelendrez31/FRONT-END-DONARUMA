@@ -1,0 +1,153 @@
+/* Fuente global */
+body { 
+    margin: 0; 
+    font-family: 'Poppins', sans-serif; 
+}
+
+/* Fondo general de la página */
+.detalle-container {
+    background: linear-gradient(135deg, #0A1F44, #123D8C);
+    min-height: 100vh;
+    color: white;
+    padding-bottom: 80px;
+}
+
+/* === IMAGEN DE CABECERA (HERO) === */
+.hero-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 60vh; /* Ocupa un poco más de la mitad de la pantalla */
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Degradado para que se fusione con el fondo azul de abajo */
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(10,31,68,0.2) 0%, rgba(10,31,68,1) 100%);
+}
+
+/* === CONTENEDOR DE LA NOTICIA (TARJETA DE CRISTAL) === */
+.articulo-content {
+    max-width: 1200px;
+    margin: -150px auto 0; /* Sube la tarjeta para montarse sobre la foto */
+    position: relative; /* <--- MUY IMPORTANTE PARA QUE EL BOTÓN FUNCIONE */
+    z-index: 10;
+    padding: 60px 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* === BOTÓN VOLVER (ACOMODADO SOBRE LA RAYA) === */
+.btn-volver {
+    position: absolute;
+    top: -45px; /* Empuja el botón hacia arriba saliéndose de la tarjeta */
+    left: 20px; /* Alineado al lado izquierdo */
+    background: transparent;
+    color: #d4af37;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-volver:hover {
+    color: white;
+    transform: translateX(-5px); /* Se mueve un poquito a la izquierda al pasar el mouse */
+}
+
+/* === ESTILOS DEL TEXTO === */
+.category-tag-vip {
+    background: rgba(10, 31, 68, 0.85);
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.titulo-articulo {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 30px 0;
+    line-height: 1.2;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+.autor-fecha {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #d4af37;
+}
+
+.autor-fecha div {
+    display: flex;
+    flex-direction: column;
+}
+
+.autor-fecha strong {
+    color: #d4af37;
+    font-size: 1.1rem;
+}
+
+.autor-fecha span {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.cuerpo-articulo p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+    margin-bottom: 20px;
+    white-space: pre-line; /* Respeta los saltos de línea cuando escribes tu reseña */
+}
+
+.loading-state {
+    text-align: center;
+    color: #d4af37;
+    font-size: 1.5rem;
+    padding-top: 150px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A1F44, #123D8C);
+}
+
+/* Responsivo para celulares o tablets */
+@media (max-width: 1024px) {
+    .articulo-content { 
+        margin: -50px 20px 0; 
+        padding: 40px 30px; 
+    }
+    .titulo-articulo { font-size: 2.2rem; }
+    .hero-image-wrapper { height: 40vh; }
+    .btn-volver { left: 0; }
+}

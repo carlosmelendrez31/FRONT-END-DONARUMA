@@ -5,7 +5,12 @@
     
     <div class="lista-productos">
       <div class="producto-card" *ngFor="let item of listaCarrito">
-        <div class="producto-icono">✨</div> <div class="producto-info">
+        
+        <div class="producto-icono">
+         <img [src]="item.img1 || item.imagenUrl || item.imagen || item.imagen_Url" alt="{{ item.nombre }}" class="img-perfume-carrito">
+        </div> 
+        
+        <div class="producto-info">
           <h3>{{ item.nombre }}</h3>
           <p class="producto-cantidad">Cantidad: {{ item.cantidad }}</p>
         </div>

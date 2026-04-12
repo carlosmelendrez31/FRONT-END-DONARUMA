@@ -1,0 +1,36 @@
+<section class="detalle-container" *ngIf="!cargando && novedad">
+  
+  <div class="hero-image-wrapper">
+    <img [src]="novedad.imagenUrl" [alt]="novedad.titulo" class="hero-image">
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="articulo-content">
+    
+    <button class="btn-volver" (click)="volver()">
+      ← VOLVER AL MURO
+    </button>
+
+    <span class="category-tag-vip">EXCLUSIVA DUNAROMA</span>
+    
+    <h1 class="titulo-articulo">{{ novedad.titulo }}</h1>
+    
+    <div class="autor-fecha">
+      <img src="https://ui-avatars.com/api/?name=Dunaroma&background=d4af37&color=0b132b&bold=true" alt="Admin" class="avatar">
+      <div>
+        <strong>Por Admin DUNAROMA</strong>
+        <span>{{ novedad.fechaPublicacion | date:'longDate' }}</span>
+      </div>
+    </div>
+
+    <div class="cuerpo-articulo">
+      <p>{{ novedad.descripcion }}</p>
+    </div>
+
+  </div>
+
+</section>
+
+<div class="loading-state" *ngIf="cargando">
+  <p>Cargando exclusiva...</p>
+</div>

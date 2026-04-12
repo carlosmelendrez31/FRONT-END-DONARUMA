@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { loadStripe } from '@stripe/stripe-js';
 import { CarritoService } from '../../core/services/carrito.service';
 import { AppStorageService, UserProfile } from '../../core/services/app-storage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carrito',
@@ -19,13 +20,14 @@ export class Carrito implements OnInit {
   editandoDireccion: boolean = false;
   nuevaDireccion: string = '';
 
-  constructor(private carritoService: CarritoService, private appStorage: AppStorageService) {}
+  constructor(
+    private carritoService: CarritoService, 
+    private appStorage: AppStorageService,
+    private cdr: ChangeDetectorRef 
+  ) {}
 
   ngOnInit() {
-    const fromService = this.carritoService.getCarrito();
-    if (fromService && fromService.length > 0) {
-      this.listaCarrito = fromService;
-    }
+    this.cargarCarritoDesdeBD();
 
     this.appStorage.userProfile$.subscribe(profile => {
       if (profile && profile.direccionUsuario) {
@@ -33,6 +35,48 @@ export class Carrito implements OnInit {
       }
     });
   }
+
+  obtenerIdUsuarioReal(): number {
+    const token = localStorage.getItem('accessToken'); 
+    if (token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadDecodificado = atob(payloadBase64);
+        const datosUsuario = JSON.parse(payloadDecodificado);
+
+        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario.sub;
+        
+        return idReal ? Number(idReal) : 1;
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+    return 1;
+  }
+
+  cargarCarritoDesdeBD() {
+    const idUsuario = this.obtenerIdUsuarioReal();
+
+    this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
+      next: (datosBD: any) => {
+        this.listaCarrito = datosBD.map((item: any) => ({
+          idCarritoItem: item.IdCarritoItem || item.idCarritoItem,
+          idPerfume: item.idPerfume || item.IdPerfume, // Ensure idPerfume is propagated
+          nombre: item.nombre,
+          precio: Number(item.precio),
+          cantidad: item.Cantidad || item.cantidad || 1,
+          img1: item.img1
+        }));
+        
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al recuperar el carrito de la BD:', err);
+        this.mostrarAlertaElegante('No pudimos recuperar tus productos guardados.', 'warning');
+      }
+    });
+  }
+
 
   activarEdicionDireccion() {
     this.nuevaDireccion = this.direccionActual;
@@ -65,7 +109,17 @@ export class Carrito implements OnInit {
     }
   }
 
-  // 🔥 AQUÍ ESTÁ LA FUNCIÓN MÁGICA PARA SUMAR EL DINERO
+  mostrarAlertaElegante(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+    Swal.fire({
+      title: tipo === 'success' ? '¡Éxito!' : (tipo === 'error' ? 'Error' : 'Aviso'),
+      text: mensaje,
+      icon: tipo,
+      background: '#111827',
+      color: '#ffffff',
+      confirmButtonColor: '#fbbf24'
+    });
+  }
+
   calcularTotal(): number {
     return this.listaCarrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
@@ -73,6 +127,11 @@ export class Carrito implements OnInit {
   pagarConStripe() {
     console.log('Click en Pagar con Stripe! Lista del carrito:', this.listaCarrito);
     
+    if (this.listaCarrito.length === 0) {
+      this.mostrarAlertaElegante('Tu carrito está vacío', 'warning');
+      return;
+    }
+
     if (!this.direccionActual) {
       console.warn('Falta dirección de envío');
       alert('Por favor agrega una dirección de envío antes de continuar.');
@@ -88,7 +147,6 @@ export class Carrito implements OnInit {
     this.carritoService.procesarPagoStripe(this.direccionActual, perfumesIds, cantidades).subscribe({
       next: (respuesta: any) => {
         console.log('Respuesta exitosa de Stripe:', respuesta);
-        // ¡La nueva forma mágica! Si el servidor nos responde con la URL de Stripe, mandamos al cliente directo para allá
         if (respuesta.url) {
           window.location.href = respuesta.url; 
         } else {
@@ -97,8 +155,8 @@ export class Carrito implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Hubo un error al conectar con el servidor en procesarPagoStripe', err);
-        alert('Error al conectar con el servidor. Revisa la consola para más detalles.');
+        console.error('Error en el checkout:', err);
+        this.mostrarAlertaElegante('Error al conectar con el servidor. Revisa la consola para más detalles.', 'error');
       }
     });
   }
