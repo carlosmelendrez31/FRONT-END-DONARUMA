@@ -7,7 +7,6 @@ import { Ofertasadm } from '../../core/services/ofertasadm';
 @Component({
   selector: 'app-ofertas',
   standalone: true,
-  // 👇 AQUÍ QUITAMOS LAS HERRAMIENTAS QUE NO SE USABAN 👇
   imports: [CommonModule], 
   templateUrl: './oferta.html',
   styleUrl: './oferta.css',
@@ -16,7 +15,7 @@ export class Ofertas implements OnInit, OnDestroy {
   
   private ofertasService = inject(Ofertasadm);
   private router = inject(Router);
-private carritoService = inject(CarritoService);
+  private carritoService = inject(CarritoService);
 
   productosEnOferta: any[] = [];
   ofertaFinalizada: boolean = false;
@@ -32,34 +31,28 @@ private carritoService = inject(CarritoService);
   segundos: number = 0;
   intervalo: any;
   fechaDestino: Date | null = null; 
-
+  notificaciones: string[] = [];
   verificandoOferta: boolean = true;
 
   // --- VARIABLES DEL CARRITO ---
   carritoAbierto: boolean = false;
   carrito: any[] = [];
-  notificaciones: string[] = [];
+
 
   ngOnInit(): void {
-    this.cargarCarrito(); // 🌟 Cargar el carrito global al iniciar
-    this.carritoAbierto = !this.carritoAbierto; 
+    this.cargarCarritoDesdeBD(); // 🌟 Actualizado a la BD al iniciar
     this.cargarDatosDesdeAPI();
   }
 
   cargarDatosDesdeAPI(): void {
-    // 1. PRIMERO preguntamos por el reloj
     this.ofertasService.obtenerRelojCliente().subscribe({
       next: (config) => {
         if (config && config.fechaFinOferta && config.activo) {
           this.fechaDestino = new Date(config.fechaFinOferta);
-          
-          // Comprobamos si aún hay tiempo
           if (this.fechaDestino.getTime() > new Date().getTime()) {
-            // SÍ HAY TIEMPO: Iniciamos el reloj y llamamos a los perfumes
             this.iniciarRelojReal();
             this.cargarPerfumes(); 
           } else {
-            // NO HAY TIEMPO: Cortamos el acceso directamente
             this.ofertaFinalizada = true;
             this.verificandoOferta = false; 
           }
@@ -76,7 +69,6 @@ private carritoService = inject(CarritoService);
     });
   }
 
-  // 2. Esta función SOLO se ejecutará si el reloj lo permite
   cargarPerfumes(): void {
     this.ofertasService.obtenerOfertasCliente().subscribe({
       next: (datosAPI) => {
@@ -88,14 +80,10 @@ private carritoService = inject(CarritoService);
           precioOriginal: apiItem.precioOriginal,
           precioOferta: apiItem.precioOferta,
           stock: apiItem.stock,
-          
           descuento: apiItem.descuento, 
-          
           genero: 'Unisex', 
           familiasArray: ['Privilege'] 
         }));
-        
-        // ¡Todo listo! Quitamos la pantalla de carga
         this.verificandoOferta = false; 
       },
       error: (err) => {
@@ -105,7 +93,6 @@ private carritoService = inject(CarritoService);
     });
   }
 
-  // Nuevo motor del reloj basado en fechas reales
   iniciarRelojReal() {
     if (!this.fechaDestino) return;
     this.ofertaFinalizada = false; 
@@ -153,71 +140,97 @@ private carritoService = inject(CarritoService);
     }, 300);
   }
 
-  // --- LÓGICA DEL CARRITO GLOBAL ---
-  cargarCarrito() {
-    const carritoGuardado = localStorage.getItem('carritoDunaroma');
-    if (carritoGuardado) {
-      this.carrito = JSON.parse(carritoGuardado);
-    }
-  }
-
-   mostrarNotificacion(mensaje: string) {
-    this.notificaciones.push(mensaje);
+  mostrarNotificacion(mensaje: string) {
+    setTimeout(() => {
+      this.notificaciones.push(mensaje);
+    }, 0);
     setTimeout(() => {
       this.notificaciones.shift(); 
     }, 3000);
   }
 
-  guardarCarrito() {
-    localStorage.setItem('carritoDunaroma', JSON.stringify(this.carrito));
+  // =========================================================
+  // 🚀 LÓGICA DEL CARRITO (CONECTADA A POSTGRESQL)
+  // =========================================================
+
+  obtenerIdUsuarioReal(): number {
+    const token = localStorage.getItem('accessToken'); 
+    if (token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadDecodificado = atob(payloadBase64);
+        const datosUsuario = JSON.parse(payloadDecodificado);
+        // console.log('CONTENIDO DEL TOKEN:', JSON.stringify(datosUsuario)); // Descomenta si necesitas debugear
+
+        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || datosUsuario.sub;
+        if (idReal) return Number(idReal); 
+
+      } catch (error) {
+        console.error('Error al leer el token:', error);
+      }
+    }
+    return 1; 
+  }
+ 
+  cargarCarritoDesdeBD() {
+    const idUsuario = this.obtenerIdUsuarioReal();
+    this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
+      next: (datosBD: any) => {
+        this.carrito = datosBD.map((item: any) => ({
+          idCarritoItem: item.IdCarritoItem || item.idCarritoItem || item.idcarritoitem,
+          nombre: item.nombre,
+          precio: Number(item.precio), 
+          cantidad: item.Cantidad || item.cantidad || 1, 
+          img1: item.img1
+        }));
+      },
+      error: (err: any) => {
+        console.error('Error al cargar el carrito:', err);
+      }
+    });
   }
 
   agregarAlCarrito(perfume: any) {
-    const itemExistente = this.carrito.find(item => item.nombre === perfume.nombreMostrar); 
-    
-    if (itemExistente) {
-      itemExistente.cantidad += 1;
-    } else {
-      this.carrito.push({ 
-        // 👇 Mapeamos los nombres para que el carrito general los entienda 👇
-        idPerfume: perfume.idPerfume,
-        nombre: perfume.nombreMostrar,
-        precio: perfume.precioOferta,
-        img1: perfume.imagenMostrar,
-        cantidad: 1 
-      });
-    }
-
-    this.guardarCarrito(); 
-    this.cerrarModal(); 
-    this.mostrarNotificacion(`¡${perfume.nombreMostrar} se agregó al carrito!`);
-  }
-
-  toggleCarrito() {
-    this.cargarCarrito(); 
-    this.carritoAbierto = !this.carritoAbierto;
+    const idUsuario = this.obtenerIdUsuarioReal(); 
+    this.carritoService.agregarAlCarritoBD(idUsuario, perfume.idPerfume, 1).subscribe({
+      next: (res: any) => {
+        this.mostrarNotificacion('¡Agregado exitosamente al carrito!'); 
+        this.cerrarModal();
+        this.cargarCarritoDesdeBD();
+      },
+      error: (err: any) => {
+        console.error('ERROR AL CONECTAR CON C#:', err);
+        this.mostrarNotificacion('Hubo un error al agregar el perfume');
+      }
+    });
   }
 
   eliminarDelCarrito(index: number) {
-    this.carrito.splice(index, 1);
-    this.guardarCarrito();
+    const itemABorrar = this.carrito[index];
+    this.carritoService.eliminarItemBD(itemABorrar.idCarritoItem).subscribe({
+      next: (respuesta: any) => {
+        this.carrito.splice(index, 1);
+        this.mostrarNotificacion('Perfume eliminado del carrito');
+      },
+      error: (err: any) => {
+        console.error('Error al eliminar en BD:', err);
+        this.mostrarNotificacion('Hubo un error al intentar eliminar');
+      }
+    });
   }
 
   calcularTotalCarrito() {
     return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
 
-irAlCarrito() {
-  // 1. Guardamos los datos más frescos en el servicio central
-  this.carritoService.setCarrito(this.carrito);
+  toggleCarrito() {
+    this.cargarCarritoDesdeBD();
+    this.carritoAbierto = !this.carritoAbierto;
+  }
 
-  // 2. Cerramos el panel lateral para que no estorbe
-  this.carritoAbierto = false; 
-
-  // 3. ¡Nos vamos a la página de cobro!
-  this.router.navigate(['/carrito']);
-}
-
-
-
+  irAlCarrito() {
+    this.carritoService.setCarrito(this.carrito);
+    this.carritoAbierto = false; 
+    this.router.navigate(['/carrito']);
+  }
 }

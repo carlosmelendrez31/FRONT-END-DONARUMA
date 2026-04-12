@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { NovedadesService, Novedad } from '../../core/services/novedades';
 import { PerfumeService } from '../../core/services/perfume'; 
+import { CarritoService } from '../../core/services/carrito.service';
 
 @Component({
   selector: 'app-novedades',
@@ -26,7 +27,7 @@ export class NovedadesComponent implements OnInit {
   carrito: any[] = [];
   carritoAbierto: boolean = false;
 
-  // 👇 DICCIONARIO DE FAMILIAS AGREGADO 👇
+  // DICCIONARIO DE FAMILIAS
   listaFamilias: any[] = [
     { id: 1, nombre: 'Cítricos' },
     { id: 2, nombre: 'Florales' },
@@ -41,57 +42,111 @@ export class NovedadesComponent implements OnInit {
   // Inyecciones
   private novedadesService = inject(NovedadesService);
   private perfumeService = inject(PerfumeService); 
+  private carritoService = inject(CarritoService);
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   ngOnInit() {
     this.cargarNovedades();
     this.cargarPerfumesAleatorios();
-    this.cargarCarrito();
+    // 👇 Cargamos el carrito desde la BD al iniciar
+    this.cargarCarritoDesdeBD();
   }
 
-  // 👇 FUNCION TRADUCTORA DE FAMILIAS 👇
   getNombreFamilia(id: number): string {
     const familia = this.listaFamilias.find(f => f.id === id);
     return familia ? familia.nombre : '';
   }
 
-  cargarCarrito() {
-    const carritoGuardado = localStorage.getItem('carritoDunaroma');
-    if (carritoGuardado) {
-      this.carrito = JSON.parse(carritoGuardado);
+  // =========================================================
+  // 🚀 LÓGICA DEL CARRITO (CONECTADA A POSTGRESQL)
+  // =========================================================
+
+  obtenerIdUsuarioReal(): number {
+    const token = localStorage.getItem('accessToken'); 
+    if (token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadDecodificado = atob(payloadBase64);
+        const datosUsuario = JSON.parse(payloadDecodificado);
+        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || datosUsuario.sub;
+        if (idReal) return Number(idReal); 
+      } catch (error) {
+        console.error('Error al leer el token:', error);
+      }
     }
+    return 1; 
   }
 
-  guardarCarrito() {
-    localStorage.setItem('carritoDunaroma', JSON.stringify(this.carrito));
+  cargarCarritoDesdeBD() {
+    const idUsuario = this.obtenerIdUsuarioReal(); 
+    this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
+      next: (datosBD: any) => {
+        this.carrito = datosBD.map((item: any) => ({
+          idCarritoItem: item.IdCarritoItem || item.idCarritoItem || item.idcarritoitem,
+          nombre: item.nombre,
+          precio: Number(item.precio), 
+          cantidad: item.Cantidad || item.cantidad || 1, 
+          img1: item.img1
+        }));
+        this.cdr.detectChanges(); 
+      },
+      error: (err: any) => console.error('Error al cargar el carrito:', err)
+    });
   }
 
-  agregarAlCarrito(perfume: any) {
-    const itemExistente = this.carrito.find(item => item.nombre === perfume.nombre); 
-    
-    if (itemExistente) {
-      itemExistente.cantidad += 1;
-    } else {
-      this.carrito.push({ ...perfume, cantidad: 1 });
-    }
+  agregarAlCarrito(perfume: any, cantidad: number = 1) {
+    const idUsuario = this.obtenerIdUsuarioReal(); 
+    // Buscamos el ID real sin importar si viene con mayúsculas o minúsculas
+    const idPerfumeReal = perfume.idPerfume || perfume.idperfume || perfume.IdPerfume;
 
-    this.guardarCarrito(); 
-    this.cerrarModal(); 
-    this.mostrarNotificacion(`¡${perfume.nombre} se agregó al carrito!`);
-  }
-
-  toggleCarrito() {
-    this.cargarCarrito(); // 👇 Trae datos frescos de Inicio antes de abrir 👇
-    this.carritoAbierto = !this.carritoAbierto;
+    this.carritoService.agregarAlCarritoBD(idUsuario, idPerfumeReal, cantidad).subscribe({
+      next: (res: any) => {
+        this.mostrarNotificacion(`¡${perfume.nombre} se agregó al carrito!`); 
+        if (this.modalAbierto) this.cerrarModal();
+        this.cargarCarritoDesdeBD(); 
+      },
+      error: (err: any) => {
+        console.error('ERROR AL CONECTAR CON C#:', err);
+        this.mostrarNotificacion('Hubo un error al agregar el perfume');
+      }
+    });
   }
 
   eliminarDelCarrito(index: number) {
-    this.carrito.splice(index, 1);
-    this.guardarCarrito();
+    const itemABorrar = this.carrito[index];
+    this.carritoService.eliminarItemBD(itemABorrar.idCarritoItem).subscribe({
+      next: (respuesta: any) => {
+        this.carrito.splice(index, 1);
+        this.mostrarNotificacion('Perfume eliminado del carrito');
+      },
+      error: (err: any) => {
+        console.error('Error al eliminar en BD:', err);
+        this.mostrarNotificacion('Hubo un error al intentar eliminar');
+      }
+    });
   }
 
-  calcularTotalCarrito() {
-    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+  calcularTotalCarrito(): number { 
+    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); 
   }
+
+  toggleCarrito() { 
+    this.cargarCarritoDesdeBD(); 
+    this.carritoAbierto = !this.carritoAbierto; 
+  }
+
+  // Esta función es clave para no romper tu página de pagos de Stripe
+  irAlCarrito() {
+    this.carritoService.setCarrito(this.carrito);
+    this.carritoAbierto = false; 
+    document.body.classList.remove('modal-open'); 
+    this.router.navigate(['/carrito']);
+  }
+
+  // =========================================================
+  // RESTO DE FUNCIONES (NOVEDADES Y MODALES)
+  // =========================================================
 
   cargarNovedades() {
     this.novedadesService.obtenerTodas().subscribe({
