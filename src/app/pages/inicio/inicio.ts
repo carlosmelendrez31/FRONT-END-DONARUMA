@@ -23,7 +23,18 @@ export class Inicio implements OnInit, OnDestroy {
   ocasionActiva: string = '';
   criterioOrden: string = 'defecto';
 
-  
+  // --- LISTA DE FAMILIAS ---
+  listaFamilias: any[] = [
+    { id: 1, nombre: 'Cítricos' },
+    { id: 2, nombre: 'Florales' },
+    { id: 4, nombre: 'Orientales' },
+    { id: 5, nombre: 'Frutales' },
+    { id: 6, nombre: 'Gourmand' },
+    { id: 7, nombre: 'Herbales' },
+    { id: 8, nombre: 'Fougère' },
+    { id: 9, nombre: 'Acuáticos' }
+  ];
+
   // Modal Vista Rápida
   modalAbierto = false;
   imagenSeleccionada: string = '';
@@ -55,26 +66,23 @@ export class Inicio implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // 👇 Cargamos el carrito desde la BASE DE DATOS al iniciar
+    this.cargarCarritoDesdeBD();
+
     this.productosSub = this.perfumeService.perfumes$.subscribe({
       next: (prods) => {
         this.productos = prods.map(p => ({
           ...p,
-          // 🔥 AQUÍ CONECTAMOS LA IMAGEN DEL BACK-END AL FRONT-END 🔥
           img1: p.imagen_Url || p.Imagen_Url || p.imagen_url || 'https://via.placeholder.com/300x300?text=Sin+Imagen',
-          
           idPerfume: p.idPerfume || p.idperfume || p.IdPerfume,
           nombre: p.nombre || p.Nombre || p.nombreperfume,
           marca: p.marca || p.Marca,
           precio: p.precio || p.Precio,
           genero: p.genero || p.Genero,
-          
-          // Valores por defecto si la base de datos no los manda
           intensidad: p.intensidad ?? 50,
           dulzor: p.dulzor ?? 50,
           duracion: p.duracion ?? 50,
           aromatico: p.aromatico ?? 50,
-
-          // Datos de prueba para el diseño (estrellas)
           rating: (Math.random() * (5 - 4) + 4).toFixed(1), 
           reviews: Math.floor(Math.random() * 200) + 15
         }));
@@ -85,7 +93,6 @@ export class Inicio implements OnInit, OnDestroy {
       error: (err) => console.error('Error:', err)
     });
 
-    
     if (isPlatformBrowser(this.platformId)) {
       this.intervaloCarrusel = setInterval(() => {
         this.siguienteDiapositiva();
@@ -112,7 +119,6 @@ export class Inicio implements OnInit, OnDestroy {
 
   // --- NUEVO: LOS MÁS VENDIDOS ---
   get mejoresVendidos() {
-    // Tomamos los primeros 4 perfumes para mostrarlos como destacados
     return this.productos.slice(0, 4);
   }
 
@@ -123,7 +129,7 @@ export class Inicio implements OnInit, OnDestroy {
     }
   }
 
-  // --- BUSCADOR, ORDEN Y FILTROS (Tus funciones intactas) ---
+  // --- BUSCADOR, ORDEN Y FILTROS ---
   buscarPorNombre() { this.aplicarFiltros(); }
   cambiarOrden() { this.aplicarFiltros(); }
   toggleGenero(genero: string) { this.generoActivo = this.generoActivo === genero ? '' : genero; this.aplicarFiltros(); }
@@ -157,27 +163,90 @@ export class Inicio implements OnInit, OnDestroy {
     this.productosFiltrados = filtrados;
   }
 
-  // --- LÓGICA DEL CARRITO Y NOTIFICACIONES (Tus funciones intactas) ---
-  agregarAlCarrito(producto: any, cantidad: number = 1) {
-    const itemExistente = this.carrito.find(item => item.idPerfume === producto.idPerfume);
-    if (itemExistente) { itemExistente.cantidad += cantidad; } 
-    else { this.carrito.push({ ...producto, cantidad: cantidad }); }
-    
-    this.lanzarNotificacion(`¡${producto.nombre} se agregó al carrito!`);
-    if (this.modalAbierto) this.cerrarModal();
+  // =========================================================
+  // 🚀 LÓGICA DEL CARRITO (CONECTADA A POSTGRESQL)
+  // =========================================================
+
+  obtenerIdUsuarioReal(): number {
+    const token = localStorage.getItem('accessToken'); 
+    if (token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadDecodificado = atob(payloadBase64);
+        const datosUsuario = JSON.parse(payloadDecodificado);
+        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || datosUsuario.sub;
+        if (idReal) return Number(idReal); 
+      } catch (error) {
+        console.error('Error al leer el token:', error);
+      }
+    }
+    return 1; 
   }
 
-  eliminarDelCarrito(index: number) { this.carrito.splice(index, 1); }
-  calcularTotalCarrito(): number { return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); }
-  toggleCarrito() { this.carritoAbierto = !this.carritoAbierto; }
+  cargarCarritoDesdeBD() {
+    const idUsuario = this.obtenerIdUsuarioReal(); 
+    this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
+      next: (datosBD: any) => {
+        this.carrito = datosBD.map((item: any) => ({
+          idCarritoItem: item.IdCarritoItem || item.idCarritoItem || item.idcarritoitem,
+          nombre: item.nombre,
+          precio: Number(item.precio), 
+          cantidad: item.Cantidad || item.cantidad || 1, 
+          img1: item.img1
+        }));
+        this.cdr.detectChanges(); // Refresca la vista
+      },
+      error: (err: any) => console.error('Error al cargar el carrito:', err)
+    });
+  }
+
+  agregarAlCarrito(producto: any, cantidad: number = 1) {
+    const idUsuario = this.obtenerIdUsuarioReal(); 
+    this.carritoService.agregarAlCarritoBD(idUsuario, producto.idPerfume, cantidad).subscribe({
+      next: (res: any) => {
+        // Lanzamos la notificación bonita
+        this.lanzarNotificacion(`¡${producto.nombre} se agregó al carrito!`); 
+        if (this.modalAbierto) this.cerrarModal();
+        this.cargarCarritoDesdeBD(); // Refrescamos los datos
+      },
+      error: (err: any) => {
+        console.error('ERROR AL CONECTAR CON C#:', err);
+        this.lanzarNotificacion('Hubo un error al agregar el perfume');
+      }
+    });
+  }
+
+  eliminarDelCarrito(index: number) {
+    const itemABorrar = this.carrito[index];
+    this.carritoService.eliminarItemBD(itemABorrar.idCarritoItem).subscribe({
+      next: (respuesta: any) => {
+        this.carrito.splice(index, 1);
+        this.lanzarNotificacion('Perfume eliminado del carrito');
+      },
+      error: (err: any) => {
+        console.error('Error al eliminar en BD:', err);
+        this.lanzarNotificacion('Hubo un error al intentar eliminar');
+      }
+    });
+  }
+
+  calcularTotalCarrito(): number { 
+    return this.carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0); 
+  }
+
+  toggleCarrito() { 
+    this.cargarCarritoDesdeBD(); // Traemos lo más fresco de la BD antes de abrir
+    this.carritoAbierto = !this.carritoAbierto; 
+  }
 
   irAlCarrito() {
     this.carritoService.setCarrito(this.carrito);
-    this.carritoAbierto = false; // Close the overlay
-    document.body.classList.remove('modal-open'); // Just in case
+    this.carritoAbierto = false; 
+    document.body.classList.remove('modal-open'); 
     this.router.navigate(['/carrito']);
   }
 
+  // --- NOTIFICACIONES ---
   lanzarNotificacion(mensaje: string) {
     this.notificaciones.push(mensaje);
     setTimeout(() => { this.notificaciones.shift(); this.cdr.detectChanges(); }, 3500);
@@ -185,7 +254,7 @@ export class Inicio implements OnInit, OnDestroy {
 
   agregarFavorito(producto: any) { this.lanzarNotificacion(`¡${producto.nombre} guardado en favoritos! ❤`); }
 
-  // --- LÓGICA DEL MODAL (Tus funciones intactas) ---
+  // --- LÓGICA DEL MODAL ---
   abrirModal(producto: any) {
     this.productoSeleccionado = producto;
     this.imagenSeleccionada = producto.img1 || 'assets/img/placeholder.png';
@@ -202,19 +271,6 @@ export class Inicio implements OnInit, OnDestroy {
   }
 
   cambiarImagen(url: string | undefined) { if (url) this.imagenSeleccionada = url; }
-
-
-  // 🔥 ESTO ES LO QUE LE FALTA A TU ARCHIVO 🔥
-  listaFamilias: any[] = [
-    { id: 1, nombre: 'Cítricos' },
-    { id: 2, nombre: 'Florales' },
-    { id: 4, nombre: 'Orientales' },
-    { id: 5, nombre: 'Frutales' },
-    { id: 6, nombre: 'Gourmand' },
-    { id: 7, nombre: 'Herbales' },
-    { id: 8, nombre: 'Fougère' },
-    { id: 9, nombre: 'Acuáticos' }
-  ];
 
   getNombreFamilia(id: number): string {
     const familia = this.listaFamilias.find(f => f.id === id);

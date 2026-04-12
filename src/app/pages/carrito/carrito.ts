@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { loadStripe } from '@stripe/stripe-js';
 import { CarritoService } from '../../core/services/carrito.service'; 
 import Swal from 'sweetalert2'; 
 
@@ -85,9 +84,6 @@ export class Carrito implements OnInit {
     return this.listaCarrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
 
-
- 
-
   pagarConStripe() {
     if (this.listaCarrito.length === 0) {
       this.mostrarAlertaElegante('Tu carrito está vacío', 'warning');
@@ -100,7 +96,7 @@ export class Carrito implements OnInit {
           window.location.href = respuesta.url; 
         }
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Error en el checkout:', err);
         this.mostrarAlertaElegante('Error al conectar con Stripe.', 'error');
       }

@@ -1,0 +1,202 @@
+<div *ngIf="verificandoOferta" class="pantalla-carga">
+  <div class="loader-dorado"></div>
+  <h2 class="texto-carga">Validando acceso a los privilegios...</h2>
+</div>
+
+<section class="ofertas-wrapper" *ngIf="!verificandoOferta">
+
+  <div class="hero-ofertas">
+    <div class="hero-content">
+      <span class="etiqueta-hero">Privilegios Dunaroma</span>
+      <h1 class="titulo-exclusivo">Venta Privada</h1>
+      <p class="subtitulo-hero">Una selección extraordinaria de nuestras fragancias más codiciadas a precios
+        irrepetibles.</p>
+      <p class="subtitulo-hero">El tiempo para hacerlas tuyas termina en:</p>
+
+      <div class="reloj-container">
+        <div class="tiempo-box"><span class="numero">{{ dias | number:'2.0' }}</span><span class="etiqueta">DÍAS</span>
+        </div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ horas | number:'2.0' }}</span><span class="etiqueta">HRS</span>
+        </div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ minutos | number:'2.0' }}</span><span
+            class="etiqueta">MIN</span></div>
+        <span class="separador">:</span>
+        <div class="tiempo-box"><span class="numero">{{ segundos | number:'2.0' }}</span><span
+            class="etiqueta">SEG</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contenedor-catalogo">
+
+    <ng-container *ngIf="!ofertaFinalizada; else mensajeCierre">
+
+      <div class="productos-grid" *ngIf="productosEnOferta.length > 0">
+        <div class="producto-card" *ngFor="let p of productosEnOferta" [class.tarjeta-agotada]="(p.stock || 0) === 0"
+          [ngClass]="{'borde-hombre': (p.genero | lowercase) === 'hombre', 'borde-mujer': (p.genero | lowercase) === 'mujer', 'borde-unisex': (p.genero | lowercase) === 'unisex' || !(p.genero)}">
+
+          <div class="img-box">
+            <img [src]="p.imagenMostrar" [alt]="p.nombreMostrar" class="main-img">
+
+            <div class="badge-privilege">PRIVILEGE -{{ p.descuento }}%</div>
+            <div class="badge-agotado" *ngIf="(p.stock || 0) === 0">AGOTADO</div>
+
+            <div class="hover-actions">
+              <button class="btn-quickview" (click)="abrirModal(p)">Ver oferta</button>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="brand-name">{{p.marca}}</span>
+            <h3 class="product-name">{{p.nombreMostrar}}</h3>
+
+            <div class="familias-pill-container" style="justify-content: center; margin-bottom: 10px;">
+              <span class="badge-gold-light" *ngFor="let fam of p.familiasArray">{{ fam | titlecase }}</span>
+            </div>
+            <div class="estrellas">⭐⭐⭐⭐⭐</div>
+
+            <div class="precios-wrapper">
+              <span class="precio-viejo">${{ p.precioOriginal }}</span>
+              <span class="precio-nuevo">${{ p.precioOferta | number:'1.0-0' }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="mensaje-finalizado-wrapper" *ngIf="productosEnOferta.length === 0" style="margin-top: 40px;">
+        <div class="icono-finalizado">💎</div>
+        <h2 class="titulo-finalizado">Éxito Total</h2>
+        <p class="subtitulo-finalizado">
+          Nuestra selección exclusiva ha sido reclamada en su totalidad por nuestra comunidad.
+          El acceso permanecerá abierto hasta que el contador termine, pero el inventario se ha agotado.
+        </p>
+        <a routerLink="/" class="btn-regresar">Explorar Catálogo Principal</a>
+      </div>
+
+    </ng-container>
+
+    <ng-template #mensajeCierre>
+      <div class="mensaje-finalizado-wrapper">
+        <div class="icono-finalizado">⏳</div>
+        <h2 class="titulo-finalizado">Acceso Concluido</h2>
+        <p class="subtitulo-finalizado">Esta selección exclusiva ha finalizado. Regresa pronto para descubrir nuevos
+          privilegios de Dunaroma.</p>
+        <a routerLink="/" class="btn-regresar">Explorar Catálogo Completo</a>
+      </div>
+    </ng-template>
+
+  </div>
+</section>
+
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <div class="modal-content modal-oferta" (click)="$event.stopPropagation()">
+    <button class="btn-close" (click)="cerrarModal()">×</button>
+
+    <div class="modal-body-premium">
+
+      <div class="modal-left">
+        <div class="modal-img-wrapper">
+          <img [src]="perfumeSeleccionado.imagenMostrar" class="img-modal-api"
+            [class.imagen-blanco-negro]="(perfumeSeleccionado.stock || 0) === 0">
+          <div class="badge-privilege large-badge">PRIVILEGE -{{ perfumeSeleccionado.descuento }}%</div>
+        </div>
+      </div>
+
+      <div class="modal-right">
+        <span class="modal-brand-label">{{ perfumeSeleccionado.marca }}</span>
+        <h2 class="modal-title-perfume">{{ perfumeSeleccionado.nombreMostrar }}</h2>
+
+        <div class="modal-precio-destacado">
+          <span class="precio-viejo-modal">${{ perfumeSeleccionado.precioOriginal }}</span>
+          <span class="precio-nuevo-modal">${{ perfumeSeleccionado.precioOferta | number:'1.0-0' }}</span>
+        </div>
+
+        <div class="alerta-stock" *ngIf="(perfumeSeleccionado.stock || 0) > 0" [ngClass]="{
+               'stock-bajo': perfumeSeleccionado.stock <= 5,
+               'stock-medio': perfumeSeleccionado.stock > 5 && perfumeSeleccionado.stock <= 15,
+               'stock-alto': perfumeSeleccionado.stock > 15
+             }">
+
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock <= 5">
+            🔥 Alta demanda: <strong>Solo quedan {{ perfumeSeleccionado.stock }} unidades</strong>
+          </p>
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock > 5 && perfumeSeleccionado.stock <= 15">
+            ⚡ Últimas piezas: <strong>Quedan {{ perfumeSeleccionado.stock }} unidades</strong>
+          </p>
+          <p class="texto-escasez" *ngIf="perfumeSeleccionado.stock > 15">
+            ✨ Disponible: <strong>{{ perfumeSeleccionado.stock }} unidades listas para envío</strong>
+          </p>
+
+          <div class="barra-escasez">
+            <div class="barra-llena" [style.width.%]="perfumeSeleccionado.stock * 4"></div>
+          </div>
+        </div>
+
+        <div class="alerta-agotado-modal" *ngIf="(perfumeSeleccionado.stock || 0) === 0">
+          Esta fragancia se ha agotado por completo durante la Venta Privada.
+        </div>
+
+        <button class="btn-agregar-carrito" [disabled]="(perfumeSeleccionado.stock || 0) === 0"
+          (click)="agregarAlCarrito(perfumeSeleccionado)">
+          {{ (perfumeSeleccionado.stock || 0) > 0 ? 'Añadir al carrito' : 'Oferta Agotada' }}
+        </button>
+
+        <div class="condiciones-venta">
+          <p>✨ Envío de cortesía incluido en esta pieza.</p>
+          <p>🔒 Venta final exclusiva. No aplican devoluciones.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/521234567890" target="_blank" class="btn-whatsapp" title="Chat con soporte">
+  <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" viewBox="0 0 16 16">
+    <path
+      d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+  </svg>
+</a>
+
+<button class="btn-carrito-flotante" (click)="toggleCarrito()">
+  🛒 <span class="badge-carrito" *ngIf="carrito.length > 0">{{carrito.length}}</span>
+</button>
+
+<div class="carrito-overlay" *ngIf="carritoAbierto" (click)="toggleCarrito()"></div>
+
+<div class="carrito-lateral" [class.abierto]="carritoAbierto">
+  <div class="carrito-header">
+    <h2>Tu Carrito</h2>
+    <span class="cerrar-carrito" (click)="toggleCarrito()">&times;</span>
+  </div>
+
+  <div class="carrito-body">
+    <div *ngIf="carrito.length === 0" class="carrito-vacio">
+      <p>Tu carrito está vacío.</p>
+      <p>Agrega la esencia de tus sueños.</p>
+    </div>
+
+    <div class="carrito-item" *ngFor="let item of carrito; let i = index">
+      <img [src]="item.img1 || item.imagenUrl || item.imagen || item.imagen_Url" alt="Perfume">
+      <div class="item-info">
+        <h4>{{item.nombre}}</h4>
+        <p class="item-precio">${{item.precio | number:'1.0-0'}} x {{item.cantidad}}</p>
+      </div>
+      <button class="btn-eliminar-item" (click)="eliminarDelCarrito(i)">🗑️</button>
+    </div>
+  </div>
+
+  <div class="carrito-footer" *ngIf="carrito.length > 0">
+    <div class="total-fila">
+      <span>Total:</span>
+      <strong>${{ calcularTotalCarrito() | number:'1.0-0' }}</strong>
+    </div>
+    <button class="btn-checkout" (click)="irAlCarrito()">Finalizar Compra</button>
+  </div>
+  <div class="toast-container">
+    <div class="toast-mensaje" *ngFor="let msj of notificaciones">✅ {{msj}}</div>
+  </div>
+</div>

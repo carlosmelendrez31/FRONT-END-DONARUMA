@@ -1,0 +1,78 @@
+<div class="admin-container">
+  
+  <div class="dashboard-layout">
+    
+    <div class="form-card">
+      <h2>Publicar Nueva <span>Exclusiva</span></h2>
+      <p>Redacta una nueva noticia, lanzamiento o reseña para el DUNAROMA Journal.</p>
+
+      <div class="form-group">
+        <label>Título del artículo:</label>
+        <input type="text" [(ngModel)]="nuevaNovedad.titulo" placeholder="Ej: Los 5 mejores perfumes de 2026...">
+      </div>
+
+      <div class="form-group">
+        <label>URL de la Imagen (Resolución alta):</label>
+        <input type="text" [(ngModel)]="nuevaNovedad.imagenUrl" placeholder="https://mi-imagen.com/foto.jpg">
+        <img *ngIf="nuevaNovedad.imagenUrl" [src]="nuevaNovedad.imagenUrl" class="preview-img" alt="Vista previa">
+      </div>
+
+      <div class="form-group">
+        <label>Cuerpo del artículo:</label>
+        <textarea [(ngModel)]="nuevaNovedad.descripcion" rows="6" placeholder="Escribe toda la reseña aquí..."></textarea>
+      </div>
+
+      <div class="mensaje" *ngIf="mensaje">{{ mensaje }}</div>
+
+      <div style="display: flex; gap: 15px; margin-top: 10px;">
+        <button class="btn-publicar" (click)="guardarNovedad()" [disabled]="cargando">
+          {{ cargando ? 'Guardando...' : (editando ? 'Actualizar Ahora' : 'Publicar Ahora') }}
+        </button>
+        
+        <button *ngIf="editando" class="btn-cancelar" (click)="cancelarEdicion()" [disabled]="cargando">
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <div class="lista-card">
+      <div class="lista-header">
+        <h3>Tus Publicaciones <span>({{ listaPublicaciones.length }})</span></h3>
+      </div>
+      
+      <div class="lista-scroll">
+        <div class="publicacion-item" *ngFor="let pub of listaPublicaciones">
+          <img [src]="pub.imagenUrl" class="pub-img" alt="miniatura">
+          
+          <div class="pub-info">
+            <h4>{{ pub.titulo }}</h4>
+            <span class="pub-fecha">{{ pub.fechaPublicacion | date:'mediumDate' }}</span>
+          </div>
+          
+          <div class="pub-acciones">
+            <button class="btn-accion btn-editar" (click)="editarPublicacion(pub)" title="Editar">✏️</button>
+            <button class="btn-accion btn-eliminar" (click)="eliminarPublicacion(pub.idNovedad)" title="Eliminar">🗑️</button>
+          </div>
+        </div>
+
+        <div class="vacio" *ngIf="listaPublicaciones.length === 0">
+          Aún no hay noticias publicadas.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-confirmacion" *ngIf="mostrarConfirmarBorrar">
+  <div class="confirm-content">
+    <div class="confirm-icon">🗑️</div>
+    <h3>¿Eliminar la Publicación?</h3>
+    <p>Esta acción no se puede deshacer y la noticia desaparecerá del muro permanentemente.</p>
+    
+    <div class="confirm-btns">
+      <button class="btn-cancelar-modal" (click)="cancelarBorrado()">Cancelar</button>
+      <button class="btn-eliminar-modal" (click)="confirmarBorrado()">Eliminar Ahora</button>
+    </div>
+  </div>
+</div>

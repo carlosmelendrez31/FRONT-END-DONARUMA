@@ -1,0 +1,101 @@
+.registro-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.registro-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+}
+
+.titulo-registro {
+  color: #0b1e36; /* Azul oscuro Dunaroma */
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 24px;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-dunaroma {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.input-dunaroma:focus {
+  outline: none;
+  border-color: #0b1e36;
+}
+
+.btn-registrar {
+  width: 100%;
+  background-color: #0b1e36;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.btn-registrar:hover {
+  background-color: #fbbf24; /* Dorado al pasar el mouse */
+  color: #0b1e36;
+}
+
+.enlace-login {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.enlace-login a {
+  color: #0b1e36;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.enlace-login a:hover {
+  text-decoration: underline;
+}

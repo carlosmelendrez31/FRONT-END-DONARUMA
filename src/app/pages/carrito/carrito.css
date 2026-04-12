@@ -147,3 +147,9 @@
     grid-template-columns: 1fr;
   }
 }
+.img-perfume-carrito {
+  width: 60px;
+  height: 60px;
+  object-fit: cover; /* Evita que la foto se estire feo */
+  border-radius: 8px;
+}
