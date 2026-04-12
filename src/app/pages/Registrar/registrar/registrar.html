@@ -1,1 +1,44 @@
-<p>registrar works!</p>
+<div class="registro-container">
+  <div class="registro-card">
+    <h2 class="titulo-registro">Crear Cuenta</h2>
+    <p class="subtitulo">Únete a la experiencia Dunaroma</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre(s) *</label>
+        <input type="text" [(ngModel)]="usuario.nombre" placeholder="Tu nombre" class="input-dunaroma">
+      </div>
+      <div class="form-group">
+        <label>Apellidos *</label>
+        <input type="text" [(ngModel)]="usuario.apellidos" placeholder="Tus apellidos" class="input-dunaroma">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Dirección de Envío</label>
+      <input type="text" [(ngModel)]="usuario.direccion" placeholder="Ej: Calle Principal 123, Ciudad" class="input-dunaroma">
+    </div>
+
+    <div class="form-group">
+      <label>Correo electrónico *</label>
+      <input type="email" [(ngModel)]="usuario.correo" placeholder="correo@ejemplo.com" class="input-dunaroma">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Contraseña *</label>
+        <input type="password" [(ngModel)]="usuario.contrasena" placeholder="********" class="input-dunaroma">
+      </div>
+      <div class="form-group">
+        <label>Confirmar Contraseña *</label>
+        <input type="password" [(ngModel)]="usuario.confirmarContrasena" placeholder="********" class="input-dunaroma">
+      </div>
+    </div>
+
+    <button class="btn-registrar" (click)="registrar()">Crear mi cuenta</button>
+
+    <div class="enlace-login">
+      ¿Ya tienes una cuenta? <a routerLink="/">Inicia sesión aquí</a>
+    </div>
+  </div>
+</div>
