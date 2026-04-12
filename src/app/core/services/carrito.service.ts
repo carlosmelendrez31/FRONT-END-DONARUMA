@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -21,8 +21,21 @@ export class CarritoService {
     return this._carrito;
   }
 
-  // Esta función manda el carrito a tu Back-End
-  procesarPagoStripe(carrito: any[]) {
-    return this.http.post(this.apiUrl, carrito);
+  procesarPagoStripe(direccion: string, perfumesIds: number[], cantidades: number[]) {
+    const token = localStorage.getItem('accessToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    const body = {
+      Direccion: direccion,
+      PerfumesIds: perfumesIds,
+      Cantidades: cantidades
+    };
+    return this.http.post(this.apiUrl, body, { headers });
+  }
+
+  confirmarPago(sessionId: string) {
+    const url = `https://localhost:7030/api/pagos/confirmar?session_id=${sessionId}`;
+    return this.http.get(url);
   }
 }

@@ -1,0 +1,24 @@
+<div class="contenedor-exito">
+  <div class="tarjeta-exito">
+    <div *ngIf="isLoading" class="estado-cargando">
+      <div class="spinner"></div>
+      <h2>{{ mensaje }}</h2>
+      <p>Espera un momento mientras verificamos con Stripe.</p>
+    </div>
+
+    <div *ngIf="!isLoading && exito" class="estado-exito">
+      <div class="icono-check">✅</div>
+      <h2>¡Pago Confirmado!</h2>
+      <p>{{ mensaje }}</p>
+      <p class="subtexto">Te enviaremos los detalles de tu compra por correo electrónico.</p>
+      <button class="btn-volver" (click)="volverAlInicio()">Seguir Comprando</button>
+    </div>
+
+    <div *ngIf="!isLoading && !exito" class="estado-error">
+      <div class="icono-error">❌</div>
+      <h2>Error al Confirmar</h2>
+      <p>{{ mensaje }}</p>
+      <button class="btn-volver" (click)="volverAlInicio()">Volver al Inicio</button>
+    </div>
+  </div>
+</div>

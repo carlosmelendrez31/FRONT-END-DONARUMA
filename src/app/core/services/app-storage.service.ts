@@ -1,5 +1,5 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 export interface UserProfile {
@@ -88,6 +88,23 @@ export class AppStorageService {
         error: (err) => console.log('Could not load user profile', err)
       });
     }
+  }
+
+  guardarDireccion(direccion: string): Observable<any> {
+    const token = this.getAccessToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put('https://localhost:7030/api/agregar-direccion', { Direccion: direccion }, { headers }).pipe(
+      tap(() => {
+        const current = this.userProfileSubject.value;
+        if (current) {
+          this.userProfileSubject.next({ ...current, direccionUsuario: direccion });
+        } else {
+          this.userProfileSubject.next({ nombreCompleto: '', direccionUsuario: direccion });
+        }
+      })
+    );
   }
 
   clearStorage(): void {

@@ -35,6 +35,27 @@
         <span>${{ calcularTotal() }} MXN</span>
       </div>
 
+      <div class="direccion-envio">
+        <h3>Datos de Envío</h3>
+        
+        <ng-container *ngIf="!editandoDireccion">
+          <p *ngIf="direccionActual" class="direccion-texto">{{ direccionActual }}</p>
+          <p *ngIf="!direccionActual" class="direccion-vacia">Aún no tienes una dirección registrada.</p>
+          
+          <button (click)="activarEdicionDireccion()" class="btn-direccion">
+            {{ direccionActual ? 'Cambiar Dirección' : '+ Agregar Dirección de Envío' }}
+          </button>
+        </ng-container>
+        
+        <ng-container *ngIf="editandoDireccion">
+          <textarea [(ngModel)]="nuevaDireccion" class="direccion-input" placeholder="Ingresa tu dirección completa (calle, número, colonia, código postal, estado)..."></textarea>
+          <div class="botones-edicion">
+            <button (click)="guardarDireccion()" class="btn-guardar">Guardar</button>
+            <button (click)="cancelarEdicionDireccion()" class="btn-cancelar">Cancelar</button>
+          </div>
+        </ng-container>
+      </div>
+
       <button class="btn-pagar" (click)="pagarConStripe()">
         Pagar con Stripe 💳
       </button>

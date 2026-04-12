@@ -1,0 +1,74 @@
+.contenedor-exito {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0d1117;
+  color: white;
+  padding: 20px;
+}
+
+.tarjeta-exito {
+  background-color: #1a2233;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.estado-cargando .spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #d4af37;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.icono-check, .icono-error {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+p {
+  color: #a0aec0;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+.subtexto {
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.btn-volver {
+  background-color: #d4af37;
+  color: #0d1117;
+  border: none;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  width: 100%;
+}
+
+.btn-volver:hover {
+  background-color: #c09e32;
+  transform: translateY(-2px);
+}

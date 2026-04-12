@@ -5,6 +5,7 @@ import { Aromas } from './pages/aromas/aromas/aromas';
 import { Carrito } from './pages/carrito/carrito';
 import { Login } from './pages/Login/login/login';
 import { Registrar } from './pages/Registrar/registrar/registrar';
+import { PagoExitoso } from './pages/pago-exitoso/pago-exitoso';
 
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'fofativas', component: Aromas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
+    { path: 'pago-exitoso', component: PagoExitoso, canActivate: [authGuard] },
     { path: '**', redirectTo: '' }
 ];
 
