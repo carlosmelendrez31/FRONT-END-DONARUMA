@@ -10,6 +10,7 @@ import { PagoExitoso } from './pages/pago-exitoso/pago-exitoso';
 import { NovedadesDetalle } from './pages/novedades-detalle/novedades-detalle';
 import { Ofertas } from './pages/oferta/oferta';
 import { AgregarDescuentoComponent } from './pages/Administrador/agregar-descuento/agregardescuento/agregardescuento';
+import { MiPerfilComponent } from './pages/mi-perfil/mi-perfil';
 
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { path: 'pago-exitoso', component: PagoExitoso, canActivate: [authGuard] },
     { path: 'ofertas', component: Ofertas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'admin/venta-privada', component: AgregarDescuentoComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
+    { path: 'mi-perfil', component: MiPerfilComponent, canActivate: [authGuard] },
     { path: '**', redirectTo: '' }
 
 ];

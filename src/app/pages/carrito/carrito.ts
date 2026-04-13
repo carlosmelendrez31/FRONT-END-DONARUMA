@@ -60,8 +60,8 @@ export class Carrito implements OnInit {
     this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
       next: (datosBD: any) => {
         this.listaCarrito = datosBD.map((item: any) => ({
-          idCarritoItem: item.IdCarritoItem || item.idCarritoItem,
-          idPerfume: item.idPerfume || item.IdPerfume, // Ensure idPerfume is propagated
+          idCarritoItem: item.IdCarritoItem || item.idCarritoItem || item.idcarritoitem,
+          idPerfume: item.idPerfume || item.IdPerfume || item.idperfume, // Ensure idPerfume is propagated
           nombre: item.nombre,
           precio: Number(item.precio),
           cantidad: item.Cantidad || item.cantidad || 1,
@@ -93,19 +93,19 @@ export class Carrito implements OnInit {
         next: () => {
           this.direccionActual = this.nuevaDireccion;
           this.editandoDireccion = false;
-          alert('¡Dirección actualizada!');
+          this.mostrarAlertaElegante('¡Dirección actualizada!', 'success');
         },
         error: (err) => {
           console.error('Error actualizando la dirección', err);
           if (err.status === 401) {
-            alert('Tu sesión ha expirado, vuelve a iniciar sesión');
+            this.mostrarAlertaElegante('Tu sesión ha expirado, vuelve a iniciar sesión', 'warning');
           } else {
-            alert('Hubo un error al guardar tu dirección.');
+            this.mostrarAlertaElegante('Hubo un error al guardar tu dirección.', 'error');
           }
         }
       });
     } else {
-      alert('La dirección no puede estar vacía');
+      this.mostrarAlertaElegante('La dirección no puede estar vacía', 'warning');
     }
   }
 
@@ -134,7 +134,7 @@ export class Carrito implements OnInit {
 
     if (!this.direccionActual) {
       console.warn('Falta dirección de envío');
-      alert('Por favor agrega una dirección de envío antes de continuar.');
+      this.mostrarAlertaElegante('Por favor agrega una dirección de envío antes de continuar.', 'warning');
       this.activarEdicionDireccion();
       return;
     }
@@ -151,7 +151,7 @@ export class Carrito implements OnInit {
           window.location.href = respuesta.url; 
         } else {
           console.error('El servidor respondió pero no trajo una URL válida', respuesta);
-          alert('Error inesperado: no se recibió el link de pago.');
+          this.mostrarAlertaElegante('Error inesperado: no se recibió el link de pago.', 'error');
         }
       },
       error: (err) => {

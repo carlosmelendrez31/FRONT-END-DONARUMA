@@ -1,0 +1,150 @@
+.perfil-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.titulo-perfil {
+  text-align: center;
+  color: #d4af37;
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resumen-panel {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 30px;
+  height: fit-content;
+}
+
+.resumen-panel h2 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.mt-4 {
+  margin-top: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.perfil-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+textarea.perfil-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.perfil-input:focus {
+  outline: none;
+  border-color: #d4af37;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.btn-guardar {
+  width: 100%;
+  background-color: #d4af37;
+  color: #0b132b;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-guardar:hover {
+  background-color: #f1c40f;
+}
+
+.btn-guardar:active {
+  transform: scale(0.98);
+}
+
+.producto-card {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.producto-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.8);
+}
+
+.producto-icono {
+  font-size: 40px;
+  margin-right: 20px;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.producto-info {
+  flex-grow: 1;
+}
+
+.producto-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  color: #d4af37;
+}
+
+.producto-cantidad {
+  margin: 0;
+  color: #a0aab2;
+  font-size: 14px;
+}
+
+.direccion-vacia {
+  color: #888888;
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+}

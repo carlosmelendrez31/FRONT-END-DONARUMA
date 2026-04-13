@@ -1,0 +1,72 @@
+<div class="perfil-container">
+  <h1 class="titulo-perfil">MI PERFIL</h1>
+  
+  <div class="perfil-grid">
+    <!-- Columna Izquierda: Edición y Configuración -->
+    <div class="perfil-form-side">
+      <div class="resumen-panel">
+        <h2>Datos Personales</h2>
+        
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" class="perfil-input" [(ngModel)]="perfil.nombre">
+        </div>
+        
+        <div class="form-group">
+          <label>Apellidos</label>
+          <input type="text" class="perfil-input" [(ngModel)]="perfil.apellidos">
+        </div>
+        
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input type="email" class="perfil-input" [(ngModel)]="perfil.correo">
+        </div>
+
+        <div class="form-group">
+          <label>Dirección de Envío</label>
+          <textarea class="perfil-input" [(ngModel)]="perfil.direccion"></textarea>
+        </div>
+
+        <button class="btn-guardar" (click)="guardarPerfil()">Guardar Cambios</button>
+      </div>
+
+      <div class="resumen-panel mt-4">
+        <h2>Cambiar Contraseña</h2>
+        
+        <div class="form-group">
+          <label>Contraseña Actual</label>
+          <input type="password" class="perfil-input" [(ngModel)]="cambioPwd.contrasenaActual">
+        </div>
+        
+        <div class="form-group">
+          <label>Nueva Contraseña</label>
+          <input type="password" class="perfil-input" [(ngModel)]="cambioPwd.nuevaContrasena">
+        </div>
+
+        <button class="btn-guardar" (click)="guardarContrasena()">Actualizar Contraseña</button>
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Historial de Compras -->
+    <div class="historial-side">
+      <div class="resumen-panel">
+        <h2>Historial de Compras</h2>
+        
+        <div *ngIf="historial.length === 0" class="direccion-vacia">
+          Aún no tienes compras realizadas.
+        </div>
+        
+        <div class="producto-card" *ngFor="let compra of historial">
+          <!-- Icono placeholder ya que no hay imagen real en el endpoint -->
+          <div class="producto-icono">🛍️</div>
+          <div class="producto-info">
+            <h3>{{ compra.nombrePerfume }}</h3>
+            <p class="producto-cantidad">Cantidad: {{ compra.cantidad }}</p>
+            <p class="producto-cantidad">Comprado: {{ compra.fecha_Compra | date:'shortDate' }}</p>
+            <p class="direccion-vacia" style="margin-top:5px; font-size:12px;">Enviado a: {{ compra.direccion }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

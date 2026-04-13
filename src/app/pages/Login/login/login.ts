@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppStorageService } from '../../../core/services/app-storage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,7 @@ export class Login {
     this.errorMessage = '';
 
     if (!this.correo || !this.contrasena) {
-      this.errorMessage = 'Por favor, ingresa tu correo y contraseña.';
+      Swal.fire({ title: 'Aviso', text: 'Por favor, ingresa tu correo y contraseña.', icon: 'warning', background: '#111827', color: '#ffffff' });
       return;
     }
 
@@ -55,13 +56,17 @@ export class Login {
             this.router.navigate(['/inicio']);
           }
         } else {
-          this.errorMessage = response.mensaje || 'Error al iniciar sesión';
+          Swal.fire({ title: 'Error', text: response.mensaje || 'Error al iniciar sesión', icon: 'error', background: '#111827', color: '#ffffff' });
         }
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Login error:', error);
-        this.errorMessage = 'Ocurrió un error al intentar conectarse al servidor.';
+        let msg = 'Ocurrió un error al intentar conectarse al servidor.';
+        if (error.status === 401 || error.status === 400 || error.status === 404) {
+            msg = error.error?.mensaje || error.error?.message || 'Correo o contraseña incorrectos.';
+        }
+        Swal.fire({ title: 'Error', text: msg, icon: 'error', background: '#111827', color: '#ffffff', confirmButtonColor: '#fbbf24' });
       }
     });
   }

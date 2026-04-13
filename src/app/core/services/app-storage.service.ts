@@ -95,7 +95,7 @@ export class AppStorageService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.put('https://localhost:7030/api/agregar-direccion', { Direccion: direccion }, { headers }).pipe(
+    return this.http.put('https://localhost:7030/api/usuarios/agregar-direccion', { Direccion: direccion }, { headers }).pipe(
       tap(() => {
         const current = this.userProfileSubject.value;
         if (current) {
