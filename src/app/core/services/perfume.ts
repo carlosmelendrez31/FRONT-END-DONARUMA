@@ -3,19 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 // Asegúrate de que esta ruta a tu interfaz sea la correcta
-import { Perfumes } from '../models/perfumes/perfumes'; 
+import { Perfumes } from '../models/perfumes/perfumes';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerfumeService {
   // La URL base (ajusta el puerto si tu C# usa otro)
-  private baseUrl = 'https://back-end-donaruma-production.up.railway.app/api/perfumes'; 
+  private baseUrl = 'https://back-end-donaruma-production.up.railway.app/api/perfumes';
 
   private perfumesSubject = new BehaviorSubject<any[]>([]);
   public perfumes$ = this.perfumesSubject.asObservable();
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.cargarPerfumes();
   }
 
@@ -27,7 +27,7 @@ export class PerfumeService {
         const perfumesListos = data.map(p => ({
           ...p,
           idPerfume: p.idPerfume || p.IdPerfume,
-          nombre: p.nombre || p.Nombre, 
+          nombre: p.nombre || p.Nombre,
           precio: p.precio || p.Precio,
           marca: p.marca || p.Marca,
           descripcion: p.descripcion || p.Descripcion,
