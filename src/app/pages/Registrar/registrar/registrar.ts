@@ -50,7 +50,7 @@ export class Registrar {
     };
 
     // 4. Lo mandamos a tu Back-End
-    this.http.post('https://localhost:7030/api/Usuarios/crear', payload).subscribe({
+    this.http.post('https://back-end-donaruma-production.up.railway.app/api/Usuarios/crear', payload).subscribe({
       next: (res: any) => {
         this.mostrarAlertaElegante('¡Cuenta creada con éxito! Bienvenido a Dunaroma.', 'success');
         // Los mandamos de regreso al login para que inicien sesión

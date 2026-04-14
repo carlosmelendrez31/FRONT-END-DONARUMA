@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CarritoService {
-  private apiUrl = 'https://localhost:7030/api/Pagos/crear-sesion'; 
-  private stripeUrl = 'https://localhost:7030/api/Pagos/crear-sesion'; 
-  private carritoApiUrl = 'https://localhost:7030/api/Carrito'; 
+  private apiUrl = 'https://back-end-donaruma-production.up.railway.app/api/Pagos/crear-sesion'; 
+  private stripeUrl = 'https://back-end-donaruma-production.up.railway.app/api/Pagos/crear-sesion'; 
+  private carritoApiUrl = 'https://back-end-donaruma-production.up.railway.app/api/Carrito'; 
   private _carrito: any[] = []; 
 
   constructor(private http: HttpClient) { }
@@ -68,7 +68,7 @@ export class CarritoService {
   }
 
   confirmarPago(sessionId: string) {
-    const url = `https://localhost:7030/api/pagos/confirmar?session_id=${sessionId}`;
+    const url = `https://back-end-donaruma-production.up.railway.app/api/pagos/confirmar?session_id=${sessionId}`;
     return this.http.get(url);
   }
 }

@@ -10,7 +10,7 @@ export class Ofertasadm {
   private http = inject(HttpClient);
   
   // URL base de tu API en C#
-  private apiUrl = 'https://localhost:7030/api';
+  private apiUrl = 'https://back-end-donaruma-production.up.railway.app/api';
 
   // 1. Obtener los perfumes para el select de administración
   obtenerPerfumesInventario(): Observable<PerfumeAPI[]> {

@@ -77,7 +77,8 @@ export class AppStorageService {
     // Looking at user prompt: "se le manda el id. el id del token... te regresa esto"
     // I will use GET /api/UsuariosInf/datos?id={id}. If it fails, I'll update it later or you can manually fix it.
     // wait, usually dot net requires the ID as route param like `/api/UsuariosInf/datos/4`
-    return this.http.get<UserProfile>(`https://localhost:7030/api/UsuariosInf/datos/${id}`).pipe(
+    // interceptor automatically adds headers
+    return this.http.get<UserProfile>(`https://back-end-donaruma-production.up.railway.app/api/UsuariosInf/datos/${id}`).pipe(
       tap(profile => this.userProfileSubject.next(profile))
     );
   }
@@ -91,11 +92,8 @@ export class AppStorageService {
   }
 
   guardarDireccion(direccion: string): Observable<any> {
-    const token = this.getAccessToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.put('https://localhost:7030/api/usuarios/agregar-direccion', { Direccion: direccion }, { headers }).pipe(
+    // interceptor automatically adds headers
+    return this.http.put('https://back-end-donaruma-production.up.railway.app/api/usuarios/agregar-direccion', { Direccion: direccion }).pipe(
       tap(() => {
         const current = this.userProfileSubject.value;
         if (current) {

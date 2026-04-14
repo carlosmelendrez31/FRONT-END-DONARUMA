@@ -13,7 +13,7 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7030/api/Auth';
+  private apiUrl = 'https://back-end-donaruma-production.up.railway.app/api/Auth';
 
   constructor(private http: HttpClient) {}
 

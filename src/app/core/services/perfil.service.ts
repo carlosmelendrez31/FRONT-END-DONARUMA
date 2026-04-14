@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PerfilService {
-  private apiUrl = 'https://localhost:7030/api'; 
+  private apiUrl = 'https://back-end-donaruma-production.up.railway.app/api'; 
 
   constructor(private http: HttpClient) { }
 
