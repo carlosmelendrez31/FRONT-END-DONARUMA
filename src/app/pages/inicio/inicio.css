@@ -1032,3 +1032,111 @@ body.modal-open {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
+
+/* Responsivo para celulares o tablets */
+
+@media (max-width: 768px) {
+  
+  /* 1. EL CARRUSEL: Achicamos las letras gigantes y ajustamos flechas */
+  .overlay-dunaroma h1 {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+  
+  .overlay-dunaroma p {
+    font-size: 1.1rem;
+    padding: 0 15px; /* Para que el texto no pegue en las orillas */
+  }
+
+  .flecha-carrusel {
+    font-size: 1.5rem;
+    padding: 5px 10px;
+  }
+
+  /* 2. BARRA DE CONFIANZA: Apilamos los íconos de envíos/seguridad */
+  .barra-confianza {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  /* 3. LAYOUT DE TIENDA (LA MAGIA): Apilamos Filtros arriba, Perfumes abajo */
+  .tienda-layout {
+    flex-direction: column; /* Cambia de fila a columna */
+    padding: 20px 15px;
+    gap: 25px;
+  }
+
+  .sidebar-filtros {
+    width: 100%; /* Ahora los filtros ocupan todo el ancho */
+    position: relative; /* Quitamos el sticky para que no estorbe al bajar */
+    top: 0;
+    box-sizing: border-box; /* Evita que el padding sume ancho extra */
+  }
+
+  /* 4. BUSCADOR Y ORDEN: Se ponen en columna */
+  .controles-busqueda {
+    flex-direction: column;
+  }
+  
+  .input-buscar, .select-ordenar {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .titulo-catalogo, .titulo-destacados {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  /* 5. NEWSLETTER VIP: Ajustamos el campo de correo */
+  .newsletter-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .input-grupo-vip {
+    flex-direction: column; /* El botón de suscribir se pone debajo del input */
+    align-items: stretch;
+  }
+  
+  .input-vip {
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 6. MODAL Y CARRITO: Que ocupen bien la pantalla del celular */
+  .carrito-lateral {
+    width: 100%;
+    right: -100%; /* Para que se esconda por completo */
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr; /* Una sola columna para foto e info */
+    max-height: 85vh; /* Evita que el modal sea más alto que la pantalla */
+    overflow-y: auto; /* Agrega scroll interno si la info es muy larga */
+  }
+
+  .modal-content {
+    width: 95%; /* Un poco de margen a los lados */
+  }
+
+  .imagen-principal {
+    max-height: 250px; /* Evita que la foto te coma toda la pantalla */
+  }
+
+  .modal-bottom {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .acciones-modal {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .btn-carrito {
+    flex: 1; /* Hace que el botón de añadir al carrito estire todo lo que pueda */
+    text-align: center;
+  }
+}
