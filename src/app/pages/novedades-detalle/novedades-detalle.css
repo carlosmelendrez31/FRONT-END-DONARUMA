@@ -151,3 +151,50 @@ body {
     .hero-image-wrapper { height: 40vh; }
     .btn-volver { left: 0; }
 }
+
+
+/* responsivilidad MODO CELULAR*/
+@media (max-width: 768px) {
+    /* 1. La foto de fondo la hacemos más chaparrita para que no ocupe toda la pantalla */
+    .hero-image-wrapper { 
+        height: 35vh; 
+    }
+
+    /* 2. Reducimos el margen negativo (para que no tape tanta foto) y los paddings interiores */
+    .articulo-content { 
+        margin: -30px 15px 0; /* 15px a los lados para que no pegue con los bordes del cel */
+        padding: 30px 20px; 
+    }
+
+    /* 3. Acomodamos el botón de volver para que no se salga de la pantalla */
+    .btn-volver { 
+        top: -35px; 
+        left: 0;
+        font-size: 0.85rem; /* Un poquito más chico */
+    }
+
+    /* 4. Achicamos el título gigante para que quepa bien en 2 o 3 renglones */
+    .titulo-articulo { 
+        font-size: 1.8rem; 
+        margin-bottom: 20px;
+    }
+
+    /* 5. El texto de la reseña lo bajamos a tamaño normal de lectura de celular */
+    .cuerpo-articulo p { 
+        font-size: 1rem; 
+        line-height: 1.6;
+    }
+
+    /* 6. Hacemos la etiqueta de "EXCLUSIVO" más sutil */
+    .category-tag-vip {
+        padding: 6px 15px;
+        font-size: 0.75rem;
+        margin-bottom: 15px;
+    }
+
+    /* 7. Reducimos espacios entre el autor y la noticia */
+    .autor-fecha {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+    }
+}
