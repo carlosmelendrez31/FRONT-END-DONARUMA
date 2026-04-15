@@ -869,9 +869,7 @@ body.modal-open {
 .btn-checkout:hover { 
     background: white; 
 }
-/* ========================================== */
-/* 📱 MODO CELULAR / TABLET (DISEÑO RESPONSIVO) */
-/* ========================================== */
+/* Responsivo para celulares o tablets */
 
 /* Este breakpoint se activa en tablets verticales y celulares (768px o menos) */
 @media (max-width: 768px) {
