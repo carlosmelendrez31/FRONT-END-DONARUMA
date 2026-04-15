@@ -26,17 +26,52 @@ export class Registrar {
     confirmarContrasena: ''
   };
 
-  registrar() {
-    // 1. Validamos que no dejen campos vacíos
+  // 🛡️ NUEVA FUNCIÓN: El "cadenero" estricto de seguridad
+  validarFormularioSeguro(): boolean {
+    // 1. Validar campos vacíos primero
     if (!this.usuario.nombre || !this.usuario.apellidos || !this.usuario.correo || !this.usuario.contrasena) {
       this.mostrarAlertaElegante('Por favor llena todos los campos obligatorios.', 'warning');
-      return;
+      return false;
     }
 
-    // 2. Validamos que no se hayan equivocado al escribir la contraseña
+    // 2. Validar Nombre y Apellidos (Solo letras y espacios, acepta acentos)
+    const letrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!letrasRegex.test(this.usuario.nombre)) {
+      this.mostrarAlertaElegante('El nombre no es válido. Usa solo letras y espacios.', 'warning');
+      return false;
+    }
+    if (!letrasRegex.test(this.usuario.apellidos)) {
+      this.mostrarAlertaElegante('Los apellidos no son válidos. Usa solo letras y espacios.', 'warning');
+      return false;
+    }
+
+    // 3. Validar Correo Electrónico (Formato real)
+    const correoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!correoRegex.test(this.usuario.correo)) {
+      this.mostrarAlertaElegante('Por favor ingresa un correo electrónico real (ejemplo@correo.com).', 'warning');
+      return false;
+    }
+
+    // 4. Validar Contraseña Segura (El terror de los hackers)
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(this.usuario.contrasena)) {
+      this.mostrarAlertaElegante('Tu contraseña debe tener mínimo 8 caracteres, incluir una mayúscula, un número y un símbolo especial (ej. @, #, !).', 'warning');
+      return false;
+    }
+
+    // 5. Confirmar Contraseña
     if (this.usuario.contrasena !== this.usuario.confirmarContrasena) {
       this.mostrarAlertaElegante('Las contraseñas no coinciden.', 'error');
-      return;
+      return false;
+    }
+
+    return true; // Si todo está perfecto, regresa un 'OK'
+  }
+
+  registrar() {
+    // 🛑 Llamamos a nuestro "cadenero" ANTES de hacer cualquier otra cosa
+    if (!this.validarFormularioSeguro()) {
+      return; // Si la validación falla, se corta la función y no manda nada
     }
 
     // 3. Armamos el paquete EXACTO para tu CrearUsuarioDTO de C#
@@ -50,6 +85,8 @@ export class Registrar {
     };
 
     // 4. Lo mandamos a tu Back-End
+    // ⚠️ ATENCIÓN AQUÍ: Si esto ya está subido a Vercel, recuerda cambiar "localhost:7030" 
+    // por el link real de tu Back-End en Railway (ej. https://back-end-donaruma.up.railway.app/...)
     this.http.post('https://localhost:7030/api/Usuarios/crear', payload).subscribe({
       next: (res: any) => {
         this.mostrarAlertaElegante('¡Cuenta creada con éxito! Bienvenido a Dunaroma.', 'success');
