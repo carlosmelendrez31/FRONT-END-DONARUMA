@@ -1,0 +1,101 @@
+<div class="perfil-wrapper">
+  
+  <div class="toast-container" *ngIf="mensajeAlerta.texto">
+    <div class="toast-mensaje" [ngClass]="mensajeAlerta.tipo">
+      {{ mensajeAlerta.tipo === 'exito' ? '✅' : '⚠️' }} {{ mensajeAlerta.texto }}
+    </div>
+  </div>
+
+  <div class="perfil-header">
+    <h1>Mi Cuenta</h1>
+    <p>Gestiona tu información personal y la seguridad de tu cuenta.</p>
+  </div>
+
+  <div class="perfil-grid">
+    
+    <div class="perfil-card">
+      <div class="card-header">
+        <div class="icono-card">👤</div>
+        <h3>Datos Personales</h3>
+      </div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="label">Nombre(s)</span>
+          <span class="value">{{ perfil.nombre }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Apellidos</span>
+          <span class="value">{{ perfil.apellidos }}</span>
+        </div>
+        <div class="info-row" style="border-bottom: none; padding-bottom: 0;">
+          <span class="label">Correo Electrónico</span>
+          <span class="value">{{ perfil.correo }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="perfil-card">
+      <div class="card-header">
+        <div class="icono-card">📍</div>
+        <h3>Dirección de Envío</h3>
+        <button class="btn-text" (click)="toggleEditarDireccion()" *ngIf="!editandoDireccion">Editar</button>
+      </div>
+      <div class="card-body">
+        
+        <div *ngIf="!editandoDireccion">
+          <p class="direccion-texto">{{ perfil.direccion || 'Aún no has registrado una dirección.' }}</p>
+        </div>
+
+        <div *ngIf="editandoDireccion" class="edit-form">
+          <textarea [(ngModel)]="perfil.direccion" rows="3" placeholder="Ej: Calle Principal 123, Ciudad"></textarea>
+          <div class="form-actions">
+            <button class="btn-cancelar" (click)="toggleEditarDireccion()">Cancelar</button>
+            <button class="btn-primary" (click)="guardarDireccion()" [disabled]="isLoading">
+              {{ isLoading ? 'Guardando...' : 'Guardar Dirección' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="perfil-card">
+      <div class="card-header">
+        <div class="icono-card">🔒</div>
+        <h3>Seguridad</h3>
+        <button class="btn-text" (click)="toggleCambiarPassword()" *ngIf="!cambiandoPassword">Actualizar</button>
+      </div>
+      <div class="card-body">
+        
+        <div *ngIf="!cambiandoPassword">
+          <p class="seguridad-texto">Contraseña ••••••••••</p>
+          <span class="badge-segura">Cuenta protegida</span>
+        </div>
+
+        <div *ngIf="cambiandoPassword" class="edit-form">
+          <div class="input-group">
+            <label>Contraseña Actual</label>
+            <input type="password" [(ngModel)]="passwords.actual" placeholder="Ingresa tu contraseña actual">
+          </div>
+          <div class="input-group">
+            <label>Nueva Contraseña</label>
+            <input type="password" [(ngModel)]="passwords.nueva" placeholder="Mínimo 8 caracteres">
+          </div>
+          <div class="input-group">
+            <label>Confirmar Nueva Contraseña</label>
+            <input type="password" [(ngModel)]="passwords.confirmar" placeholder="Repite la nueva contraseña">
+          </div>
+          
+          <div class="form-actions">
+            <button class="btn-cancelar" (click)="toggleCambiarPassword()">Cancelar</button>
+            <button class="btn-primary" (click)="guardarPassword()" [disabled]="isLoading || !passwords.actual || !passwords.nueva">
+              {{ isLoading ? 'Actualizando...' : 'Actualizar Contraseña' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -9,7 +9,7 @@ import { Registrar } from './pages/Registrar/registrar/registrar';
 import { NovedadesDetalle } from './pages/novedades-detalle/novedades-detalle';
 import { Ofertas } from './pages/oferta/oferta';
 import { AgregarDescuentoComponent } from './pages/Administrador/agregar-descuento/agregardescuento/agregardescuento';
-
+import { PerfilComponent } from './pages/perfil/perfil';
 
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
@@ -29,6 +29,7 @@ export const routes: Routes = [
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'fofativas', component: Aromas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     {path: 'ofertas', component: Ofertas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
+    {path:'pefil', component: PerfilComponent ,canActivate:[authGuard,roleGuard], data: {role: 'cliente'}},
     {path: 'admin/venta-privada', component: AgregarDescuentoComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' }},
     { path: '**', redirectTo: '' }
 

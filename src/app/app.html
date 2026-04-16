@@ -29,7 +29,7 @@
         <span class="material-icons arrow-icon">arrow_drop_down</span>
         
         <div class="dropdown-menu" *ngIf="isMenuOpen">
-          <a class="dropdown-item">
+          <a class="dropdown-item" routerLink="pefil" (click)="isMenuOpen= false">
             <span class="material-icons">person</span>
             Mi Perfil
           </a>
