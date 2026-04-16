@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
   // Misma URL base, pero apuntando a Usuarios
-  private apiUrl = 'https://localhost:7030/api/Usuarios'; 
+  private apiUrl = 'https://back-end-donaruma-production-ac0c.up.railway.app/api/Usuarios';
 
   constructor(private http: HttpClient) {}
 

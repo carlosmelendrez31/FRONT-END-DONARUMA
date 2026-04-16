@@ -16,7 +16,7 @@ export interface Novedad {
 })
 export class NovedadesService {
   
-  private apiUrl = 'https://localhost:7030/api/Novedades';
+  private apiUrl = 'https://back-end-donaruma-production-ac0c.up.railway.app/api/Novedades';
 
   constructor(private http: HttpClient) { }
 

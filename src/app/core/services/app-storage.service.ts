@@ -40,7 +40,7 @@ export class AppStorageService {
     if (!id) throw new Error('No user ID found');
     
     // 4. Hacemos la petición con withCredentials para que el servidor lea nuestra Cookie secreta
-    return this.http.get<UserProfile>(`https://localhost:7030/api/UsuariosInf/datos/${id}`, { withCredentials: true }).pipe(
+    return this.http.get<UserProfile>(`https://back-end-donaruma-production-ac0c.up.railway.app/api/UsuariosInf/datos/${id}`, { withCredentials: true }).pipe(
       tap(profile => this.userProfileSubject.next(profile))
     );
   }
