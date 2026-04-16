@@ -869,3 +869,60 @@ body.modal-open {
 .btn-checkout:hover { 
     background: white; 
 }
+/* Responsivo para celulares o tablets */
+
+/* Este breakpoint se activa en tablets verticales y celulares (768px o menos) */
+@media (max-width: 768px) {
+    
+    /* 1. Reducimos los paddings gigantes de la pantalla principal */
+    .novedades-container {
+        padding: 100px 15px 40px 15px; /* Dejamos 100px arriba para que no lo tape el menú */
+    }
+
+    /* 2. Ajustamos los títulos para que quepan en pantallas chicas */
+    .header-vip h2 {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+
+    .post-title-large {
+        font-size: 1.5rem;
+    }
+
+    /* 3. Ajustamos la tarjeta grande (hacemos la imagen más corta) */
+    .card-image-wrapper-large {
+        height: 250px; 
+    }
+
+    .card-content-large {
+        padding: 20px;
+    }
+
+    /* 4. ¡EL MODAL! Lo pasamos de 2 columnas a 1 columna (Apilamiento) */
+    .modal-grid {
+        grid-template-columns: 1fr; /* Magia: Todo se pone en 1 sola columna */
+    }
+
+    /* Ajustamos la altura de la imagen en el modal para que no ocupe todo el celular */
+    .imagen-principal {
+        max-height: 250px;
+    }
+
+    /* 5. El carrito lateral debe ocupar toda la pantalla en celular */
+    .carrito-lateral {
+        width: 100%;
+        right: -100%; /* Para que se esconda completamente */
+    }
+    
+    /* Ajustes menores de botones en el modal para celular */
+    .modal-bottom {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .btn-carrito {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,296 @@
+.perfil-wrapper {
+    background-color: #f8fafc;
+    /* Gris/Azul súper clarito para dar contraste */
+    min-height: calc(100vh - 75px);
+    /* Restando el height de tu Navbar */
+    padding: 50px 20px;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+.perfil-header {
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    text-align: center;
+}
+
+.perfil-header h1 {
+    color: #0A1F44;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.perfil-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* ========================================== */
+/* GRID DE TARJETAS */
+/* ========================================== */
+.perfil-grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.perfil-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.perfil-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background: white;
+    padding: 20px 25px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icono-card {
+    font-size: 1.5rem;
+    background: rgba(212, 175, 55, 0.15);
+    /* Fondo dorado transparente */
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #0A1F44;
+    flex-grow: 1;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-text:hover {
+    color: #0A1F44;
+    text-decoration: underline;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+/* ========================================== */
+/* CONTENIDO INTERNO */
+/* ========================================== */
+.info-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #0A1F44;
+}
+
+.direccion-texto,
+.seguridad-texto {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    margin: 0 0 10px 0;
+}
+
+.badge-segura {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #a7f3d0;
+}
+
+/* ========================================== */
+/* FORMULARIOS DE EDICIÓN */
+/* ========================================== */
+.edit-form textarea,
+.edit-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.edit-form textarea:focus,
+.edit-form input:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-cancelar {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-cancelar:hover {
+    background: #f1f5f9;
+    color: #333;
+}
+
+.btn-primary {
+    background: #0A1F44;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary:hover:not([disabled]) {
+    background: #d4af37;
+    color: #0A1F44;
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ========================================== */
+/* TOASTS (ALERTAS) */
+/* ========================================== */
+.toast-container {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast-mensaje {
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s forwards;
+}
+
+.toast-mensaje.exito {
+    background: #10b981;
+}
+
+.toast-mensaje.error {
+    background: #ef4444;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ========================================== */
+/* RESPONSIVO */
+/* ========================================== */
+@media (max-width: 768px) {
+    .perfil-wrapper {
+        padding: 30px 15px;
+    }
+
+    .perfil-header h1 {
+        font-size: 2rem;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-cancelar,
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+}

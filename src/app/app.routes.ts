@@ -10,7 +10,7 @@ import { NovedadesDetalle } from './pages/novedades-detalle/novedades-detalle';
 import { Ofertas } from './pages/oferta/oferta';
 import { AgregarDescuentoComponent } from './pages/Administrador/agregar-descuento/agregardescuento/agregardescuento';
 import { VerificarComponent } from './pages/verificar/verificar';
-
+import { PerfilComponent } from './pages/perfil/perfil';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { noAuthGuard } from './core/guards/no-auth.guard';
@@ -24,6 +24,7 @@ export const routes: Routes = [
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'novedades', component: NovedadesComponent, canActivate: [authGuard] },
     { path: 'novedades/:id', component: NovedadesDetalle, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
+    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }}, 
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
    { path: 'admin-novedades', component: AdminNovedadesComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },

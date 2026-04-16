@@ -1023,12 +1023,5 @@ body.modal-open {
 }
 
 .badge-familia {
-  border: 1px solid #d4af37; /* Borde dorado */
-  color: #d4af37; /* Texto dorado */
-  background-color: transparent;
-  padding: 3px 10px;
-  border-radius: 15px; /* Bordes bien redondeados */
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  border: 1px solid #d4af37; 
 }

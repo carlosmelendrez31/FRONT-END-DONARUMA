@@ -1,54 +1,76 @@
-<!-- Fuente moderna -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-<section class="login-container">
-  <div class="login-box">
-
-    <h2>Iniciar Sesión</h2>
-
-    <form (ngSubmit)="login()">
-
-      <div *ngIf="errorMessage" style="color: red; margin-bottom: 15px; font-size: 14px;">
-        {{ errorMessage }}
-      </div>
-
-      <div class="input-group">
-        <label for="email">Correo electrónico</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          [(ngModel)]="correo"
-          required 
-          placeholder="Tu correo">
-      </div>
-
-      <div class="input-group">
-        <label for="password">Contraseña</label>
-        <div class="password-wrapper">
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            [(ngModel)]="contrasena"
-            required 
-            placeholder="Tu contraseña">
-          <span class="show-password" (click)="togglePasswordVisibility()">
-            {{ shPassword ? 'Ocultar' : 'Mostrar' }}
-          </span>
-        </div>
-      </div>
-
-      <button type="submit" class="login-button" [disabled]="isLoading">
-        {{ isLoading ? 'Cargando...' : 'Iniciar Sesión' }}
-      </button>
-
-    </form>
-
-    <p class="signup-link">
-      ¿No tienes cuenta?
-      <a routerLink="/registrar">Crea una aquí</a>
-    </p>
-
+<div class="login-wrapper">
+  
+  <div class="toast-container">
+    <div class="toast-mensaje error" *ngFor="let err of notificacionesError">⚠️ {{err}}</div>
+    <div class="toast-mensaje exito" *ngFor="let exito of notificacionesExito">✅ {{exito}}</div>
   </div>
-</section>
+
+  <div class="login-image">
+    <div class="diapositiva-login"
+         *ngFor="let img of imagenesCarrusel; let i = index"
+         [style.backgroundImage]="'url(' + img + ')'"
+         [class.activa]="i === imagenActualIndex">
+    </div>
+    
+    <div class="overlay">
+      <h2>DUNA<span>ROMA</span></h2>
+      <p>Descubre la esencia que define tu estilo.</p>
+    </div>
+  </div>
+
+  <div class="login-form-container">
+    <div class="form-box">
+      
+      <h2 class="title">Iniciar Sesión</h2>
+      <p class="subtitle">Bienvenido de nuevo a Dunaroma.</p>
+
+      <form (ngSubmit)="login()">
+        
+        <div class="input-group">
+          <label for="email">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="correo"
+            required 
+            placeholder="correo@ejemplo.com"
+            [class.input-error]="errorCampoInvalido && !correo">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="shPassword ? 'text' : 'password'" 
+              id="password" 
+              name="password" 
+              [(ngModel)]="contrasena"
+              required 
+              placeholder="Tu contraseña"
+              [class.input-error]="errorCampoInvalido && !contrasena">
+            
+            <button type="button" class="show-password" (click)="togglePasswordVisibility()">
+              {{ shPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Validando...' : 'Entrar' }}
+        </button>
+
+      </form>
+
+      <div class="divider">
+        <span>o</span>
+      </div>
+
+      <p class="signup-link">
+        ¿Aún no tienes cuenta? 
+        <a routerLink="/registrar">Regístrate aquí</a>
+      </p>
+
+    </div>
+  </div>
+</div>
