@@ -33,7 +33,7 @@ export class App implements OnInit {
   logout() {
     const id = this.appStorage.getUserId();
     if (id) {
-      this.authService.logout(+id).subscribe({
+      this.authService.logout().subscribe({
         next: () => this.handleLogoutSuccess(),
         error: () => this.handleLogoutSuccess() // Limpiar incluso si falla en back
       });

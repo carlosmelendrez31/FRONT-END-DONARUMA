@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarritoService } from '../../core/services/carrito.service'; 
+import { AppStorageService } from '../../core/services/app-storage.service'; // 👈 Agregamos el servicio de almacenamiento
 import Swal from 'sweetalert2'; 
 
 @Component({
@@ -14,39 +15,32 @@ export class Carrito implements OnInit {
 
   listaCarrito: any[] = [];
 
+  private appStorage = inject(AppStorageService); // 👈 Inyectamos el servicio
+
   constructor(
     private carritoService: CarritoService,
-    private cdr: ChangeDetectorRef // 👈 Ayuda a Angular a refrescar la vista cuando llegan los datos
+    private cdr: ChangeDetectorRef // Ayuda a Angular a refrescar la vista cuando llegan los datos
   ) {}
 
   ngOnInit() {
-    // 🌟 Ahora, en lugar de solo leer la memoria, vamos directo a la Base de Datos
     this.cargarCarritoDesdeBD();
   }
 
-  // 🔍 FUNCIÓN: Lee el Token y extrae el ID real del usuario
+  // 🔍 FUNCIÓN: Lee el ID directamente de donde lo guardamos en el login
   obtenerIdUsuarioReal(): number {
-    const token = localStorage.getItem('accessToken'); 
-    if (token) {
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const payloadDecodificado = atob(payloadBase64);
-        const datosUsuario = JSON.parse(payloadDecodificado);
-
-        // Buscamos el ID con los nombres que usa tu C#
-        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario.sub;
-        
-        return idReal ? Number(idReal) : 1;
-      } catch (error) {
-        console.error('Error al decodificar el token:', error);
-      }
-    }
-    return 1; // ID por defecto si no hay sesión
+    const idString = this.appStorage.getUserId(); // Esto lee 'userId' del localStorage
+    return idString ? Number(idString) : 0; 
   }
 
   // 🚀 FUNCIÓN: Carga los datos frescos de PostgreSQL
   cargarCarritoDesdeBD() {
     const idUsuario = this.obtenerIdUsuarioReal();
+
+    // Si el ID es 0, significa que no hay nadie logueado (o el tapete desinfectante limpió todo)
+    if (idUsuario === 0) {
+      this.listaCarrito = [];
+      return;
+    }
 
     this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
       next: (datosBD: any) => {
@@ -56,15 +50,21 @@ export class Carrito implements OnInit {
           nombre: item.nombre,
           precio: Number(item.precio),
           cantidad: item.Cantidad || item.cantidad || 1,
-          img1: item.img1 // Asegúrate que en C# el JOIN devuelva p.imagen_url as img1
+          img1: item.img1 
         }));
         
+        // ⚠️ ¡CLAVE PARA STRIPE! Le pasamos la lista al servicio para que Stripe sepa qué cobrar
+        this.carritoService.setCarrito(this.listaCarrito);
+
         // Refrescamos los cálculos del total
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al recuperar el carrito de la BD:', err);
-        this.mostrarAlertaElegante('No pudimos recuperar tus productos guardados.', 'warning');
+        // Si da error 404 (no tiene carrito aún), no mostramos alerta, solo lo dejamos vacío
+        if (err.status !== 404) {
+          this.mostrarAlertaElegante('No pudimos recuperar tus productos guardados.', 'warning');
+        }
       }
     });
   }

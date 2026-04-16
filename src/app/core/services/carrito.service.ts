@@ -1,73 +1,74 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs'; // 👈 Súper importante para la Base de Datos
+import { Observable, BehaviorSubject } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarritoService {
-  // 1. La URL para los pagos (la que ya tenías)
   private stripeUrl = 'https://localhost:7030/api/Pagos/crear-sesion'; 
-  
-  // 2. 🚀 NUEVA URL para tu base de datos de carritos en C#
   private carritoApiUrl = 'https://localhost:7030/api/Carrito'; 
 
-  // Variable temporal por si la página de pagos aún la necesita
-  private _carrito: any[] = []; 
+  // 🔄 Nuestra memoria temporal (RAM). Cuando el usuario cierra la pestaña, esto desaparece.
+  private _carrito = new BehaviorSubject<any[]>([]);
+  public carrito$ = this._carrito.asObservable();
 
-  constructor(private http: HttpClient) { 
-    // Ya no leemos del localStorage aquí, porque ahora lo sacaremos de PostgreSQL
-  }
+  constructor(private http: HttpClient) { }
 
   // ==========================================
-  // 🚀 FUNCIONES PRO PARA LA BASE DE DATOS
+  // 🚀 FUNCIONES PARA LA BASE DE DATOS
   // ==========================================
 
-  // 1. GUARDAR EN BASE DE DATOS (El POST)
   agregarAlCarritoBD(idUsuario: number, idPerfume: number, cantidad: number): Observable<any> {
-    const payload = {
-      idUsuario: idUsuario,
-      idPerfume: idPerfume,
-      cantidad: cantidad
-    };
-    return this.http.post(`${this.carritoApiUrl}/agregar`, payload);
+    const payload = { idUsuario, idPerfume, cantidad };
+    return this.http.post(`${this.carritoApiUrl}/agregar`, payload, { withCredentials: true });
   }
 
-  // 2. LEER DE LA BASE DE DATOS (El GET)
-  obtenerCarritoBD(idUsuario: number): Observable<any> {
-    return this.http.get(`${this.carritoApiUrl}/usuario/${idUsuario}`);
+  obtenerCarritoBD(idUsuario: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.carritoApiUrl}/usuario/${idUsuario}`, { withCredentials: true });
   }
 
-  // 3. ELIMINAR DE LA BASE DE DATOS (El DELETE)
   eliminarItemBD(idCarritoItem: number): Observable<any> {
-    return this.http.delete(`${this.carritoApiUrl}/eliminar/${idCarritoItem}`);
+    return this.http.delete(`${this.carritoApiUrl}/eliminar/${idCarritoItem}`, { withCredentials: true });
   }
-
 
   // ==========================================
-  // 💳 FUNCIONES PARA STRIPE (Tus funciones originales)
+  // 🧹 LIMPIEZA TOTAL
+  // ==========================================
+
+  limpiarCarrito() {
+    this._carrito.next([]); // Vaciamos la memoria RAM
+    
+    // 🧹 Solo dejamos esto por precaución, para borrar cualquier basura vieja que haya quedado
+    localStorage.removeItem('carrito_dunaroma'); 
+    
+    console.log('🧹 Memoria del carrito vaciada por completo.');
+  }
+
+  // ==========================================
+  // 💳 FUNCIONES DE APOYO Y STRIPE
   // ==========================================
 
   setCarrito(items: any[]) {
-    this._carrito = items;
-    // Lo dejamos en localStorage temporalmente solo para que tu página de Stripe no explote
-    localStorage.setItem('carrito_dunaroma', JSON.stringify(this._carrito));
+    this._carrito.next(items); // Actualizamos a los componentes (como tu icono del carrito)
+    
+    // ❌ AQUÍ ESTABA EL ERROR. 
+    // Ya eliminamos la línea de localStorage.setItem. 
+    // ¡El carrito ya no dejará rastros en la computadora!
   }
 
-  getCarrito() {
-    return this._carrito;
+  getCarritoActual() {
+    return this._carrito.value;
   }
 
   procesarPagoStripe() {
-    // 📦 Volvemos a meter todo en la caja "items"
     const payloadCheckout = {
-      items: this._carrito.map((item: any) => ({
+      items: this._carrito.value.map((item: any) => ({
         nombre: item.nombre, 
         precio: item.precio, 
         cantidad: item.cantidad || 1 
       }))
     };
-
-    return this.http.post(this.stripeUrl, payloadCheckout);
+    return this.http.post(this.stripeUrl, payloadCheckout, { withCredentials: true });
   }
 }

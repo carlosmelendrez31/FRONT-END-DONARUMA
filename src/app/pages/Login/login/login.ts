@@ -42,26 +42,33 @@ export class Login {
     this.isLoading = true;
 
     this.authService.login(this.correo, this.contrasena).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.isLoading = false;
-        if (response.exito) {
-          this.authService.setTokens(response.accessToken, response.refreshToken);
-          this.appStorage.loadUserProfileIfAuthenticated();
+        
+        // 👀 Imprimimos la respuesta para ver qué mandó C#
+        console.log('Login Exitoso, respuesta:', response);
+        
+        // 🔒 Guardamos datos inofensivos
+        localStorage.setItem('userRole', response.rol || 'cliente');
+        localStorage.setItem('userId', response.idUsuario?.toString() || '');
+
+        // Disparamos la carga del perfil
+        this.appStorage.loadUserProfileIfAuthenticated();
           
-          const role = this.appStorage.getUserRole();
-          if (role === 'admin') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/inicio']);
-          }
+        // Hacemos la redirección
+        if (response.rol === 'admin') {
+          this.router.navigate(['/admin']);
         } else {
-          this.errorMessage = response.mensaje || 'Error al iniciar sesión';
+          // 👇 Lo cambié a '/' para que te lleve directo a la raíz de tu tienda
+          this.router.navigate(['/inicio']); 
         }
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Login error:', error);
-        this.errorMessage = 'Ocurrió un error al intentar conectarse al servidor.';
+        
+        // Si hay error (401 Unauthorized), mostramos el mensaje que manda C#
+        this.errorMessage = error.error?.mensaje || 'Correo o contraseña incorrectos.';
       }
     });
   }

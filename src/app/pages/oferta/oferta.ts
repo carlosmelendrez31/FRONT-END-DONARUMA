@@ -1,8 +1,10 @@
 import { Router } from '@angular/router';
 import { CarritoService } from '../../core/services/carrito.service';
+import { AppStorageService } from '../../core/services/app-storage.service'; // 👈 IMPORTAMOS EL STORAGE
 import { CommonModule } from '@angular/common'; 
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { Ofertasadm } from '../../core/services/ofertasadm'; 
+import { Subscription } from 'rxjs'; // 👈 IMPORTAMOS PARA LA SINCRONIZACIÓN
 
 @Component({
   selector: 'app-ofertas',
@@ -16,6 +18,8 @@ export class Ofertas implements OnInit, OnDestroy {
   private ofertasService = inject(Ofertasadm);
   private router = inject(Router);
   private carritoService = inject(CarritoService);
+  private appStorage = inject(AppStorageService); // 👈 INYECTAMOS EL SERVICIO
+  private cdr = inject(ChangeDetectorRef); // 👈 AYUDA A REFRESCAR LA PANTALLA
 
   productosEnOferta: any[] = [];
   ofertaFinalizada: boolean = false;
@@ -37,9 +41,15 @@ export class Ofertas implements OnInit, OnDestroy {
   // --- VARIABLES DEL CARRITO ---
   carritoAbierto: boolean = false;
   carrito: any[] = [];
-
+  private carritoSub!: Subscription; // 👈 VARIABLE PARA LA CONEXIÓN TELEPÁTICA
 
   ngOnInit(): void {
+    // 🧠 1. Conexión telepática con la memoria RAM del Carrito
+    this.carritoSub = this.carritoService.carrito$.subscribe(items => {
+      this.carrito = items;
+      this.cdr.detectChanges();
+    });
+
     this.cargarCarritoDesdeBD(); // 🌟 Actualizado a la BD al iniciar
     this.cargarDatosDesdeAPI();
   }
@@ -124,6 +134,7 @@ export class Ofertas implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.intervalo) clearInterval(this.intervalo);
+    if (this.carritoSub) this.carritoSub.unsubscribe(); // 👈 Limpiamos la conexión al salir
   }
 
   abrirModal(perfume: any) {
@@ -150,53 +161,56 @@ export class Ofertas implements OnInit, OnDestroy {
   }
 
   // =========================================================
-  // 🚀 LÓGICA DEL CARRITO (CONECTADA A POSTGRESQL)
+  // 🚀 LÓGICA DEL CARRITO (PURIFICADA)
   // =========================================================
 
   obtenerIdUsuarioReal(): number {
-    const token = localStorage.getItem('accessToken'); 
-    if (token) {
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const payloadDecodificado = atob(payloadBase64);
-        const datosUsuario = JSON.parse(payloadDecodificado);
-        // console.log('CONTENIDO DEL TOKEN:', JSON.stringify(datosUsuario)); // Descomenta si necesitas debugear
-
-        const idReal = datosUsuario.idusuario || datosUsuario.IdUsuario || datosUsuario.id || datosUsuario.nameid || datosUsuario['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || datosUsuario.sub;
-        if (idReal) return Number(idReal); 
-
-      } catch (error) {
-        console.error('Error al leer el token:', error);
-      }
-    }
-    return 1; 
+    // 🧹 Leemos el ID inofensivo de la memoria, ¡adiós al atob() y al desencriptado!
+    const idString = this.appStorage.getUserId();
+    return idString ? Number(idString) : 0; 
   }
  
   cargarCarritoDesdeBD() {
     const idUsuario = this.obtenerIdUsuarioReal();
+    
+    if(idUsuario === 0) {
+      this.carritoService.setCarrito([]);
+      return;
+    }
+
     this.carritoService.obtenerCarritoBD(idUsuario).subscribe({
       next: (datosBD: any) => {
-        this.carrito = datosBD.map((item: any) => ({
+        const itemsMapeados = datosBD.map((item: any) => ({
           idCarritoItem: item.IdCarritoItem || item.idCarritoItem || item.idcarritoitem,
           nombre: item.nombre,
           precio: Number(item.precio), 
           cantidad: item.Cantidad || item.cantidad || 1, 
           img1: item.img1
         }));
+        
+        // 🚀 Actualizamos la RAM Global. Al hacer esto, this.carrito se llena solo.
+        this.carritoService.setCarrito(itemsMapeados);
       },
       error: (err: any) => {
         console.error('Error al cargar el carrito:', err);
+        if(err.status === 404) this.carritoService.setCarrito([]);
       }
     });
   }
 
   agregarAlCarrito(perfume: any) {
     const idUsuario = this.obtenerIdUsuarioReal(); 
+
+    if (idUsuario === 0) {
+      this.mostrarNotificacion('Inicia sesión para agregar productos');
+      return;
+    }
+
     this.carritoService.agregarAlCarritoBD(idUsuario, perfume.idPerfume, 1).subscribe({
       next: (res: any) => {
         this.mostrarNotificacion('¡Agregado exitosamente al carrito!'); 
         this.cerrarModal();
-        this.cargarCarritoDesdeBD();
+        this.cargarCarritoDesdeBD(); // Refrescamos la RAM
       },
       error: (err: any) => {
         console.error('ERROR AL CONECTAR CON C#:', err);
@@ -209,8 +223,8 @@ export class Ofertas implements OnInit, OnDestroy {
     const itemABorrar = this.carrito[index];
     this.carritoService.eliminarItemBD(itemABorrar.idCarritoItem).subscribe({
       next: (respuesta: any) => {
-        this.carrito.splice(index, 1);
         this.mostrarNotificacion('Perfume eliminado del carrito');
+        this.cargarCarritoDesdeBD(); // Refrescamos la RAM
       },
       error: (err: any) => {
         console.error('Error al eliminar en BD:', err);
@@ -224,12 +238,13 @@ export class Ofertas implements OnInit, OnDestroy {
   }
 
   toggleCarrito() {
-    this.cargarCarritoDesdeBD();
+    if (!this.carritoAbierto) {
+      this.cargarCarritoDesdeBD();
+    }
     this.carritoAbierto = !this.carritoAbierto;
   }
 
   irAlCarrito() {
-    this.carritoService.setCarrito(this.carrito);
     this.carritoAbierto = false; 
     this.router.navigate(['/carrito']);
   }

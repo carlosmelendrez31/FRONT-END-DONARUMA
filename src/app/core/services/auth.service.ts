@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs'; 
+import { AppStorageService } from './app-storage.service'; 
+import { CarritoService } from './carrito.service';       
 
 export interface LoginResponse {
   exito: boolean;
   mensaje: string;
-  accessToken: string;
-  refreshToken: string;
+  rol?: string;
+  idUsuario?: number;
 }
 
 @Injectable({
@@ -15,42 +17,27 @@ export interface LoginResponse {
 export class AuthService {
   private apiUrl = 'https://localhost:7030/api/Auth';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  private appStorage = inject(AppStorageService);
+  private carritoService = inject(CarritoService);
 
   login(correo: string, contrasena: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { correo, contrasena });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { correo, contrasena }, { withCredentials: true });
   }
 
-  refresh(refreshToken: string): Observable<LoginResponse> {
-    // The backend refresh endpoint accepts a single string or JSON? 
-    // Usually it accepts the refresh token, either in body or header.
-    // Based on the given c# code, it's string refreshToken in Refresh(string refreshToken). 
-    // Assuming it's in a JSON body or URL query. Let's pass it in the body as standard practice.
-    // We'll pass it as { refreshToken: refreshToken } or maybe just a string. 
-    // Often it expects { refreshToken }. If the backend expects something else, we might need to adjust.
-    return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, { refreshToken });
+  refresh(): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, {}, { withCredentials: true });
   }
 
-  logout(idUsuario: number): Observable<any> {
-    // The C# backend expects idUsuario for logout. Usually this would be extracted from the token.
-    return this.http.post<any>(`${this.apiUrl}/logout`, { idUsuario });
-  }
+  logout(): Observable<any> {
+    // 🧹 1. EL VERDUGO: Destrucción inmediata de la memoria (RAM y LocalStorage)
+    // Esto mata al fantasma antes de que el servidor siquiera parpadee.
+    this.appStorage.clearStorage(); 
+    this.carritoService.limpiarCarrito(); 
+    
+    console.log('🧹 Memoria de Angular destruida. El Fantasma ha muerto.');
 
-  setTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-  }
-
-  getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
-  }
-
-  clearTokens(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // 2. Cerramos sesión en el servidor
+    return this.http.post<any>(`${this.apiUrl}/logout`, {}, { withCredentials: true });
   }
 }
