@@ -1,0 +1,36 @@
+<div class="verificacion-container">
+  <div class="verificacion-card">
+    
+    <div class="icono-contenedor">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
+    </div>
+
+    <h2>Verifica tu Cuenta</h2>
+    <p class="subtitulo">
+      Hemos enviado un código de seguridad a tu correo. Por favor, cópialo y pégalo aquí para activar tu cuenta en Dunaroma.
+    </p>
+
+    <div class="input-group">
+      <input 
+        type="text" 
+        [(ngModel)]="codigo" 
+        placeholder="Ej: c573ca8a-6d3b..." 
+        [disabled]="cargando"
+        (keyup.enter)="verificar()">
+    </div>
+
+    <div *ngIf="mensajeError" class="alerta error">{{ mensajeError }}</div>
+    <div *ngIf="mensajeExito" class="alerta exito">{{ mensajeExito }}</div>
+
+    <button 
+      class="btn-verificar" 
+      (click)="verificar()" 
+      [disabled]="cargando || !codigo">
+      {{ cargando ? 'Verificando...' : 'Confirmar Código' }}
+    </button>
+    
+  </div>
+</div>

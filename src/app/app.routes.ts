@@ -16,6 +16,7 @@ import { roleGuard } from './core/guards/role.guard';
 import { noAuthGuard } from './core/guards/no-auth.guard';
 import { NovedadesComponent } from './pages/novedades/novedades';
 import { PagoExitosoComponent } from './pages/pago-exitoso/pago-exitoso';
+import { VerificarCodigoComponent } from './pages/verificar-codigo/verificar-codigo';
 
 export const routes: Routes = [
     { path: '', component: Login, canActivate: [noAuthGuard] },
@@ -32,6 +33,7 @@ export const routes: Routes = [
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'fofativas', component: Aromas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     {path: 'ofertas', component: Ofertas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
+    { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [noAuthGuard] },
     {path: 'admin/venta-privada', component: AgregarDescuentoComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' }},
     { path: 'verificar', component: VerificarComponent },
     { path: '**', redirectTo: '' }

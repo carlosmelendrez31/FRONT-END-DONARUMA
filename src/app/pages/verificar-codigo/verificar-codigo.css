@@ -1,0 +1,118 @@
+/* Contenedor principal que ocupa toda la pantalla con el azul oscuro de Dunaroma */
+.verificacion-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0B132B; /* Azul oscuro estilo Dunaroma */
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* La tarjeta central */
+.verificacion-card {
+  background-color: #f3f4f6; /* Gris muy claro/blanco roto */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+/* Estilos del ícono */
+.icono-contenedor {
+  background-color: #E2E8F0;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px auto;
+  color: #1e293b;
+}
+
+h2 {
+  color: #1e293b;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.subtitulo {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Input moderno */
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.input-group input:focus {
+  border-color: #facc15; /* El amarillo/dorado de Dunaroma */
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+}
+
+/* Botón llamativo */
+.btn-verificar {
+  width: 100%;
+  padding: 15px;
+  margin-top: 25px;
+  background-color: #facc15; /* Dorado/Amarillo */
+  color: #1e293b;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-verificar:hover:not(:disabled) {
+  background-color: #eab308;
+}
+
+.btn-verificar:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-verificar:disabled {
+  background-color: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Alertas */
+.alerta {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.exito {
+  background-color: #dcfce3;
+  color: #166534;
+  border: 1px solid #86efac;
+}

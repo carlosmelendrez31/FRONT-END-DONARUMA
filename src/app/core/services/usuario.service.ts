@@ -11,6 +11,12 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
+  // 👇 AQUÍ AGREGAMOS LA NUEVA LLAVE PARA VERIFICAR EL CORREO 👇
+  confirmarCuenta(token: string): Observable<any> {
+    // Hace un POST a /api/Usuarios/confirmar enviando el token en el body
+    return this.http.post<any>(`${this.apiUrl}/confirmar`, { token });
+  }
+
   // Traer los datos del usuario por ID (GET)
   obtenerUsuario(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
@@ -21,7 +27,7 @@ export class UsuarioService {
     return this.http.put<any>(`${this.apiUrl}/actualizar`, datos);
   }
 
-  // Cambiar contraseña (Asumiendo que luego crees el endpoint en C#)
+  // Cambiar contraseña
   cambiarPassword(datos: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/cambiar-password`, datos);
   }

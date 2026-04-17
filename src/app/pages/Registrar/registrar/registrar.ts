@@ -89,9 +89,11 @@ export class Registrar {
     // por el link real de tu Back-End en Railway (ej. https://back-end-donaruma.up.railway.app/...)
     this.http.post('https://back-end-donaruma-production-ac0c.up.railway.app/api/Usuarios/crear', payload).subscribe({
       next: (res: any) => {
-        this.mostrarAlertaElegante('¡Cuenta creada con éxito! Bienvenido a Dunaroma.', 'success');
-        // Los mandamos de regreso al login para que inicien sesión
-        this.router.navigate(['/']); 
+        // 1. Cambiamos un poco el mensaje para avisarles del correo
+        this.mostrarAlertaElegante('¡Cuenta creada! Te hemos enviado un código a tu correo para verificarla.', 'success');
+        
+        // 2. 👇 AQUÍ ESTÁ LA MAGIA: En lugar de mandarlos al login ('/'), los mandamos a la nueva pantalla
+        this.router.navigate(['/verificar-codigo']); 
       },
       error: (err) => {
         console.error('Error al registrar:', err);
