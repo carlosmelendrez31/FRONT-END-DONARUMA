@@ -1,18 +1,17 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
-import { FormsModule } from '@angular/forms';   
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core'; // 👈 1. Importamos OnInit
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router'; // 👈 2. Importamos ActivatedRoute
 import { UsuarioService } from '../../core/services/usuario.service'; 
 
 @Component({
   selector: 'app-verificar-codigo',
-  standalone: true,                             
-  imports: [CommonModule, FormsModule],         
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './verificar-codigo.html',
   styleUrls: ['./verificar-codigo.css']
 })
-export class VerificarCodigoComponent {
-  
+export class VerificarCodigoComponent implements OnInit { // 👈 3. Agregamos implements OnInit
   codigo: string = '';
   cargando: boolean = false;
   mensajeError: string = '';
@@ -20,8 +19,20 @@ export class VerificarCodigoComponent {
 
   constructor(
     private usuarioService: UsuarioService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute // 👈 4. Inyectamos el lector de rutas
   ) {}
+
+  // 👇 5. Esta función se ejecuta apenas carga la página 👇
+  ngOnInit() {
+    // Revisamos si la URL trae un "?token=algo"
+    this.route.queryParams.subscribe(params => {
+      if (params['token']) {
+        this.codigo = params['token']; // Escribimos el código en el input automáticamente
+        this.verificar(); // ¡Le damos clic al botón verificar por el usuario!
+      }
+    });
+  }
 
   verificar() {
     if (!this.codigo.trim()) {
@@ -33,18 +44,16 @@ export class VerificarCodigoComponent {
     this.mensajeError = '';
     
     this.usuarioService.confirmarCuenta(this.codigo.trim()).subscribe({
-      next: (respuesta) => {
+      next: (respuesta: any) => {
         this.cargando = false;
         this.mensajeExito = '¡Cuenta verificada con éxito! Redirigiendo...';
         
-        
         setTimeout(() => {
-          this.router.navigate(['/login']); // Ajusta la ruta de tu login si es diferente
+          this.router.navigate(['/']); 
         }, 2000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.cargando = false;
-        
         this.mensajeError = err.error?.mensaje || 'Error al verificar el código. Intenta de nuevo.';
       }
     });
