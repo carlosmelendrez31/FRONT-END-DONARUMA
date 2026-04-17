@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, HostListener } from '@angular/core'; // 🔥 Agregamos HostListener
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
@@ -55,13 +55,19 @@ export class App implements OnInit {
   }
 
   private handleLogoutSuccess() {
-    // 1. Limpiamos las variables de Angular para que la UI se borre
-    this.appStorage.clearStorage();
-    this.isMenuOpen = false;
+    // 1. Destruimos toda la memoria local sin piedad
+    localStorage.clear();
+    sessionStorage.clear();
+    this.appStorage.clearStorage(); // Nos aseguramos de limpiar también tu servicio
     
-    // 2. Usamos replace() en lugar de href(). 
-    // Replace borra el registro de la página actual del historial del navegador,
-    // haciendo mucho más difícil regresar a ella.
-    window.location.replace('/'); 
+    // 2. Destruimos cualquier cookie residual del frontend
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    this.isMenuOpen = false;
+
+    
+    window.location.href = '/?sesion_cerrada=' + new Date().getTime(); 
   }
 }
