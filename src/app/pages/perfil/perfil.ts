@@ -46,29 +46,42 @@ export class PerfilComponent implements OnInit {
   // ==========================================
   // 1. TRAER LOS DATOS DESDE POSTGRESQL (GET)
   // ==========================================
-  cargarDatosUsuario() {
+ cargarDatosUsuario() {
     this.appStorage.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         const perfilSeguro = userProfile as any;
         
-        // Obtenemos el ID desde el Token (o 13 por defecto para pruebas)
-        this.idUsuarioActual = perfilSeguro.idUsuario || perfilSeguro.id || perfilSeguro.nameid || 13;
-        
-        // El correo sí viene en el JWT, lo podemos sacar de ahí directo
-        this.perfil.correo = perfilSeguro.correo || perfilSeguro.email || '';
+        // 🔒 LA SOLUCIÓN:
+        // En lugar de depender de los nombres raros del JWT, usamos el método getUserId() 
+        // de tu propio AppStorageService, que sabemos que funciona perfecto.
+        const idReal = this.appStorage.getUserId();
 
-        // Hacemos la llamada HTTP GET a C#
+        if (!idReal) {
+          console.error("No se encontró el ID del usuario en la sesión.");
+          return; // Si no hay ID, detenemos todo para no mostrar a un "impostor"
+        }
+
+        this.idUsuarioActual = Number(idReal);
+        
+        // El correo sí suele venir en el perfil, pero por si acaso:
+        this.perfil.correo = perfilSeguro.correo || perfilSeguro.email || 'Cargando...';
+
+        // Hacemos la llamada HTTP GET a C# con tu ID REAL
         this.usuarioService.obtenerUsuario(this.idUsuarioActual).subscribe({
           next: (datosBD: any) => {
-            // Llenamos la pantalla con la información de PostgreSQL
+            // Llenamos la pantalla con TU información real de PostgreSQL
             this.perfil.nombre = datosBD.nombre;
             this.perfil.apellidos = datosBD.apellidos;
             this.perfil.direccion = datosBD.direccion;
-            this.perfil.correo = datosBD.correo;
+            
+            // Si la BD devuelve el correo, lo sobreescribimos para mayor precisión
+            if(datosBD.correo) {
+                this.perfil.correo = datosBD.correo;
+            }
           },
           error: (err) => {
             console.error('Error al cargar datos desde la BD:', err);
-            this.mostrarNotificacion('Error al conectar con el servidor.', 'error');
+            this.mostrarNotificacion('Error al conectar con el servidor para traer tus datos.', 'error');
           }
         });
       }
