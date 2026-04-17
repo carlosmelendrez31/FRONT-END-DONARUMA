@@ -4,8 +4,8 @@ import { UsuarioService } from '../../core/services/usuario.service';
 
 @Component({
   selector: 'app-verificar-codigo',
-  templateUrl: './verificar-codigo.component.html',
-  styleUrls: ['./verificar-codigo.component.css']
+  templateUrl: './verificar-codigo.html',
+  styleUrls: ['./verificar-codigo.css']
 })
 export class VerificarCodigoComponent {
   codigo: string = '';
