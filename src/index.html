@@ -10,6 +10,52 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FrontendDonaruma</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script>
+    window.addEventListener('pageshow', function(event) {
+      // Revisamos si el usuario tiene sesión
+      var tieneSesion = localStorage.getItem('userId');
+      var rutaActual = window.location.pathname;
+      var rutasProtegidas = ['/carrito', '/admin', '/perfil', '/fofativas', '/ofertas', '/novedades', '/admin-novedades'];
+      
+      var estaEnPaginaProhibida = rutasProtegidas.some(function(ruta) {
+        return rutaActual.includes(ruta);
+      });
+
+      // Si el navegador intenta mostrar una foto vieja (persisted) O está en una página privada sin sesión
+      if (!tieneSesion && (event.persisted || estaEnPaginaProhibida)) {
+        // 1. Apagamos la pantalla en blanco instantáneamente para que no vea nada
+        document.body.style.display = 'none'; 
+        // 2. Lo pateamos al Login sin dejar rastro en el historial
+        window.location.replace('/'); 
+      }
+    });
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
 </head>
 <body>
   <app-root></app-root>
