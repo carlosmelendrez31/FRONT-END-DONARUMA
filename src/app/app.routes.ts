@@ -22,6 +22,7 @@ export const routes: Routes = [
     { path: '', component: Login, canActivate: [noAuthGuard] },
     { path: 'login', redirectTo: '', pathMatch: 'full' },
     { path: 'registrar', component: Registrar, canActivate: [noAuthGuard] },
+    { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [noAuthGuard] },
     { path: 'inicio', component: Inicio, canActivate: [authGuard] },
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'novedades', component: NovedadesComponent, canActivate: [authGuard] },
@@ -33,7 +34,7 @@ export const routes: Routes = [
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'fofativas', component: Aromas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     {path: 'ofertas', component: Ofertas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
-    { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [noAuthGuard] },
+
     {path: 'admin/venta-privada', component: AgregarDescuentoComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' }},
     { path: 'verificar', component: VerificarComponent },
     { path: '**', redirectTo: '' }
