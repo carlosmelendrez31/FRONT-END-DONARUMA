@@ -26,11 +26,11 @@ export class Login implements OnInit, OnDestroy {
   notificacionesError: string[] = [];
   notificacionesExito: string[] = [];
 
-  // 🔥 NUEVO: Variables del Carrusel
+  // Variables del Carrusel
   imagenesCarrusel: string[] = [
-    'https://i.postimg.cc/MZhZ60hN/Duna2.jpg', // Escena de montaña 1
-    'https://i.postimg.cc/fRvMfGJ9/duna3.jpg', // Escena de montaña 2
-    'https://i.postimg.cc/QtQmFJfk/Dunaroma.png'  // Escena de montaña 3
+    'https://i.postimg.cc/MZhZ60hN/Duna2.jpg', 
+    'https://i.postimg.cc/fRvMfGJ9/duna3.jpg', 
+    'https://i.postimg.cc/QtQmFJfk/Dunaroma.png'  
   ];
   imagenActualIndex: number = 0;
   intervaloCarrusel: any;
@@ -41,14 +41,27 @@ export class Login implements OnInit, OnDestroy {
   private router = inject(Router);
 
   ngOnInit() {
-    // 🔥 NUEVO: Arrancamos el carrusel para que cambie cada 4 segundos
+    // 🛡️ EL DOBLE ESCUDO ANTI-FANTASMAS
+    // Si la persona usa la flecha de "Atrás" para llegar al Login, pero el sistema 
+    // detecta que en realidad SÍ tiene una sesión activa, lo regresamos a su cuenta.
+    if (this.appStorage.isLoggedIn()) {
+      const role = this.appStorage.getUserRole();
+      if (role === 'admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/inicio']);
+      }
+      return; // 🛑 Detenemos la ejecución aquí para que no cargue el formulario
+    }
+
+    // 🔥 Arrancamos el carrusel para que cambie cada 4 segundos
     this.intervaloCarrusel = setInterval(() => {
       this.imagenActualIndex = (this.imagenActualIndex + 1) % this.imagenesCarrusel.length;
     }, 4000);
   }
 
   ngOnDestroy() {
-    // 🔥 NUEVO: Limpiamos el carrusel cuando cambiamos de pantalla
+    // Limpiamos el carrusel cuando cambiamos de pantalla
     if (this.intervaloCarrusel) {
       clearInterval(this.intervaloCarrusel);
     }
@@ -66,7 +79,6 @@ export class Login implements OnInit, OnDestroy {
       return;
     }
 
-    // Si pasamos la validación local, limpiamos los bordes rojos y activamos el loader
     this.errorCampoInvalido = false;
     this.isLoading = true;
 
@@ -75,9 +87,6 @@ export class Login implements OnInit, OnDestroy {
       next: (response: any) => {
         if (response.exito) {
           
-          // 🔒 MÁXIMA SEGURIDAD: 
-          // Ya NO tocamos los tokens. El navegador los guarda solos (HttpOnly Cookies).
-          // Solo guardamos la información inofensiva para que la interfaz sepa quién entró:
           if (response.idUsuario) {
             localStorage.setItem('userId', response.idUsuario.toString());
           }
@@ -89,13 +98,10 @@ export class Login implements OnInit, OnDestroy {
           
           this.mostrarExito('¡Acceso concedido! Validando credenciales...');
 
-          // Damos un pequeño retraso (1 segundo) para que la alerta verde se alcance a ver
-          // antes de saltar a la otra pantalla
           setTimeout(() => {
             this.isLoading = false;
             const role = this.appStorage.getUserRole();
             
-            // Tu lógica inteligente de redirección
             if (role === 'admin') {
               this.router.navigate(['/admin']);
             } else {
@@ -112,7 +118,6 @@ export class Login implements OnInit, OnDestroy {
         this.isLoading = false;
         console.error('Login error:', error);
         
-        // Atrapamos si C# nos mandó un mensaje de error específico
         if (error.error && error.error.mensaje) {
           this.mostrarError(error.error.mensaje);
         } else {
@@ -127,7 +132,6 @@ export class Login implements OnInit, OnDestroy {
   // =========================================
   mostrarError(mensaje: string) {
     this.notificacionesError.push(mensaje);
-    // Borramos el mensaje después de 4 segundos
     setTimeout(() => {
       this.notificacionesError.shift();
     }, 4000);
