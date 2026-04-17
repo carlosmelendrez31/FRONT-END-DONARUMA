@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; 
+import { FormsModule } from '@angular/forms';   
 import { Router } from '@angular/router';
-import { UsuarioService } from '../../core/services/usuario.service';
+import { UsuarioService } from '../../core/services/usuario.service'; 
 
 @Component({
   selector: 'app-verificar-codigo',
+  standalone: true,                             
+  imports: [CommonModule, FormsModule],         
   templateUrl: './verificar-codigo.html',
   styleUrls: ['./verificar-codigo.css']
 })
 export class VerificarCodigoComponent {
+  
   codigo: string = '';
   cargando: boolean = false;
   mensajeError: string = '';
@@ -32,14 +37,14 @@ export class VerificarCodigoComponent {
         this.cargando = false;
         this.mensajeExito = '¡Cuenta verificada con éxito! Redirigiendo...';
         
-        // Esperamos 2 segundos para que el usuario lea el mensaje de éxito y lo mandamos al Login
+        
         setTimeout(() => {
           this.router.navigate(['/login']); // Ajusta la ruta de tu login si es diferente
         }, 2000);
       },
       error: (err) => {
         this.cargando = false;
-        // Mostramos el mensaje de error que configuramos en C#
+        
         this.mensajeError = err.error?.mensaje || 'Error al verificar el código. Intenta de nuevo.';
       }
     });
