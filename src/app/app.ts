@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core'; // 🔥 Agregamos HostListener
 import { RouterOutlet } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
@@ -22,6 +22,18 @@ export class App implements OnInit {
 
   isMenuOpen = false;
 
+  // 🛡️ EL GUARDIÁN DEL BOTÓN ATRÁS (BFCache)
+  // Este código se dispara cada vez que la página se muestra, INCLUSO si 
+  // el usuario usa la flecha de "Atrás" y Chrome intenta mostrar una foto vieja.
+  @HostListener('window:pageshow', ['$event'])
+  onPageShow(event: any) {
+    // Si la página viene de la memoria caché (flecha de atrás) Y el usuario ya no tiene sesión:
+    if (event.persisted && !this.appStorage.isLoggedIn()) {
+      // Destruimos la foto vieja y forzamos a recargar en el login
+      window.location.reload(); 
+    }
+  }
+
   ngOnInit() {
     this.appStorage.loadUserProfileIfAuthenticated();
   }
@@ -35,7 +47,7 @@ export class App implements OnInit {
     if (id) {
       this.authService.logout().subscribe({
         next: () => this.handleLogoutSuccess(),
-        error: () => this.handleLogoutSuccess() // Limpiar incluso si falla en back
+        error: () => this.handleLogoutSuccess() 
       });
     } else {
       this.handleLogoutSuccess();
@@ -43,8 +55,13 @@ export class App implements OnInit {
   }
 
   private handleLogoutSuccess() {
+    // 1. Limpiamos las variables de Angular para que la UI se borre
     this.appStorage.clearStorage();
     this.isMenuOpen = false;
-    window.location.href = '/'; 
+    
+    // 2. Usamos replace() en lugar de href(). 
+    // Replace borra el registro de la página actual del historial del navegador,
+    // haciendo mucho más difícil regresar a ella.
+    window.location.replace('/'); 
   }
 }
