@@ -4,8 +4,8 @@ import { CarritoService } from '../../core/services/carrito.service';// 👈 Rev
 @Component({
   selector: 'app-pago-exitoso',
   standalone: true, // Si usas Angular moderno, déjalo así
-  templateUrl: './pago-exitoso.component.html',
-  styleUrls: ['./pago-exitoso.component.css']
+  templateUrl: './pago-exitoso.html',
+  styleUrls: ['./pago-exitoso.css']
 })
 export class PagoExitosoComponent implements OnInit {
 
