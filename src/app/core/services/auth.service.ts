@@ -33,7 +33,7 @@ export class AuthService {
     // 🧹 1. EL VERDUGO: Destrucción inmediata de la memoria (RAM y LocalStorage)
     // Esto mata al fantasma antes de que el servidor siquiera parpadee.
     this.appStorage.clearStorage(); 
-    this.carritoService.limpiarCarrito(); 
+    this.carritoService.vaciarCarrito(); 
     
     console.log('🧹 Memoria de Angular destruida. El Fantasma ha muerto.');
 

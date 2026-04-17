@@ -36,7 +36,7 @@ export class CarritoService {
   // 🧹 LIMPIEZA TOTAL
   // ==========================================
 
-  limpiarCarrito() {
+  vaciarCarrito() {
     this._carrito.next([]); // Vaciamos la memoria RAM
     
     // 🧹 Solo dejamos esto por precaución, para borrar cualquier basura vieja que haya quedado

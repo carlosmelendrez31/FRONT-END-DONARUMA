@@ -15,6 +15,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { noAuthGuard } from './core/guards/no-auth.guard';
 import { NovedadesComponent } from './pages/novedades/novedades';
+import { PagoExitosoComponent } from './pages/pago-exitoso/pago-exitoso';
 
 export const routes: Routes = [
     { path: '', component: Login, canActivate: [noAuthGuard] },
@@ -24,7 +25,8 @@ export const routes: Routes = [
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'novedades', component: NovedadesComponent, canActivate: [authGuard] },
     { path: 'novedades/:id', component: NovedadesDetalle, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
-    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }}, 
+    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
+     { path: 'pago-exitoso', component: PagoExitosoComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
    { path: 'admin-novedades', component: AdminNovedadesComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
