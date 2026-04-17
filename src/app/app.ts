@@ -45,6 +45,6 @@ export class App implements OnInit {
   private handleLogoutSuccess() {
     this.appStorage.clearStorage();
     this.isMenuOpen = false;
-    this.router.navigate(['/']); // Redirigir a login
+    window.location.href = '/'; 
   }
 }
