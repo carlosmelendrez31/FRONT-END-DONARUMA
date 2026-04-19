@@ -129,17 +129,33 @@ export class PerfilComponent implements OnInit {
   // ==========================================
   // 3. LÓGICA DE CONTRASEÑA
   // ==========================================
+ passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
   toggleCambiarPassword() {
     this.cambiandoPassword = !this.cambiandoPassword;
     this.passwords = { actual: '', nueva: '', confirmar: '' };
   }
 
   guardarPassword() {
+    // 🛑 VALIDACIÓN 1: Que no dejen campos en blanco
+    if (!this.passwords.actual || !this.passwords.nueva || !this.passwords.confirmar) {
+      this.mostrarNotificacion('Por favor, completa todos los campos de contraseña.', 'error');
+      return;
+    }
+
+    // 🛑 VALIDACIÓN 2: El Escudo de Contraseña Fuerte
+    if (!this.passwordRegex.test(this.passwords.nueva)) {
+      this.mostrarNotificacion('La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo especial.', 'error');
+      return;
+    }
+
+    // 🛑 VALIDACIÓN 3: Que las contraseñas nuevas coincidan
     if (this.passwords.nueva !== this.passwords.confirmar) {
       this.mostrarNotificacion('Las contraseñas nuevas no coinciden.', 'error');
       return;
     }
     
+    // Si pasa todos los guardias, encendemos el loading y mandamos a C#
     this.isLoading = true;
 
     const datosPassword = {
