@@ -47,6 +47,7 @@ export class Carrito implements OnInit {
         // Mapeamos los datos para que coincidan con lo que espera tu HTML
         this.listaCarrito = datosBD.map((item: any) => ({
           idCarritoItem: item.IdCarritoItem || item.idCarritoItem,
+          idPerfume: item.idPerfume || item.IdPerfume,
           nombre: item.nombre,
           precio: Number(item.precio),
           cantidad: item.Cantidad || item.cantidad || 1,
