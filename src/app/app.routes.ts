@@ -25,7 +25,7 @@ export const routes: Routes = [
     { path: 'registrar', component: Registrar, canActivate: [noAuthGuard] },
     { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [noAuthGuard] },
     { path: 'inicio', component: Inicio, canActivate: [authGuard] },
-    { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
+    { path: 'admin', component: Agregarperfume, canActivate: [authGuard], data: { role: 'admin' } },
     { path: 'novedades', component: NovedadesComponent, canActivate: [authGuard] },
     { path: 'novedades/:id', component: NovedadesDetalle, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
     { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
