@@ -8,14 +8,16 @@
     <a routerLink="/novedades" class="menu-item" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'cliente'">Novedades</a>
     
    <div class="dropdown" *ngIf="appStorage.isLoggedIn() && appStorage.getUserRole() === 'admin'">
-      <span class="menu-item">Admin ▾</span>
-      <div class="dropdown-content">
-        <a routerLink="/admin">📦 Gestionar Perfumes</a>
+       <span class="menu-item">Admin ▾</span>
+        <div class="dropdown-content">
+         <a routerLink="/admin">📦 Gestionar Perfumes</a>
         <a routerLink="/admin-novedades">📰 Publicar Novedades</a>
-        <a routerLink="/admin/venta-privada">🏷️ Publicar Ofertas</a>
+       <a routerLink="/admin/venta-privada">🏷️ Publicar Ofertas</a>
         
-      </div>
-    </div>
+        <a routerLink="/admin/logs">🛡️ Auditoría de Seguridad</a>
+        
+     </div>
+       </div>
     
     <a routerLink="/" class="menu-item" *ngIf="!appStorage.isLoggedIn()">Cuenta</a>
   </nav>

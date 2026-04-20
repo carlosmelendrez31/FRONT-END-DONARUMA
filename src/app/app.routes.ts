@@ -28,7 +28,7 @@ export const routes: Routes = [
     { path: 'admin', component: Agregarperfume, canActivate: [authGuard], data: { role: 'admin' } },
     { path: 'novedades', component: NovedadesComponent, canActivate: [authGuard] },
     { path: 'novedades/:id', component: NovedadesDetalle, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
-    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
+    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard]  },
      { path: 'pago-exitoso', component: PagoExitosoComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     
    { path: 'admin-novedades', component: AdminNovedadesComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
