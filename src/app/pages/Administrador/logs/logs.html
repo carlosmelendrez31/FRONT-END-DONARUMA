@@ -1,41 +1,41 @@
-<div class="p-6 text-white font-sans">
-  <div class="flex justify-between items-center mb-6 border-b border-gray-600 pb-4">
-    <div>
-      <h1 class="text-3xl font-bold text-yellow-400">Auditoría y Seguridad</h1>
-      <p class="text-sm text-gray-400 mt-1">Monitoreo en tiempo real de los eventos del sistema.</p>
+<div class="logs-container">
+  <div class="logs-header">
+    <div class="logs-title">
+      <h1>Auditoría y Seguridad</h1>
+      <p>Monitoreo en tiempo real de los eventos del sistema.</p>
     </div>
-    <button (click)="cargarHistorial()" class="px-4 py-2 bg-yellow-400 text-black font-bold rounded hover:bg-yellow-500 transition shadow">
+    <button class="btn-actualizar" (click)="cargarHistorial()">
       Actualizar
     </button>
   </div>
 
-  <div class="overflow-x-auto bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-    <table class="w-full text-left border-collapse">
+  <div class="table-wrapper">
+    <table class="logs-table">
       <thead>
-        <tr class="bg-gray-900 text-yellow-400 text-sm uppercase tracking-wider">
-          <th class="p-4 font-semibold">ID</th>
-          <th class="p-4 font-semibold">Fecha y Hora</th>
-          <th class="p-4 font-semibold">Evento</th>
-          <th class="p-4 font-semibold">Usuario</th>
-          <th class="p-4 font-semibold">IP</th>
+        <tr>
+          <th>ID</th>
+          <th>Fecha y Hora</th>
+          <th>Evento</th>
+          <th>Usuario</th>
+          <th>Dirección IP</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-700">
-        <tr *ngFor="let log of listaLogs" class="hover:bg-gray-700 transition">
-          <td class="p-4 text-gray-400">#{{ log.id }}</td>
-          <td class="p-4 text-gray-300">{{ log.eventDate | date:'short' }}</td>
-          <td class="p-4">
-            <span class="px-3 py-1 text-xs font-bold rounded-full"
+      <tbody>
+        <tr *ngFor="let log of listaLogs">
+          <td class="log-id">#{{ log.id }}</td>
+          <td>{{ log.eventDate | date:'medium' }}</td>
+          <td>
+            <span class="status-badge"
                   [ngClass]="{
-                    'bg-green-900 text-green-300': log.eventType.includes('Exitoso'),
-                    'bg-red-900 text-red-300': log.eventType.includes('Fallido') || log.eventType.includes('Error'),
-                    'bg-blue-900 text-blue-300': !log.eventType.includes('Exitoso') && !log.eventType.includes('Fallido')
+                    'badge-success': log.eventType.includes('Exitoso'),
+                    'badge-error': log.eventType.includes('Fallido') || log.eventType.includes('Error'),
+                    'badge-warning': !log.eventType.includes('Exitoso') && !log.eventType.includes('Fallido') && !log.eventType.includes('Error')
                   }">
               {{ log.eventType }}
             </span>
           </td>
-          <td class="p-4 font-medium">{{ log.userEmail }}</td>
-          <td class="p-4 text-sm font-mono text-gray-400">{{ log.ipAddress }}</td>
+          <td class="log-user">{{ log.userEmail }}</td>
+          <td class="log-ip">{{ log.ipAddress }}</td>
         </tr>
       </tbody>
     </table>

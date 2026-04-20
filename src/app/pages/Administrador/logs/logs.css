@@ -1,0 +1,118 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.logs-container {
+  padding: 30px;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+/* --- ENCABEZADO --- */
+.logs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #2a344a; /* Línea separadora sutil */
+  padding-bottom: 15px;
+}
+
+.logs-title h1 {
+  color: #facc15; /* Amarillo Dunaroma */
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.logs-title p {
+  color: #a0aec0;
+  margin: 5px 0 0 0;
+  font-size: 14px;
+}
+
+.btn-actualizar {
+  background-color: #facc15;
+  color: #111827;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-actualizar:hover {
+  background-color: #eab308;
+}
+
+/* --- TABLA --- */
+.table-wrapper {
+  background-color: #111827; /* Fondo oscuro del panel */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  border: 1px solid #1f2937;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.logs-table th {
+  background-color: #1f2937; /* Gris azulado para los títulos */
+  color: #facc15;
+  padding: 16px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.logs-table td {
+  padding: 16px;
+  border-bottom: 1px solid #374151; /* Línea entre filas */
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+/* Efecto al pasar el mouse por encima de la fila */
+.logs-table tbody tr:hover {
+  background-color: #1f2937;
+  transition: background-color 0.2s ease;
+}
+
+/* Textos específicos */
+.log-id { color: #9ca3af; }
+.log-user { font-weight: 500; }
+.log-ip { font-family: monospace; color: #9ca3af; }
+
+/* --- ETIQUETAS DE ESTADO (BADGES) --- */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* Verde para Éxitos */
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid #059669;
+}
+
+/* Rojo para Errores */
+.badge-error {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid #dc2626;
+}
+
+/* Amarillo para Alertas u otros */
+.badge-warning {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid #d97706;
+}
