@@ -9,6 +9,24 @@
     </button>
   </div>
 
+  <div class="logs-filters">
+    <div class="search-box">
+      <span class="material-icons text-gray-400">search</span>
+      <input 
+        type="text" 
+        [(ngModel)]="terminoBusqueda" 
+        (keyup.enter)="cargarHistorial()"
+        placeholder="Buscar por correo o tipo de evento (Presiona Enter para buscar)..."
+      >
+    </div>
+    
+    <select [(ngModel)]="limiteActual" (change)="cargarHistorial()" class="limit-select">
+      <option [value]="50">Ver 50 registros</option>
+      <option [value]="100">Ver 100 registros</option>
+      <option [value]="200">Ver 200 registros</option>
+      <option [value]="500">Ver 500 registros</option>
+    </select>
+  </div>
   <div class="table-wrapper">
     <table class="logs-table">
       <thead>
