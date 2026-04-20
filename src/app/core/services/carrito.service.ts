@@ -61,8 +61,9 @@ export class CarritoService {
     return this._carrito.value;
   }
 
-  procesarPagoStripe() {
+  procesarPagoStripe(idUsuario: number) { 
     const payloadCheckout = {
+      IdUsuario: idUsuario,
       items: this._carrito.value.map((item: any) => ({
         idPerfume: item.idPerfume,
         nombre: item.nombre, 

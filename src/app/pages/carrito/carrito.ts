@@ -91,7 +91,17 @@ export class Carrito implements OnInit {
       return;
     }
 
-    this.carritoService.procesarPagoStripe().subscribe({
+    // 👉 PASO 1: Sacamos la credencial del usuario (su ID)
+    const idUsuario = this.obtenerIdUsuarioReal();
+
+    // 🛡️ Pequeña validación de seguridad por si acaso
+    if (idUsuario === 0) {
+      this.mostrarAlertaElegante('Por favor, inicia sesión para poder pagar.', 'warning');
+      return;
+    }
+
+    // 👉 PASO 2: Le pasamos ese ID a nuestro servicio
+    this.carritoService.procesarPagoStripe(idUsuario).subscribe({
       next: (respuesta: any) => {
         if (respuesta.url) {
           window.location.href = respuesta.url; 
