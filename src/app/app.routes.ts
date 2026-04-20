@@ -17,6 +17,7 @@ import { noAuthGuard } from './core/guards/no-auth.guard';
 import { NovedadesComponent } from './pages/novedades/novedades';
 import { PagoExitosoComponent } from './pages/pago-exitoso/pago-exitoso';
 import { VerificarCodigoComponent } from './pages/verificar-codigo/verificar-codigo';
+import { LogsComponent } from './pages/Administrador/logs/logs';
 
 export const routes: Routes = [
     { path: '', component: Login, canActivate: [noAuthGuard] },
@@ -29,13 +30,14 @@ export const routes: Routes = [
     { path: 'novedades/:id', component: NovedadesDetalle, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
     { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
      { path: 'pago-exitoso', component: PagoExitosoComponent, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
-    { path: 'admin', component: Agregarperfume, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
+    
    { path: 'admin-novedades', component: AdminNovedadesComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'carrito', component: Carrito, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     { path: 'fofativas', component: Aromas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' } },
     {path: 'ofertas', component: Ofertas, canActivate: [authGuard, roleGuard], data: { role: 'cliente' }},
 
     {path: 'admin/venta-privada', component: AgregarDescuentoComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' }},
+    { path: 'admin/logs', component: LogsComponent, canActivate: [authGuard, roleGuard], data: { role: 'admin' } },
     { path: 'verificar', component: VerificarComponent },
     { path: '**', redirectTo: '' }
 
