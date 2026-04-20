@@ -1,0 +1,56 @@
+<div class="p-6 bg-[#111827] min-h-screen text-white font-sans">
+  <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+    <div>
+      <h1 class="text-3xl font-bold text-[#facc15]">Auditoría y Seguridad</h1>
+      <p class="text-sm text-gray-400 mt-1">Monitoreo en tiempo real de los eventos del sistema.</p>
+    </div>
+    <button (click)="cargarHistorial()" class="px-4 py-2 bg-[#facc15] text-[#111827] font-bold rounded hover:bg-yellow-400 transition shadow-lg">
+      <i class="fa-solid fa-rotate-right mr-2"></i> Actualizar
+    </button>
+  </div>
+
+  <div class="overflow-x-auto bg-[#1f2937] rounded-xl shadow-2xl border border-gray-700">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-[#374151] text-[#facc15] text-sm uppercase tracking-wider">
+          <th class="p-4 font-semibold rounded-tl-xl">ID</th>
+          <th class="p-4 font-semibold">Fecha y Hora</th>
+          <th class="p-4 font-semibold">Evento</th>
+          <th class="p-4 font-semibold">Usuario</th>
+          <th class="p-4 font-semibold rounded-tr-xl">Dirección IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="cargando">
+          <td colspan="5" class="p-8 text-center text-gray-400">
+            <i class="fa-solid fa-spinner fa-spin text-[#facc15] text-2xl mb-2"></i>
+            <p>Cargando registros de seguridad...</p>
+          </td>
+        </tr>
+
+        <tr *ngIf="!cargando && listaLogs.length === 0">
+          <td colspan="5" class="p-8 text-center text-gray-400">
+            No hay eventos registrados en este momento.
+          </td>
+        </tr>
+
+        <tr *ngFor="let log of listaLogs" class="border-b border-gray-700 hover:bg-[#374151] transition duration-200">
+          <td class="p-4 text-gray-400 text-sm">#{{ log.id }}</td>
+          <td class="p-4 text-gray-300">{{ log.eventDate | date:'medium' }}</td>
+          <td class="p-4">
+            <span class="px-3 py-1 text-xs font-bold rounded-full"
+                  [ngClass]="{
+                    'bg-green-900 text-green-300': log.eventType.includes('Exitoso') || log.eventType.includes('Login'),
+                    'bg-red-900 text-red-300': log.eventType.includes('Fallido') || log.eventType.includes('Error'),
+                    'bg-yellow-900 text-yellow-300': !log.eventType.includes('Exitoso') && !log.eventType.includes('Login') && !log.eventType.includes('Fallido') && !log.eventType.includes('Error')
+                  }">
+              {{ log.eventType }}
+            </span>
+          </td>
+          <td class="p-4 font-medium text-gray-200">{{ log.userEmail || 'Sistema' }}</td>
+          <td class="p-4 text-gray-400 text-sm font-mono">{{ log.ipAddress }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
