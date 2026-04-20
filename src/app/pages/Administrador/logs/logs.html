@@ -23,7 +23,7 @@
       <tbody>
         <tr *ngFor="let log of listaLogs">
           <td class="log-id">#{{ log.id }}</td>
-          <td>{{ log.eventDate | date:'medium':'-0700' }}</td>
+          <td>{{ log.eventDate | date:'short':'-0700' }}</td>
           <td>
             <span class="status-badge"
                   [ngClass]="{
