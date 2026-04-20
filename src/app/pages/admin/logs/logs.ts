@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SecurityLogsService } from '../../../core/services/security-logs.service'; // Ajusta la ruta
 
 @Component({
   selector: 'app-logs',
+  standalone:  true,
+  imports: [CommonModule],
   templateUrl: './logs.html',
   styleUrls: ['./logs.css']
 })
